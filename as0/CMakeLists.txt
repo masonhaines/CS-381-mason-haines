@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(DuckLib LANGUAGES CXX)
+project(as0 LANGUAGES CXX)
 
 add_subdirectory(raylib-cpp)
 
