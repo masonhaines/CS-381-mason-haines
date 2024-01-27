@@ -11,7 +11,7 @@ int main() {
         window.BeginDrawing();
         {
             window.ClearBackground(RAYWHITE);
-            // window.GetPosition();
+            //window.GetPosition();
             text.Draw("Hello Class", 400, 250, 20, raylib::Color::Black());
         }
         window.EndDrawing();
