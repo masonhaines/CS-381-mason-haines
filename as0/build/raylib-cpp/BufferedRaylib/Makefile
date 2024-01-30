@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/cs381/as0
+CMAKE_SOURCE_DIR = "/mnt/c/UNR CSE/cs381/as0"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/cs381/as0/build
+CMAKE_BINARY_DIR = "/mnt/c/UNR CSE/cs381/as0/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /mnt/c/cs381/as0/build
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd /mnt/c/cs381/as0/build && /usr/bin/cpack --config ./CPackConfig.cmake
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /mnt/c/cs381/as0/build && /usr/bin/cpack --config ./CPackSourceConfig.cmake /mnt/c/cs381/as0/build/CPackSourceConfig.cmake
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && /usr/bin/cpack --config ./CPackSourceConfig.cmake /mnt/c/UNR\ CSE/cs381/as0/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -152,14 +152,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /mnt/c/cs381/as0/build && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/cs381/as0/build/CMakeFiles /mnt/c/cs381/as0/build/raylib-cpp/BufferedRaylib//CMakeFiles/progress.marks
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/cs381/as0/build/CMakeFiles 0
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/BufferedRaylib//CMakeFiles/progress.marks"
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/clean
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/clean
 .PHONY : clean
 
 # The main clean target
@@ -168,22 +168,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/preinstall
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/preinstall
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /mnt/c/cs381/as0/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/rule:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/rule
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/rule
 .PHONY : raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/rule
 
 # Convenience name for target.
@@ -192,12 +192,12 @@ buffered-raylib: raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/rule
 
 # fast build rule for target.
 buffered-raylib/fast:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build
 .PHONY : buffered-raylib/fast
 
 # Convenience name for target.
 raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/rule:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/rule
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/rule
 .PHONY : raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/rule
 
 # Convenience name for target.
@@ -206,7 +206,7 @@ tst: raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/rule
 
 # fast build rule for target.
 tst/fast:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build
 .PHONY : tst/fast
 
 examples/test.o: examples/test.cpp.o
@@ -214,7 +214,7 @@ examples/test.o: examples/test.cpp.o
 
 # target to build an object file
 examples/test.cpp.o:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.o
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.o
 .PHONY : examples/test.cpp.o
 
 examples/test.i: examples/test.cpp.i
@@ -222,7 +222,7 @@ examples/test.i: examples/test.cpp.i
 
 # target to preprocess a source file
 examples/test.cpp.i:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.i
 .PHONY : examples/test.cpp.i
 
 examples/test.s: examples/test.cpp.s
@@ -230,7 +230,7 @@ examples/test.s: examples/test.cpp.s
 
 # target to generate assembly for a file
 examples/test.cpp.s:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/tst.dir/examples/test.cpp.s
 .PHONY : examples/test.cpp.s
 
 src/BufferedInput.o: src/BufferedInput.cpp.o
@@ -238,7 +238,7 @@ src/BufferedInput.o: src/BufferedInput.cpp.o
 
 # target to build an object file
 src/BufferedInput.cpp.o:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.o
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.o
 .PHONY : src/BufferedInput.cpp.o
 
 src/BufferedInput.i: src/BufferedInput.cpp.i
@@ -246,7 +246,7 @@ src/BufferedInput.i: src/BufferedInput.cpp.i
 
 # target to preprocess a source file
 src/BufferedInput.cpp.i:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.i
 .PHONY : src/BufferedInput.cpp.i
 
 src/BufferedInput.s: src/BufferedInput.cpp.s
@@ -254,7 +254,7 @@ src/BufferedInput.s: src/BufferedInput.cpp.s
 
 # target to generate assembly for a file
 src/BufferedInput.cpp.s:
-	cd /mnt/c/cs381/as0/build && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(MAKE) $(MAKESILENT) -f raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/build.make raylib-cpp/BufferedRaylib/CMakeFiles/buffered-raylib.dir/src/BufferedInput.cpp.s
 .PHONY : src/BufferedInput.cpp.s
 
 # Help Target
@@ -290,6 +290,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /mnt/c/cs381/as0/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

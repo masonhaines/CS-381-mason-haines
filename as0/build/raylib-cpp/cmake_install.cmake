@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0/raylib-cpp
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0/raylib-cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,10 +44,10 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/mnt/c/cs381/as0/build/raylib-cpp/include/cmake_install.cmake")
-  include("/mnt/c/cs381/as0/build/raylib-cpp/raylib/cmake_install.cmake")
-  include("/mnt/c/cs381/as0/build/raylib-cpp/raygui/projects/CMake/cmake_install.cmake")
-  include("/mnt/c/cs381/as0/build/raylib-cpp/BufferedRaylib/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/include/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raygui/projects/CMake/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/BufferedRaylib/cmake_install.cmake")
 
 endif()
 

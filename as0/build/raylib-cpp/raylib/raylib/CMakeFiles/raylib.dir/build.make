@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/cs381/as0
+CMAKE_SOURCE_DIR = "/mnt/c/UNR CSE/cs381/as0"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/cs381/as0/build
+CMAKE_BINARY_DIR = "/mnt/c/UNR CSE/cs381/as0/build"
 
 # Include any dependencies generated for this target.
 include raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/depend.make
@@ -72,100 +72,100 @@ include raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o: ../raylib-cpp/raylib/src/rcore.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o -MF CMakeFiles/raylib.dir/rcore.c.o.d -o CMakeFiles/raylib.dir/rcore.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/rcore.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o -MF CMakeFiles/raylib.dir/rcore.c.o.d -o CMakeFiles/raylib.dir/rcore.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rcore.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/rcore.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/rcore.c > CMakeFiles/raylib.dir/rcore.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rcore.c" > CMakeFiles/raylib.dir/rcore.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/rcore.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/rcore.c -o CMakeFiles/raylib.dir/rcore.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rcore.c" -o CMakeFiles/raylib.dir/rcore.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o: ../raylib-cpp/raylib/src/rmodels.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o -MF CMakeFiles/raylib.dir/rmodels.c.o.d -o CMakeFiles/raylib.dir/rmodels.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/rmodels.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o -MF CMakeFiles/raylib.dir/rmodels.c.o.d -o CMakeFiles/raylib.dir/rmodels.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rmodels.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/rmodels.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/rmodels.c > CMakeFiles/raylib.dir/rmodels.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rmodels.c" > CMakeFiles/raylib.dir/rmodels.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/rmodels.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/rmodels.c -o CMakeFiles/raylib.dir/rmodels.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rmodels.c" -o CMakeFiles/raylib.dir/rmodels.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o: ../raylib-cpp/raylib/src/rshapes.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o -MF CMakeFiles/raylib.dir/rshapes.c.o.d -o CMakeFiles/raylib.dir/rshapes.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/rshapes.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.o -MF CMakeFiles/raylib.dir/rshapes.c.o.d -o CMakeFiles/raylib.dir/rshapes.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rshapes.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/rshapes.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/rshapes.c > CMakeFiles/raylib.dir/rshapes.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rshapes.c" > CMakeFiles/raylib.dir/rshapes.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rshapes.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/rshapes.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/rshapes.c -o CMakeFiles/raylib.dir/rshapes.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rshapes.c" -o CMakeFiles/raylib.dir/rshapes.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o: ../raylib-cpp/raylib/src/rtext.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o -MF CMakeFiles/raylib.dir/rtext.c.o.d -o CMakeFiles/raylib.dir/rtext.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtext.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.o -MF CMakeFiles/raylib.dir/rtext.c.o.d -o CMakeFiles/raylib.dir/rtext.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtext.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/rtext.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtext.c > CMakeFiles/raylib.dir/rtext.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtext.c" > CMakeFiles/raylib.dir/rtext.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtext.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/rtext.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtext.c -o CMakeFiles/raylib.dir/rtext.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtext.c" -o CMakeFiles/raylib.dir/rtext.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o: ../raylib-cpp/raylib/src/rtextures.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o -MF CMakeFiles/raylib.dir/rtextures.c.o.d -o CMakeFiles/raylib.dir/rtextures.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtextures.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.o -MF CMakeFiles/raylib.dir/rtextures.c.o.d -o CMakeFiles/raylib.dir/rtextures.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtextures.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/rtextures.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtextures.c > CMakeFiles/raylib.dir/rtextures.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtextures.c" > CMakeFiles/raylib.dir/rtextures.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rtextures.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/rtextures.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/rtextures.c -o CMakeFiles/raylib.dir/rtextures.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rtextures.c" -o CMakeFiles/raylib.dir/rtextures.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o: ../raylib-cpp/raylib/src/utils.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o -MF CMakeFiles/raylib.dir/utils.c.o.d -o CMakeFiles/raylib.dir/utils.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/utils.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.o -MF CMakeFiles/raylib.dir/utils.c.o.d -o CMakeFiles/raylib.dir/utils.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/utils.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/utils.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/utils.c > CMakeFiles/raylib.dir/utils.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/utils.c" > CMakeFiles/raylib.dir/utils.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/utils.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/utils.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/utils.c -o CMakeFiles/raylib.dir/utils.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/utils.c" -o CMakeFiles/raylib.dir/utils.c.s
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/flags.make
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o: ../raylib-cpp/raylib/src/raudio.c
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o -MF CMakeFiles/raylib.dir/raudio.c.o.d -o CMakeFiles/raylib.dir/raudio.c.o -c /mnt/c/cs381/as0/raylib-cpp/raylib/src/raudio.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building C object raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.o -MF CMakeFiles/raylib.dir/raudio.c.o.d -o CMakeFiles/raylib.dir/raudio.c.o -c "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/raudio.c"
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/raylib.dir/raudio.c.i"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/cs381/as0/raylib-cpp/raylib/src/raudio.c > CMakeFiles/raylib.dir/raudio.c.i
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/raudio.c" > CMakeFiles/raylib.dir/raudio.c.i
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/raudio.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/raylib.dir/raudio.c.s"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/cs381/as0/raylib-cpp/raylib/src/raudio.c -o CMakeFiles/raylib.dir/raudio.c.s
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/raudio.c" -o CMakeFiles/raylib.dir/raudio.c.s
 
 # Object files for target raylib
 raylib_OBJECTS = \
@@ -179,29 +179,29 @@ raylib_OBJECTS = \
 
 # External object files for target raylib
 raylib_EXTERNAL_OBJECTS = \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/monitor.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/platform.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/window.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_init.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_window.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_module.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_time.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_thread.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_init.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_monitor.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_window.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/xkb_unicode.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/glx_context.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/linux_joystick.c.o" \
-"/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_poll.c.o"
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/monitor.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/platform.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/window.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_init.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_window.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_module.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_time.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_thread.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_init.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_monitor.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/x11_window.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/xkb_unicode.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/glx_context.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/linux_joystick.c.o" \
+"/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_poll.c.o"
 
 raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rcore.c.o
 raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/rmodels.c.o
@@ -235,19 +235,19 @@ raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/external/glfw/src
 raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_poll.c.o
 raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/build.make
 raylib-cpp/raylib/raylib/libraylib.a: raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C static library libraylib.a"
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && $(CMAKE_COMMAND) -P CMakeFiles/raylib.dir/cmake_clean_target.cmake
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/raylib.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Linking C static library libraylib.a"
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && $(CMAKE_COMMAND) -P CMakeFiles/raylib.dir/cmake_clean_target.cmake
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/raylib.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/build: raylib-cpp/raylib/raylib/libraylib.a
 .PHONY : raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/build
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/clean:
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib && $(CMAKE_COMMAND) -P CMakeFiles/raylib.dir/cmake_clean.cmake
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" && $(CMAKE_COMMAND) -P CMakeFiles/raylib.dir/cmake_clean.cmake
 .PHONY : raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/clean
 
 raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/depend:
-	cd /mnt/c/cs381/as0/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/cs381/as0 /mnt/c/cs381/as0/raylib-cpp/raylib/src /mnt/c/cs381/as0/build /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/DependInfo.cmake --color=$(COLOR)
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/mnt/c/UNR CSE/cs381/as0" "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src" "/mnt/c/UNR CSE/cs381/as0/build" "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib" "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : raylib-cpp/raylib/raylib/CMakeFiles/raylib.dir/depend
 

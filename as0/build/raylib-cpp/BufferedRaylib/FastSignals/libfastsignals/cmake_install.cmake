@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

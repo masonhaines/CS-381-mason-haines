@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0/raylib-cpp/raygui/projects/CMake
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0/raylib-cpp/raygui/projects/CMake
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -43,6 +43,6 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/mnt/c/cs381/as0/raylib-cpp/raygui/projects/CMake/../../src/raygui.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raygui/projects/CMake/../../src/raygui.h")
 endif()
 

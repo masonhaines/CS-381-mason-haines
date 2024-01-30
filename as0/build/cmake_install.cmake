@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/mnt/c/cs381/as0/build/raylib-cpp/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/c/cs381/as0/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/mnt/c/UNR CSE/cs381/as0/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

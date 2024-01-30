@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
 
-CXX_INCLUDES = -I/mnt/c/cs381/as0/raylib-cpp/raylib/src -I/mnt/c/cs381/as0/raylib-cpp/raylib/src/external/glfw/include -I/mnt/c/cs381/as0/raylib-cpp/include
+CXX_INCLUDES = -I"/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src" -I"/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/external/glfw/include" -I"/mnt/c/UNR CSE/cs381/as0/raylib-cpp/include"
 
 CXX_FLAGS = -std=gnu++20
 

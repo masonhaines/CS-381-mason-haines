@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0/raylib-cpp/raylib/src
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -43,32 +43,32 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/libraylib.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/libraylib.a")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES
-    "/mnt/c/cs381/as0/raylib-cpp/raylib/src/raylib.h"
-    "/mnt/c/cs381/as0/raylib-cpp/raylib/src/rlgl.h"
-    "/mnt/c/cs381/as0/raylib-cpp/raylib/src/raymath.h"
+    "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/raylib.h"
+    "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/rlgl.h"
+    "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/raymath.h"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/raylib.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/raylib.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/raylib" TYPE FILE FILES "/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/raylib-config-version.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/raylib" TYPE FILE FILES "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/raylib-config-version.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/raylib" TYPE FILE FILES "/mnt/c/cs381/as0/raylib-cpp/raylib/src/../cmake/raylib-config.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/raylib" TYPE FILE FILES "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/../cmake/raylib-config.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/cmake_install.cmake")
 
 endif()
 

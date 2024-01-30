@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/cs381/as0
+CMAKE_SOURCE_DIR = "/mnt/c/UNR CSE/cs381/as0"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/cs381/as0/build
+CMAKE_BINARY_DIR = "/mnt/c/UNR CSE/cs381/as0/build"
 
 # Utility rule file for update_mappings.
 
@@ -67,8 +67,8 @@ include raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.di
 include raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/progress.make
 
 raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/mnt/c/cs381/as0/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Updating gamepad mappings from upstream repository"
-	cd /mnt/c/cs381/as0/raylib-cpp/raylib/src/external/glfw/src && /usr/bin/cmake -P /mnt/c/cs381/as0/raylib-cpp/raylib/src/external/glfw/CMake/GenerateMappings.cmake mappings.h.in mappings.h
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir="/mnt/c/UNR CSE/cs381/as0/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Updating gamepad mappings from upstream repository"
+	cd "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/external/glfw/src" && /usr/bin/cmake -P "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/external/glfw/CMake/GenerateMappings.cmake" mappings.h.in mappings.h
 
 update_mappings: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings
 update_mappings: raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build.make
@@ -79,10 +79,10 @@ raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build:
 .PHONY : raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build
 
 raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/clean:
-	cd /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src && $(CMAKE_COMMAND) -P CMakeFiles/update_mappings.dir/cmake_clean.cmake
+	cd "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src" && $(CMAKE_COMMAND) -P CMakeFiles/update_mappings.dir/cmake_clean.cmake
 .PHONY : raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/clean
 
 raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/depend:
-	cd /mnt/c/cs381/as0/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/cs381/as0 /mnt/c/cs381/as0/raylib-cpp/raylib/src/external/glfw/src /mnt/c/cs381/as0/build /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src /mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/DependInfo.cmake --color=$(COLOR)
+	cd "/mnt/c/UNR CSE/cs381/as0/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/mnt/c/UNR CSE/cs381/as0" "/mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/external/glfw/src" "/mnt/c/UNR CSE/cs381/as0/build" "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src" "/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : raylib-cpp/raylib/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/depend
 

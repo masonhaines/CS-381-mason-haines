@@ -1,7 +1,7 @@
 raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/CMakeFiles/libfastsignals.dir/src/function_detail.cpp.o: \
- /mnt/c/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/src/function_detail.cpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/src/function_detail.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/src/../include/function_detail.h \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/BufferedRaylib/FastSignals/libfastsignals/src/../include/function_detail.h \
  /usr/include/c++/11/cassert \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \

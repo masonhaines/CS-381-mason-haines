@@ -1,12 +1,12 @@
-CMakeFiles/as0.dir/src/as0.cpp.o: /mnt/c/cs381/as0/src/as0.cpp \
+CMakeFiles/as0.dir/src/as0.cpp.o: /mnt/c/UNR\ CSE/cs381/as0/src/as0.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/cs381/as0/raylib-cpp/include/raylib-cpp.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./AudioDevice.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././raylib.hpp \
- /mnt/c/cs381/as0/raylib-cpp/raylib/src/raylib.h \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/raylib-cpp.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./AudioDevice.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././raylib.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/raylib/src/raylib.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
- /mnt/c/cs381/as0/raylib-cpp/include/././raylib-cpp-utils.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././RaylibException.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././raylib-cpp-utils.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././RaylibException.hpp \
  /usr/include/c++/11/stdexcept /usr/include/c++/11/exception \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -148,11 +148,11 @@ CMakeFiles/as0.dir/src/as0.cpp.o: /mnt/c/cs381/as0/src/as0.cpp \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/11/bits/charconv.h \
  /usr/include/c++/11/bits/basic_string.tcc \
- /mnt/c/cs381/as0/raylib-cpp/include/./././raylib.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./AudioStream.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./BoundingBox.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Camera2D.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././Vector2.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././raylib.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./AudioStream.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./BoundingBox.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Camera2D.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././Vector2.hpp \
  /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -176,61 +176,79 @@ CMakeFiles/as0.dir/src/as0.cpp.o: /mnt/c/cs381/as0/src/as0.cpp \
  /usr/include/c++/11/tr1/poly_hermite.tcc \
  /usr/include/c++/11/tr1/poly_laguerre.tcc \
  /usr/include/c++/11/tr1/riemann_zeta.tcc \
- /mnt/c/cs381/as0/raylib-cpp/include/./././raymath.hpp \
- /mnt/c/cs381/as0/raylib-cpp/raylib/src/raymath.h \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././raymath.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/raylib/src/raymath.h \
  /usr/include/c++/11/math.h \
- /mnt/c/cs381/as0/raylib-cpp/include/./././raylib-cpp-utils.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./././RadiansDegrees.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././././raylib.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././././raylib-cpp-utils.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././././raymath.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././RadiansDegrees.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Camera3D.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././Vector3.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Color.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././Vector4.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././raylib-cpp-utils.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././RadiansDegrees.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././././raylib.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././././raylib-cpp-utils.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././././raymath.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././RadiansDegrees.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Camera3D.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././Vector3.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Color.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././Vector4.hpp \
  /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
- /mnt/c/cs381/as0/raylib-cpp/include/./Font.hpp /usr/include/c++/11/span \
- /usr/include/c++/11/array /usr/include/c++/11/cstddef \
- /mnt/c/cs381/as0/raylib-cpp/include/././TextureUnmanaged.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./././Vector2.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./././Material.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Font.hpp \
+ /usr/include/c++/11/span /usr/include/c++/11/array \
+ /usr/include/c++/11/cstddef \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././TextureUnmanaged.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././Vector2.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././Material.hpp \
  /usr/include/c++/11/vector /usr/include/c++/11/bits/stl_uninitialized.h \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
  /usr/include/c++/11/bits/vector.tcc \
- /mnt/c/cs381/as0/raylib-cpp/include/./././RaylibException.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./././Image.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././././RaylibException.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././././Color.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Functions.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Image.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Material.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Matrix.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././raymath.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Mesh.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././BoundingBox.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Model.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././Mesh.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./ModelAnimation.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Music.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./RadiansDegrees.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Ray.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/././RayCollision.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./RaylibException.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./RayCollision.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Rectangle.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./RenderTexture.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Shader.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Texture.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Sound.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Text.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Texture.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./TextureUnmanaged.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Touch.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Vector2.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Vector3.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Vector4.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./VrStereoConfig.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Wave.hpp \
- /mnt/c/cs381/as0/raylib-cpp/include/./Window.hpp
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././RaylibException.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./././Image.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././././RaylibException.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././././Color.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Functions.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Image.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Material.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Matrix.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././raymath.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Mesh.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././BoundingBox.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Model.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././Mesh.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./ModelAnimation.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Music.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./RadiansDegrees.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Ray.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/././RayCollision.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./RaylibException.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./RayCollision.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Rectangle.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./RenderTexture.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Shader.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Texture.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Sound.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Text.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Texture.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./TextureUnmanaged.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Touch.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Vector2.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Vector3.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Vector4.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./VrStereoConfig.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Wave.hpp \
+ /mnt/c/UNR\ CSE/cs381/as0/raylib-cpp/include/./Window.hpp \
+ /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
+ /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
+ /usr/include/c++/11/bits/locale_classes.h \
+ /usr/include/c++/11/bits/locale_classes.tcc \
+ /usr/include/c++/11/system_error \
+ /usr/include/x86_64-linux-gnu/c++/11/bits/error_constants.h \
+ /usr/include/c++/11/streambuf /usr/include/c++/11/bits/streambuf.tcc \
+ /usr/include/c++/11/bits/basic_ios.h \
+ /usr/include/c++/11/bits/locale_facets.h /usr/include/c++/11/cwctype \
+ /usr/include/wctype.h /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
+ /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_base.h \
+ /usr/include/c++/11/bits/streambuf_iterator.h \
+ /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h \
+ /usr/include/c++/11/bits/locale_facets.tcc \
+ /usr/include/c++/11/bits/basic_ios.tcc \
+ /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
+ /usr/include/c++/11/bits/istream.tcc

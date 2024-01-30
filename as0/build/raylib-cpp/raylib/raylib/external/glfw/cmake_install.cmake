@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/cs381/as0/raylib-cpp/raylib/src/external/glfw
+# Install script for directory: /mnt/c/UNR CSE/cs381/as0/raylib-cpp/raylib/src/external/glfw
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,6 +44,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/mnt/c/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/cmake_install.cmake")
+  include("/mnt/c/UNR CSE/cs381/as0/build/raylib-cpp/raylib/raylib/external/glfw/src/cmake_install.cmake")
 endif()
 
