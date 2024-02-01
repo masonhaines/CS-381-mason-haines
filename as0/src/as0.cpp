@@ -18,8 +18,8 @@ int main() {
     raylib::Text text;//text object 
 
     //load image as texture into texture object mask 
-    mask = LoadTexture("/mnt/c/UNR CSE/cs381/as0/majorasMask.png");
-    rupee = LoadTexture("/mnt/c/UNR CSE/cs381/as0/green_rupee_small.png");
+    mask = LoadTexture("../majorasMask.png");
+    rupee = LoadTexture("../green_rupee_small.png");
 
     //make window resizable
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
