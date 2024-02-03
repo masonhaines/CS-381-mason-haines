@@ -13,16 +13,16 @@ Texture2D rupee;
 
 int main() {
 
+    //make window resizable
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     raylib::Window window(800, 800, "CS381 - Assignment 0");//initialize window 
+
     raylib::Color colors;//colors object 
     raylib::Text text;//text object 
 
     //load image as texture into texture object mask 
     mask = LoadTexture("../majorasMask.png");
     rupee = LoadTexture("../green_rupee_small.png");
-
-    //make window resizable
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     //create RGBA values and initialize 
     int red = 0;
@@ -37,8 +37,6 @@ int main() {
     int BOUNCE = 0;
     bool bounceFlag = true;
 
-    
-    
     while(!window.ShouldClose()){
 
         int height = window.GetHeight();
