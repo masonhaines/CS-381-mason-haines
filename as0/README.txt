@@ -1,10 +1,11 @@
 A Simple Window README
 
-This program is designed to create a simple window that features centered text that 
-remains centered even when the window is resized. 
+This program is designed to create a simple window 
+featuring centered text that remains centered even when the window is resized. 
 Some creative liberty has been taken to make this task more appealing.
 
 ----Instructions----
+Please open your terminal and..
 
 1. Update System and Install Dependencies
 
@@ -21,6 +22,14 @@ Some creative liberty has been taken to make this task more appealing.
 
     git submodule update --init --recursive
 
+3.5 Additional Setup (Optional)
+
+If you're using Visual Studio Code, please install the following extensions:
+
+-C/C++ for Visual Studio Code
+-CMake for Visual Studio Code
+-Visual Studio Code C++ Extension Pack
+
 4. Build
 
     mkdir build
@@ -36,10 +45,3 @@ Some creative liberty has been taken to make this task more appealing.
 
     No applicable controls*
 
-Additional Setup (Optional)
-
-If you're using Visual Studio Code, please install the following extensions:
-
--C/C++ for Visual Studio Code
--CMake for Visual Studio Code
--Visual Studio Code C++ Extension Pack
