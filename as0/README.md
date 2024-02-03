@@ -43,6 +43,7 @@ This program is designed to create a simple window featuring centered text that 
     make
 
 # 5. Executable
+To exit program/window press X on top right of window and program will terminate. 
 
     ./as0
 
