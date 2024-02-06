@@ -93,7 +93,7 @@ int main() {
             Rectangle maskDest = (Rectangle){static_cast<float>(width / 2), static_cast<float>(height / 2), maskSource.width, maskSource.height};
             DrawTexturePro(mask, maskSource, maskDest, (Vector2){0, 0}, 45 * GetTime(), RED);
 
-            //Create a text
+            //Create text
             //gets larger over time based off of textsize incrementing and RGB values are changing colors
             text.Draw(Label, ((width / 2) - (MeasureText(Label, textSize) / 2)), height / 2, textSize, raylib::Color{red,green,blue,alpha});
         }

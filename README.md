@@ -8,7 +8,7 @@ plus issues of interface design, quality assurance, and business practice.
 This is the root directory. For further instruction please open one of the "as-" folders and the README will continue specific directions for each project. Also, there is a README.txt in each project folder if you have closed GitHub.
 
 # Instructions 
-## Please open your terminal and..
+## Please open your terminal and...
 
 
 # 1. Update System and Install Dependencies
