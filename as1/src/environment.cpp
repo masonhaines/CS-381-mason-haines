@@ -2,10 +2,11 @@
 #include "rlgl.h"
 #include "skybox.hpp"
 
+
 // Some object that can be used as a function, and takes a transform in, and returns a transform 
 template<typename T>
 concept Transformer = requires( T t, raylib:: Transform m) {
-    {t.operator()(m) } -> std::convertible_to<raylib::Transform>;
+    {t.operator()(m)}->std::convertible_to<raylib::Transform>;
 };
 
 void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
@@ -18,69 +19,62 @@ void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
 
 int main() {
 
+    //make window resizable
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     raylib::Window window(800, 800, "CS381 - Assignment 1");//initialize window 
-    
-    // raylib::Model bad("bad.obj");
 
     //***************************************************//
     raylib::Camera camera(
-        raylib::Vector3(3, 5, 15),
+        raylib::Vector3(0, 120, -500),
+        // raylib::Vector3(0, 0, 300),
+        // raylib::Vector3(4, 15, 45),
         raylib::Vector3(0, 0, 0),
         raylib::Vector3::Up(), 
         45, 
         CAMERA_PERSPECTIVE
     );
     //**************************************************//
-    raylib::Text text;//text object 
-
-    cs381::SkyBox skyBox("../textures/skybox.png");
+    cs381::SkyBox skyBox("textures/skybox.png");
     
-    // raylib::Model defaultCube("bad.obj");
+    raylib::Model PolyPlane("meshes/PolyPlane.glb");
+    raylib::Model tugBoat("meshes/SmitHouston_Tug.glb");
+    // raylib::Model DDG51("meshes/ddg51.glb");
 
-    // raylib::Mesh UploadMesh
-
-    raylib::Model oilTanker = LoadModel("../meshes/OilTanker.glb");
-    // oilTanker.Load("../meshes/OilTanker.glb");
-
-    Texture2D texture = LoadTexture("../textures/skybox.png");
-    oilTanker.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
-
-
-    // float speed = 10;
-    // Vector3 position = {0, 0, 0};
-    
-    while(!window.ShouldClose()){
-
-        int height = window.GetHeight();
-        int width = window.GetWidth();
+    while (!window.ShouldClose()) {
 
         window.BeginDrawing();//begin drawing inside window 
         {
-            // window.ClearBackground(PINK);
-            // text.Draw("Hello World", 0, 100, 20, raylib::Color::DarkPurple());
-        
             camera.BeginMode();
-            {
-                // DrawBoundedModel(oilTanker, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({0, 1, 0}).RotateZ(raylib::Degree(45));
-                // });
-                DrawModel(oilTanker, Vector3{0,5,0}, 5, WHITE);
-                
-
-
+            {   
                 // skyBox.Draw();
-                // defaultCube.Draw({0, 0, 0});
+              
+                // [capture list](parameters) -> return_type { function_body }
+                DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({0, 0, 0});
+                });
+                DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({-100, 100, 0}).RotateY(180).Scale(1, -1, 1);
+                });
+                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({-200, 0, 0});
+                });
+                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({200, 0, 0}).RotateY(90);
+                });
+                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
+                });
+
             }
             camera.EndMode();
+
+            DrawFPS(10, 10);
             
-            // position += raylib::Vector3::Right() * speed * window.GetFrameTime();
         }
         window.EndDrawing();
-
     }
-    UnloadTexture(texture);
-    UnloadModel(oilTanker);
 };
 
 
+    
     

@@ -9,6 +9,13 @@ target_link_libraries(as0 PUBLIC raylib raylib_cpp)
 set_property(TARGET as0 PROPERTY CXX_STANDARD 20)
 
 configure_file(textures/skybox.png textures/skybox.png COPYONLY)
+configure_file(textures/grass.jpg textures/grass.jpg COPYONLY)
+configure_file(meshes/PolyPlane.glb meshes/PolyPlane.glb COPYONLY)
+configure_file(meshes/OrientExplorer.glb meshes/OrientExplorer.glb COPYONLY)
+configure_file(meshes/OilTanker.glb meshes/OilTanker.glb COPYONLY)
+configure_file(meshes/SmitHouston_Tug.glb meshes/SmitHouston_Tug.glb COPYONLY)
+configure_file(meshes/ddg51.glb meshes/ddg51.glb COPYONLY)
+
 
 include(includeable.cmake)
 
