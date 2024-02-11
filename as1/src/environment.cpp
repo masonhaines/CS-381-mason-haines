@@ -34,11 +34,9 @@ int main() {
         CAMERA_PERSPECTIVE
     );
     //**************************************************//
-    cs381::SkyBox skyBox("textures/skybox.png");
     
     raylib::Model PolyPlane("meshes/PolyPlane.glb");
     raylib::Model tugBoat("meshes/SmitHouston_Tug.glb");
-    // raylib::Model DDG51("meshes/ddg51.glb");
 
     while (!window.ShouldClose()) {
 
@@ -47,6 +45,7 @@ int main() {
             camera.BeginMode();
             {   
                 // skyBox.Draw();
+                window.ClearBackground(raylib::Color::Blue());
               
                 // [capture list](parameters) -> return_type { function_body }
                 DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
@@ -60,6 +59,9 @@ int main() {
                 });
                 DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
                     return t.Translate({200, 0, 0}).RotateY(90);
+                });
+                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
                 });
                 DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
                     return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
