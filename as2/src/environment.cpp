@@ -13,7 +13,7 @@ void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
     raylib::Transform backupTransform = model.transform; // save the models transform 
     model.transform = transformer(backupTransform); // update the models transform based on our tranform function
     model.Draw({});
-    model.GetTransformedBoundingBox().Draw();
+    // model.GetTransformedBoundingBox().Draw();
     model.transform = backupTransform;
 }
 
@@ -41,7 +41,7 @@ int main() {
 
     raylib::Text text;//text object 
     float textSize = 1;//TEXT SIZE 
-    const char *Label = {"Press Space to begin :)"};
+    const char *Label = {"Press Space to begin and hold space to stop :) "};
 
 
     //for ground model
@@ -70,95 +70,54 @@ int main() {
                 // ground.Draw({});
                 window.ClearBackground(raylib::Color::Blue());
               
-                // // [capture list](parameters) -> return_type { function_body }
-                // DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({0, 0, 0});
-                // });
-                // DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({-100, 100, 0}).RotateY(180).Scale(1, -1, 1);
-                // });
-                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({-200, 0, 0});
-                // });
-                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({200, 0, 0}).RotateY(90);
-                // });
-                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
-                // });
-                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                //     return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
-                // });
+                
                 DrawBoundedModel(PolyPlane, [&position, &Yaxis, &Xaxis](raylib::Transform t) -> raylib::Transform {
                     return t.Translate(position).RotateY(Yaxis).Scale(3, 6, 3);
                 });
+                
 
                 raylib::Vector3 velocity = {speed * cos(Yaxis.RadianValue()), 0, -speed * sin(Yaxis.RadianValue())};
-                // position += velocity * window.GetFrameTime();
 
-                // if(IsKeyPressed(KEY_Q)){
-                //     Yaxis += 5;
-                // }
-                // if(IsKeyPressed(KEY_E)){
-                //     Yaxis -= 5;
-                // }
-                // if(IsKeyDown(KEY_W)){
-                //     position += raylib::Vector3::Forward() * window.GetFrameTime() + velocity;
-                // }
-                // if(IsKeyDown(KEY_A)){
-                //     position += raylib::Vector3::Left() * window.GetFrameTime() + velocity;
-                // }
-                // if(IsKeyDown(KEY_D)){
-                //     position += raylib::Vector3::Right() * window.GetFrameTime() + velocity;
-                // }
-                // if(IsKeyDown(KEY_S)){
-                //     position += raylib::Vector3::Back() * window.GetFrameTime() + velocity;
-                // }
-                // Calculate velocity based on rotation
-                // velocity = {speed * cos(Yaxis.RadianValue()), 0, -speed * sin(Yaxis.RadianValue())};
-
-                if(IsKeyPressed(KEY_SPACE)){
-                    speed = 4;
+                if(IsKeyReleased(KEY_SPACE)){
+                    speed = 5;
+                } else if (IsKeyDown(KEY_SPACE)) {
+                    speed = 0;
                 }
 
-                // // Handle key inputs for rotation
-                // if (IsKeyDown(KEY_Q)) {
-                //     Yaxis += .5;
-                // }
-                // if (IsKeyDown(KEY_E)) {
-                //     Yaxis -= .5;
-                // }
-
+                
+                if(IsKeyDown(KEY_Q)){
+                    velocity += raylib::Vector3::Up() * speed;
+                    position += (velocity) * window.GetFrameTime();
+                }
+                if(IsKeyDown(KEY_E)){
+                    velocity += raylib::Vector3::Down() * speed;
+                    position += (velocity) * window.GetFrameTime();
+                }
                 if (IsKeyDown(KEY_W)) {
-                    if (Yaxis > 0 && Yaxis < 180){
-                        velocity += raylib::Vector3::Back() * speed;
-                        // position += (velocity * speed) * window.GetFrameTime();
-                    } else {
+                    // if (Yaxis > 0 && Yaxis < 180){
+                    //     velocity += raylib::Vector3::Back() * speed;
+                    //     position += (velocity) * window.GetFrameTime();
+                    // } else {
                         velocity += raylib::Vector3::Forward() * speed;
-                        // position += (velocity * speed) * window.GetFrameTime();
-                    }
+                        position += (velocity) * window.GetFrameTime();
+                    // }
                     
                 }
                 if (IsKeyDown(KEY_A)) {
                     velocity += raylib::Vector3::Left() * speed;
                     Yaxis += .5;
-                    // position += (velocity * speed) * window.GetFrameTime();
+                    position += (velocity) * window.GetFrameTime();
                 }
                 if (IsKeyDown(KEY_D)) {
                     velocity += raylib::Vector3::Right() * speed;
                     Yaxis -= .5;
-                    // position += (velocity * speed) * window.GetFrameTime();
+                    position += (velocity) * window.GetFrameTime();
                 }
                 if (IsKeyDown(KEY_S)) {
                     velocity += raylib::Vector3::Back() * speed / 5;
-                    Xaxis += .5;
-                    // position += (velocity * speed) * window.GetFrameTime();
+                    position += (velocity) * window.GetFrameTime();
                 }
-                if (IsKeyDown(KEY_X)) {
-                    velocity += raylib::Vector3::Back() * speed / 5;
-                    Xaxis -= .5;
-                    // position += (velocity * speed) * window.GetFrameTime();
-                }
+                
 
                 position += (velocity * speed) * window.GetFrameTime();
             }
