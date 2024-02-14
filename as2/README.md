@@ -1,6 +1,6 @@
-# Ships And Planes README
+# Plane Takeoff! README
 
-This program is designed to create a simple window featuring 3D planes and boats in various locations axis.
+This program is designed to create a simple window featuring a 3D plane plane taking off. After taking off user can control the plane as it flies.
 
 # Instructions 
 ## Please open your terminal and..
@@ -18,7 +18,7 @@ This program is designed to create a simple window featuring 3D planes and boats
 
     git clone https://github.com/masonhaines/CS-381-mason-haines.git
 
-    cd CS-381-mason-haines/as1/
+    cd CS-381-mason-haines/as2/
 
 # 3. Fetch Git Submodules
 
@@ -45,8 +45,13 @@ This program is designed to create a simple window featuring 3D planes and boats
 # 5. Executable
 To exit program/window press X on top right of window and program will terminate. 
 
-    ./as1
+    ./as2
 
 # 6. Controls
 
-No applicable controls*
+• Pressing W to go forward
+• Pressing S to go backwards
+• Pressing A to turn left 
+• Pressing D to turn right 
+• Pressing Q to go upwards
+• Pressing E to go downwards

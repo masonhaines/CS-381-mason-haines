@@ -40,7 +40,7 @@ int main() {
     raylib::Model tugBoat("meshes/SmitHouston_Tug.glb");
 
     raylib::Text text;//text object 
-    float textSize = 1;//TEXT SIZE 
+    float textSize = 5;//TEXT SIZE 
     const char *Label = {"Press Space to begin and hold space to stop :) "};
 
 
@@ -94,13 +94,13 @@ int main() {
                     position += (velocity) * window.GetFrameTime();
                 }
                 if (IsKeyDown(KEY_W)) {
-                    // if (Yaxis > 0 && Yaxis < 180){
-                    //     velocity += raylib::Vector3::Back() * speed;
-                    //     position += (velocity) * window.GetFrameTime();
-                    // } else {
+                    if (Yaxis > 0 && Yaxis < 180){
+                        velocity -= raylib::Vector3::Forward() * speed * 2;
+                        position -= (velocity) * window.GetFrameTime();
+                    } else {
                         velocity += raylib::Vector3::Forward() * speed;
                         position += (velocity) * window.GetFrameTime();
-                    // }
+                    }
                     
                 }
                 if (IsKeyDown(KEY_A)) {
@@ -114,7 +114,7 @@ int main() {
                     position += (velocity) * window.GetFrameTime();
                 }
                 if (IsKeyDown(KEY_S)) {
-                    velocity += raylib::Vector3::Back() * speed / 5;
+                    velocity += raylib::Vector3::Back() * speed;
                     position += (velocity) * window.GetFrameTime();
                 }
                 
