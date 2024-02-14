@@ -1,7 +1,7 @@
 #include "raylib-cpp.hpp"
 #include "rlgl.h"
 #include "skybox.hpp"
-
+#include "raylib.h"
 
 // Some object that can be used as a function, and takes a transform in, and returns a transform 
 template<typename T>
@@ -19,9 +19,15 @@ void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
 
 int main() {
 
+
+    
     //make window resizable
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     raylib::Window window(800, 800, "CS381 - Assignment 2");//initialize window 
+    InitAudioDevice();
+
+    Music music = LoadMusicStream("../metroid.wav");
+    PlayMusicStream(music);
 
     //***************************************************//
     raylib::Camera camera(
@@ -40,10 +46,10 @@ int main() {
     raylib::Model tugBoat("meshes/SmitHouston_Tug.glb");
 
     raylib::Text text;//text object 
-    float textSize = 5;//TEXT SIZE 
-    const char *Label = {"Press Space to begin and hold space to stop :) "};
-
-
+    float textSize = 25;//TEXT SIZE 
+    const char *Label = {"Press Space to begin and hold space to stop plane "};
+    const char *XAXIS = {"X-AXIS:"};
+    
     //for ground model
     auto mesh = raylib::Mesh::Plane(10'000, 10'000, 50, 50, 25);
     raylib::Model ground = ((raylib::Mesh*)&mesh)->LoadModelFrom();
@@ -55,12 +61,14 @@ int main() {
     float speed = 0; // Adjust the speed to your preference
     raylib::Vector3 position = {0, 0, 0};
     raylib::Degree Yaxis = 270;
-    raylib::Degree Xaxis = 180;
+    raylib::Degree Xaxis = 0;
 
     while (!window.ShouldClose()) {
 
         int height = window.GetHeight();
         int width = window.GetWidth();
+
+        UpdateMusicStream(music);
 
         window.BeginDrawing();//begin drawing inside window 
         {   
@@ -72,26 +80,38 @@ int main() {
               
                 
                 DrawBoundedModel(PolyPlane, [&position, &Yaxis, &Xaxis](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate(position).RotateY(Yaxis).Scale(3, 6, 3);
+                    return t.Translate(position).RotateY(Yaxis).RotateX(Xaxis).Scale(3, 6, 3);
                 });
                 
 
                 raylib::Vector3 velocity = {speed * cos(Yaxis.RadianValue()), 0, -speed * sin(Yaxis.RadianValue())};
 
                 if(IsKeyReleased(KEY_SPACE)){
+                    
                     speed = 5;
                 } else if (IsKeyDown(KEY_SPACE)) {
                     speed = 0;
                 }
-
+                
+                
                 
                 if(IsKeyDown(KEY_Q)){
+                    if (Xaxis != -25) {
+                        Xaxis -= .5;
+                    }
+        
                     velocity += raylib::Vector3::Up() * speed;
                     position += (velocity) * window.GetFrameTime();
+                    
                 }
                 if(IsKeyDown(KEY_E)){
-                    velocity += raylib::Vector3::Down() * speed;
+                    if (Xaxis != 25) {
+                        Xaxis += .5;
+                    }
+
+                    velocity += raylib::Vector3::Down() * speed * 2.5;
                     position += (velocity) * window.GetFrameTime();
+                    
                 }
                 if (IsKeyDown(KEY_W)) {
                     if (Yaxis > 0 && Yaxis < 180){
@@ -123,14 +143,21 @@ int main() {
             }
             camera.EndMode();
 
-            DrawFPS(10, 10);
-            text.Draw(Label, ((width / 2) - (MeasureText(Label, textSize) / 2)), height / 4, textSize, raylib::Color::Black());
             
+
+            DrawFPS(10, 10);
+            text.Draw(Label, ((width / 2) - (MeasureText(Label, textSize) / 2)), height / 1.1, textSize, raylib::Color::Black());
+            text.Draw(XAXIS, ((width / 2) - (MeasureText(Label, textSize) / 2)), height / 10, textSize, raylib::Color::Black());
+            text.Draw(std::to_string(Xaxis), ((width / 2) - (MeasureText(Label, textSize) / 2.9)), height / 10 , textSize , raylib::Color::Black());
         }
+
         window.EndDrawing();
-    }
+    } // end while loop
+
+    UnloadMusicStream(music);
+    CloseAudioDevice(); // Close the audio device
 };
 
 
     
-    
+     
