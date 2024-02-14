@@ -21,7 +21,7 @@ int main() {
 
     //make window resizable
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    raylib::Window window(800, 800, "CS381 - Assignment 1");//initialize window 
+    raylib::Window window(1400, 800, "CS381 - Assignment 1");//initialize window 
 
     //***************************************************//
     raylib::Camera camera(
@@ -44,7 +44,6 @@ int main() {
         {
             camera.BeginMode();
             {   
-                // skyBox.Draw();
                 window.ClearBackground(raylib::Color::Blue());
               
                 // [capture list](parameters) -> return_type { function_body }
