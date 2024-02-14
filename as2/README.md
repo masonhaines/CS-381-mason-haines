@@ -45,7 +45,7 @@ This program is designed to create a simple window featuring a 3D plane plane ta
 # 5. Executable
 To exit program/window press X on top right of window and program will terminate. 
 
-    ./as2
+    ./as0
 
 # 6. Controls
 
