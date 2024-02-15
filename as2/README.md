@@ -5,7 +5,7 @@ This program is designed to create a simple window featuring a 3D plane plane ta
 # Question   
 Can we simplify the problem by remapping camera directions to specific world axes (e.g. W moves along say -Z)? Why or why not can we use this simplification in this assignment?
 
-Yes it is possible. we can simplify th e problem by doing so with the pre made camera perspectives like CameraObj.target and CameraObj.position. 
+Yes it is possible. we can simplify the problem by doing so with the pre made camera perspective functions like CameraObj.target and CameraObj.position. 
 Using these would give a full access to the camera's functionality in Raylib. 
 We would not be able to use this functionality completely on this assignment because each control needs to reflect a direction with the perspective to the camera. 
 
