@@ -57,13 +57,13 @@ To exit program/window press X on top right of window and program will terminate
 
 # 6. Controls
 
-• Pressing LEFT CLICK on mouse begins plane movement
-• Pressing SPACE-BAR to stop plane
-• Pressing LEFT SHIFT to accelerate plane
-• Pressing W to go forward
-• Pressing S to go backwards
-• Pressing A to turn left 
-• Pressing D to turn right 
-• Pressing Q to go upwards
-• Pressing E to go downwards
+- Pressing LEFT CLICK on mouse begins plane movement
+- Pressing SPACE-BAR to stop plane
+- Pressing LEFT SHIFT to accelerate plane
+- Pressing W to go forward
+- Pressing S to go backwards
+- Pressing A to turn left 
+- Pressing D to turn right 
+- Pressing Q to go upwards
+- Pressing E to go downwards
 
