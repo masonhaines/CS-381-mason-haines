@@ -45,7 +45,7 @@ This program is designed to create a simple window featuring 3D planes and boats
 # 5. Executable
 To exit program/window press X on top right of window and program will terminate. 
 
-    ./as0
+    ./as1
 
 # 6. Controls
 
