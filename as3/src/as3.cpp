@@ -23,10 +23,7 @@ int main() {
     //make window resizable
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     raylib::Window window(800, 800, "CS381 - Assignment 2");//initialize window 
-    // InitAudioDevice();
-
-    // Music music = LoadMusicStream("../metroid.wav");
-    // PlayMusicStream(music);
+   
 
     //***************************************************//
     raylib::Camera camera(
@@ -157,8 +154,7 @@ int main() {
 
     } // end while loop
 
-    // UnloadMusicStream(music);
-    // CloseAudioDevice(); // Close the audio device
+    
 };
 
 
