@@ -10,6 +10,7 @@ set_property(TARGET as0 PROPERTY CXX_STANDARD 20)
 
 configure_file(textures/skybox.png textures/skybox.png COPYONLY)
 configure_file(textures/grass.jpg textures/grass.jpg COPYONLY)
+configure_file(textures/water.jpg textures/water.jpg COPYONLY)
 configure_file(meshes/PolyPlane.glb meshes/PolyPlane.glb COPYONLY)
 configure_file(meshes/OrientExplorer.glb meshes/OrientExplorer.glb COPYONLY)
 configure_file(meshes/OilTanker.glb meshes/OilTanker.glb COPYONLY)
