@@ -33,9 +33,7 @@ int main() {
     raylib::Window window(GetMonitorWidth(monitor), GetMonitorHeight(monitor), "CS381 - Assignment 3");//initialize window 
     // raylib::Window window(800, 800, "CS381 - Assignment 3");//initialize window for testing 
     // Initialize audio
-    InitAudioDevice();
-    Music music = LoadMusicStream("../metroid.wav");
-    PlayMusicStream(music);
+    
 
     //***************************************************//
     // Initialize camera
@@ -70,7 +68,7 @@ int main() {
     //***************************************************//
     // Initialize speed and positions
     float speed = 0; 
-    float TopVelocity = 15;
+    float TopVelocity = 20;
     raylib::Vector3 controlPOS = {0, 3.1, 0}; // for changing control to the bounded model 
     raylib::Vector3 controlVelo = {0, 0, 0};
     raylib::Degree controlY = 0;
@@ -229,7 +227,7 @@ int main() {
                 else if (position3.z < -500) position3.z = -500;
             }
 
-
+            
             // Control plane movement along different axes
             if(IsKeyDown(KEY_Q)){
                 if (controlX != -25) {
@@ -282,8 +280,6 @@ int main() {
             position2 += (velocity2 * speed) * window.GetFrameTime();
             position3 += (velocity3 * speed) * window.GetFrameTime();
             
-            
-
             // Draw UI elements
             DrawFPS(10, 10);
             text.Draw(start, (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
