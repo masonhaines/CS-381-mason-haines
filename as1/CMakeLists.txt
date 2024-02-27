@@ -15,6 +15,10 @@ configure_file(meshes/OrientExplorer.glb meshes/OrientExplorer.glb COPYONLY)
 configure_file(meshes/OilTanker.glb meshes/OilTanker.glb COPYONLY)
 configure_file(meshes/SmitHouston_Tug.glb meshes/SmitHouston_Tug.glb COPYONLY)
 configure_file(meshes/ddg51.glb meshes/ddg51.glb COPYONLY)
+configure_file(meshes/Barrel1.glb meshes/Barrel1.glb COPYONLY)
+configure_file(meshes/Doughnut.glb meshes/Doughnut.glb COPYONLY)
+
+
 
 
 include(includeable.cmake)

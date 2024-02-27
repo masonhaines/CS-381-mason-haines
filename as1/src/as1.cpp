@@ -25,7 +25,7 @@ int main() {
 
     //***************************************************//
     raylib::Camera camera(
-        raylib::Vector3(0, 120, -500),
+        raylib::Vector3(0, 10, -50),
         // raylib::Vector3(0, 0, 300),
         // raylib::Vector3(4, 15, 45),
         raylib::Vector3(0, 0, 0),
@@ -37,8 +37,11 @@ int main() {
     
     raylib::Model PolyPlane("meshes/PolyPlane.glb");
     raylib::Model tugBoat("meshes/SmitHouston_Tug.glb");
-
+    raylib::Model car{"meshes/Doughnut.glb"};
+    // raylib::Mesh model = LoadModelFromMesh("meshes/Doughnut.glb");
     while (!window.ShouldClose()) {
+
+        
 
         window.BeginDrawing();//begin drawing inside window 
         {
@@ -46,25 +49,35 @@ int main() {
             {   
                 window.ClearBackground(raylib::Color::Blue());
               
-                // [capture list](parameters) -> return_type { function_body }
-                DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({0, 0, 0});
+                // // [capture list](parameters) -> return_type { function_body }
+                // DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({0, 0, 0});
+                // });
+                // DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({-100, 100, 0}).RotateY(180).Scale(1, -1, 1);
+                // });
+                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({-200, 0, 0});
+                // });
+                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({200, 0, 0}).RotateY(90);
+                // });
+                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
+                // });
+                // DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
+                //     return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
+                // });
+
+                // // Draw the plane model
+                DrawBoundedModel(car, [](raylib::Transform t) -> raylib::Transform {
+                    return t.Translate({0, 0, 0}).RotateY(0).Scale(1, 1, 1);
                 });
-                DrawBoundedModel(PolyPlane, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({-100, 100, 0}).RotateY(180).Scale(1, -1, 1);
-                });
-                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({-200, 0, 0});
-                });
-                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({200, 0, 0}).RotateY(90);
-                });
-                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
-                });
-                DrawBoundedModel(tugBoat, [](raylib::Transform t) -> raylib::Transform {
-                    return t.Translate({100, 100, 0}).RotateY(270).Scale(1, 2, 1);
-                });
+                // //barrel attempt
+
+                // DrawModel(model, {0, 0, 0}, 5, BLUE);
+
+
 
             }
             camera.EndMode();

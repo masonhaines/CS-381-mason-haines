@@ -31,8 +31,6 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     int monitor = GetCurrentMonitor();
     raylib::Window window(GetMonitorWidth(monitor), GetMonitorHeight(monitor), "CS381 - Assignment 3");//initialize window 
-    // raylib::Window window(800, 800, "CS381 - Assignment 3");//initialize window for testing 
-    // Initialize audio
     
 
     //***************************************************//
@@ -57,6 +55,7 @@ int main() {
     const char *reset = {"Press P to reset all planes locations"};
     // const char *shift = {"Press SHIFT to accelerate"};
     const char *velo = {"Speed in Z-axis:"};
+    const char *camChange = {"Press C to change camera perspective"};
     //***************************************************//
     // Initialize ground model
     auto mesh = raylib::Mesh::Plane(10'000, 10'000, 50, 50, 25);
@@ -67,10 +66,11 @@ int main() {
     ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = grass;
     //***************************************************//
     // Initialize speed and positions
-    float speed = 0; 
-    float TopVelocity = 20;
+    float speed, speed1, speed2, speed3 = 0; 
+    float UpDown, UpDown1, UpDown2, UpDown3 = 0;
+
+    float TopVelocity = 40;
     raylib::Vector3 controlPOS = {0, 3.1, 0}; // for changing control to the bounded model 
-    raylib::Vector3 controlVelo = {0, 0, 0};
     raylib::Degree controlY = 0;
     raylib::Degree controlX = 0;
     int planeIndex = 1;
@@ -90,6 +90,8 @@ int main() {
     raylib::Degree Yaxis3 = 180;
     raylib::Degree Xaxis3 = 0;
 
+    bool changeCamera = false;
+
     //***************************************************//
     while (!window.ShouldClose()) {
         int height = window.GetHeight();
@@ -101,10 +103,15 @@ int main() {
             window.ClearBackground(raylib::Color::Blue());
 
             // plane velocities 
-            raylib::Vector3 velocity1 = {speed * cos(Yaxis1.RadianValue()), 0, -speed * sin(Yaxis1.RadianValue())};
-            raylib::Vector3 velocity2 = {speed * cos(Yaxis2.RadianValue()), 0, -speed * sin(Yaxis2.RadianValue())};
-            raylib::Vector3 velocity3 = {speed * cos(Yaxis3.RadianValue()), 0, -speed * sin(Yaxis3.RadianValue())};
+            raylib::Vector3 velocity1 = {speed1 * cos(Yaxis1.RadianValue()), UpDown1, -speed1 * sin(Yaxis1.RadianValue())};
+            raylib::Vector3 velocity2 = {speed2 * cos(Yaxis2.RadianValue()), UpDown2, -speed2 * sin(Yaxis2.RadianValue())};
+            raylib::Vector3 velocity3 = {speed3 * cos(Yaxis3.RadianValue()), UpDown3, -speed3 * sin(Yaxis3.RadianValue())};
+            raylib::Vector3 controlVelo = {speed * cos(controlY.RadianValue()), UpDown, -speed * sin(controlY.RadianValue())};
 
+            if (IsKeyReleased(KEY_C)) {
+                if (changeCamera == false) changeCamera = true;
+                else changeCamera = false;
+            }
 
             if (IsKeyReleased(KEY_P)) {
                 raylib::Vector3 RESETPlane = {0, 3.1, 0};
@@ -116,42 +123,74 @@ int main() {
             }
 
             if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
-                speed = 2.5;
+                speed = 15;
+                speed1 = 10;
+                speed2 = 10;
+                speed3 = 10;
             } else if (IsKeyDown(KEY_SPACE)) {
                 raylib::Vector3 RESETvelocity = {0, 0, 0};
                 controlVelo = RESETvelocity;
-            } else if (speed < 10 && IsKeyDown(KEY_LEFT_SHIFT)) {
-                speed += .002;
-            } else if (IsKeyPressed(KEY_TAB)) {
+            } 
+            else if (IsKeyPressed(KEY_TAB)) {
                 planeIndex += 1;
                 if (planeIndex > 3) {
                     planeIndex = 1;
                 }
+                if (planeIndex == 2) {
+                    controlVelo = velocity1;
+                    controlPOS = position1;
+                    controlX = Xaxis1;
+                    controlY = Yaxis1;
+                }
+                if (planeIndex == 2) {
+                    controlVelo = velocity2;
+                    controlPOS = position2;
+                    controlX = Xaxis2;
+                    controlY = Yaxis2;
+                }
+                if (planeIndex == 3) {
+                    controlVelo = velocity3;
+                    controlPOS = position3;
+                    controlX = Xaxis3;
+                    controlY = Yaxis3;
+                }
             }
-            // // Begin camera
+
+            // Ensure the Y-axis rotation is within the range of 0 to 360 degrees
+            while(controlY > 360 || controlY < 0) {
+                if (controlY > 360 ) {
+                    controlY -= 360;
+                }
+                if (controlY < 0 ) {
+                    controlY += 360;
+                }
+            }
+
+            // Begin camera
             camera.BeginMode();
             {   
+                if (changeCamera == true) {
+                    // Update camera position and target to follow the model
+                    camera.target = controlPOS;
+                    int intYaxis = controlY;
+                    intYaxis %= 360;
 
-                // Update camera position and target to follow the model
-                camera.target = controlPOS;
-                int intYaxis = controlY;
-                intYaxis %= 360;
-
-                // Adjust camera position based on the Y-axis rotation
-                if (controlPOS.z < -400){
-                    camera.position = {0, 120, 500};
-                } else {
-                    camera.position = {0, 120, -500};  
-                }
-
+                    // Adjust camera position based on the Y-axis rotation
+                    if (controlPOS.z < -400){
+                        camera.position = {0, 120, 500};
+                    } else {
+                        camera.position = {0, 120, -500};  
+                    }
+                } 
+                
                 // Draw skybox, ground, and models
                 skybox.Draw();
                 ground.Draw({});
 
                 if (planeIndex == 1) {
                     // Draw the plane model
-                    DrawBoundedModel(PolyPlane, [&position1, &Yaxis1, &Xaxis1](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(position1).RotateY(Yaxis1).RotateX(Xaxis1).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
                     });
                     DrawModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
@@ -159,27 +198,37 @@ int main() {
                     DrawModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
                     });
-                    velocity1 = controlVelo;
-                    controlPOS = position1;
-                    Xaxis1 = controlX;
-                    Yaxis1 = controlY;
+                    // velocity1 = controlVelo;
+                    // controlPOS = position1;
+                    // Xaxis1 = controlX;
+                    // Yaxis1 = controlY;
+
+                    // controlVelo = velocity1;
+                    // controlPOS = position1;
+                    // controlX = Xaxis1;
+                    // controlY = Yaxis1;
                     
                 } else if (planeIndex == 2) {
                     // Draw the plane model
-                    
+        
                     DrawModel(PolyPlane, [&position1, &Yaxis1, &Xaxis1](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position1).RotateY(Yaxis1).RotateX(Xaxis1).Scale(1, 2, 1);
                     });
-                    DrawBoundedModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
                     });
                     DrawModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
                     });
-                    velocity2 = controlVelo;
-                    controlPOS = position2;
-                    Xaxis2 = controlX;
-                    Yaxis2 = controlY;
+                    // velocity2 = controlVelo;
+                    // controlPOS = position2;
+                    // Xaxis2 = controlX;
+                    // Yaxis2 = controlY;
+
+                    // controlVelo = velocity2;
+                    // controlPOS = position2;
+                    // controlX = Xaxis2;
+                    // controlY = Yaxis2;
                 } else if (planeIndex == 3) {
                     // Draw the plane model
                     
@@ -189,13 +238,18 @@ int main() {
                     DrawModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
                     });
-                    DrawBoundedModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
                     });
-                    velocity3 = controlVelo;
-                    controlPOS = position3;
-                    Xaxis3 = controlX;
-                    Yaxis3 = controlY;
+                    // velocity3 = controlVelo;
+                    // controlPOS = position3;
+                    // Xaxis3 = controlX;
+                    // Yaxis3 = controlY;
+
+                    // controlVelo = velocity3;
+                    // controlPOS = position3;
+                    // controlX = Xaxis3;
+                    // controlY = Yaxis3;
                 }
             }
             // End camera
@@ -226,71 +280,52 @@ int main() {
                 if (position3.z > 500) position3.z = 500;
                 else if (position3.z < -500) position3.z = -500;
             }
-
-            
+           
             // Control plane movement along different axes
-            if(IsKeyDown(KEY_Q)){
+            if(IsKeyPressed(KEY_Q)){
                 if (controlX != -25) {
-                    controlX -= .5;
+                    controlX -= 5;
                 }
-                if (controlVelo.y < TopVelocity ) {
-                    controlVelo += raylib::Vector3::Up();
-                }
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
-            if(IsKeyDown(KEY_E)){
-                if (controlX != 25) {
-                    controlX += .5;
-                }
-                if (controlVelo.y > -TopVelocity ) {
-                    controlVelo += raylib::Vector3::Down();
-                }
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
-            if (IsKeyDown(KEY_W)) {
-                if (controlVelo.z < TopVelocity ) {
-                    controlVelo += raylib::Vector3::Forward();
-                }
-                controlY = 270;
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
-            if (IsKeyDown(KEY_A)) {
-                if (controlVelo.x < TopVelocity ) {
-                    controlVelo += raylib::Vector3::Left();
-                }
-                controlY = 0;
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
-            if (IsKeyDown(KEY_D)) {
-                if (controlVelo.x > -TopVelocity ) {
-                    controlVelo += raylib::Vector3::Right();
-                }
-                controlY = 180;
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
-            if (IsKeyDown(KEY_S)) {
-                if (controlVelo.z > -TopVelocity ) {
-                    controlVelo += raylib::Vector3::Back();
-                }
-                controlY = 90;
-                controlPOS += (controlVelo) * window.GetFrameTime();
-            }
 
-            position1 += (velocity1 * speed) * window.GetFrameTime();
-            position2 += (velocity2 * speed) * window.GetFrameTime();
-            position3 += (velocity3 * speed) * window.GetFrameTime();
+                UpDown += 5;
+            }
+            if(IsKeyPressed(KEY_E)){
+                if (controlX != 25) {
+                    controlX += 5; 
+                }
+
+                UpDown -= 5;
+            }
+            //**************************************************************//
+            if (IsKeyPressed(KEY_W)) {
+                speed += 5;
+            }
+            if (IsKeyPressed(KEY_S)) {
+                speed -= 3;
+            }
+            if (IsKeyPressed(KEY_A)) {
+                controlY += 10;
+            }
+            if (IsKeyPressed(KEY_D)) {
+                controlY -= 10;
+            }
+           
+            controlPOS += (velocity1) * window.GetFrameTime();
+            position1 += (velocity1) * window.GetFrameTime();
+            position2 += (velocity2) * window.GetFrameTime();
+            position3 += (velocity3) * window.GetFrameTime();
             
             // Draw UI elements
             DrawFPS(10, 10);
             text.Draw(start, (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
             text.Draw(brake, (width * .005), height * .15, textSize * .75, raylib::Color::Black());
             text.Draw(tab, (width * .005), height * .2, textSize * .75, raylib::Color::Black());
-            // text.Draw(shift, (width * .005), height * .25, textSize * .75, raylib::Color::Black());
+            text.Draw(camChange, (width * .005), height * .25, textSize * .75, raylib::Color::Black());
             text.Draw(velo, (width * .005), height * .1, textSize, raylib::Color::Black());
             text.Draw(std::to_string(controlVelo.z), (width * .15), height * .1 , textSize , raylib::Color::Black());
         }
+
         window.EndDrawing();
 
     } // end while loop
 }
-
