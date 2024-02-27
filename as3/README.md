@@ -1,6 +1,6 @@
 # Plane Takeoff! README
 
-This program is designed to create a simple window featuring a 3D plane plane taking off. After taking off user can control the plane as it flies.
+This program is designed to create a simple window featuring a three 3D plane planes taking off and flying and allowing you to fly each one! After taking off user can control the plane as it flies and switch between each plane on screen.
 
 # Instructions 
 ## Please open your terminal and..
@@ -18,7 +18,7 @@ This program is designed to create a simple window featuring a 3D plane plane ta
 
     git clone https://github.com/masonhaines/CS-381-mason-haines.git
 
-    cd CS-381-mason-haines/as2/
+    cd CS-381-mason-haines/as3/
 
 # 3. Fetch Git Submodules
 
