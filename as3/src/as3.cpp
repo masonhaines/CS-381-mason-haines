@@ -30,7 +30,7 @@ int main() {
     // Make window resizable
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     int monitor = GetCurrentMonitor();
-    raylib::Window window(GetMonitorWidth(monitor), GetMonitorHeight(monitor), "CS381 - Assignment 3");//initialize window 
+    raylib::Window window(GetMonitorWidth(monitor -100), GetMonitorHeight(monitor -100), "CS381 - Assignment 3");//initialize window 
     
 
     //***************************************************//
@@ -136,7 +136,7 @@ int main() {
                 if (planeIndex > 3) {
                     planeIndex = 1;
                 }
-                if (planeIndex == 2) {
+                if (planeIndex == 1) {
                     controlVelo = velocity1;
                     controlPOS = position1;
                     controlX = Xaxis1;
@@ -189,8 +189,8 @@ int main() {
 
                 if (planeIndex == 1) {
                     // Draw the plane model
-                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane, [&position1, &Yaxis1, &Xaxis1](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(position1).RotateY(Yaxis1).RotateX(Xaxis1).Scale(1, 2, 1);
                     });
                     DrawModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
@@ -198,15 +198,10 @@ int main() {
                     DrawModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
                     });
-                    // velocity1 = controlVelo;
-                    // controlPOS = position1;
-                    // Xaxis1 = controlX;
-                    // Yaxis1 = controlY;
-
-                    // controlVelo = velocity1;
-                    // controlPOS = position1;
-                    // controlX = Xaxis1;
-                    // controlY = Yaxis1;
+                    velocity1 = controlVelo;
+                    controlPOS = position1;
+                    Xaxis1 = controlX;
+                    Yaxis1 = controlY;
                     
                 } else if (planeIndex == 2) {
                     // Draw the plane model
@@ -214,21 +209,17 @@ int main() {
                     DrawModel(PolyPlane, [&position1, &Yaxis1, &Xaxis1](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position1).RotateY(Yaxis1).RotateX(Xaxis1).Scale(1, 2, 1);
                     });
-                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
                     });
                     DrawModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
                     });
-                    // velocity2 = controlVelo;
-                    // controlPOS = position2;
-                    // Xaxis2 = controlX;
-                    // Yaxis2 = controlY;
+                    velocity2 = controlVelo;
+                    controlPOS = position2;
+                    Xaxis2 = controlX;
+                    Yaxis2 = controlY;
 
-                    // controlVelo = velocity2;
-                    // controlPOS = position2;
-                    // controlX = Xaxis2;
-                    // controlY = Yaxis2;
                 } else if (planeIndex == 3) {
                     // Draw the plane model
                     
@@ -238,18 +229,14 @@ int main() {
                     DrawModel(PolyPlane2, [&position2, &Yaxis2, &Xaxis2](raylib::Transform t) -> raylib::Transform {
                         return t.Translate(position2).RotateY(Yaxis2).RotateX(Xaxis2).Scale(1, 2, 1);
                     });
-                    DrawBoundedModel(PolyPlane3, [&controlPOS, &controlY, &controlX](raylib::Transform t) -> raylib::Transform {
-                        return t.Translate(controlPOS).RotateY(controlY).RotateX(controlX).Scale(1, 2, 1);
+                    DrawBoundedModel(PolyPlane3, [&position3, &Yaxis3, &Xaxis3](raylib::Transform t) -> raylib::Transform {
+                        return t.Translate(position3).RotateY(Yaxis3).RotateX(Xaxis3).Scale(1, 2, 1);
                     });
-                    // velocity3 = controlVelo;
-                    // controlPOS = position3;
-                    // Xaxis3 = controlX;
-                    // Yaxis3 = controlY;
+                    velocity3 = controlVelo;
+                    controlPOS = position3;
+                    Xaxis3 = controlX;
+                    Yaxis3 = controlY;
 
-                    // controlVelo = velocity3;
-                    // controlPOS = position3;
-                    // controlX = Xaxis3;
-                    // controlY = Yaxis3;
                 }
             }
             // End camera
@@ -284,14 +271,22 @@ int main() {
             // Control plane movement along different axes
             if(IsKeyPressed(KEY_Q)){
                 if (controlX != -25) {
-                    controlX -= 5;
+                    if (controlY > 0 && controlY < 180){
+                        controlX += 5; 
+                    } else {
+                        controlX -= 5; 
+                    }
                 }
 
                 UpDown += 5;
             }
             if(IsKeyPressed(KEY_E)){
                 if (controlX != 25) {
-                    controlX += 5; 
+                    if (controlY > 0 && controlY < 180){
+                        controlX -= 5; 
+                    } else {
+                        controlX += 5; 
+                    }
                 }
 
                 UpDown -= 5;

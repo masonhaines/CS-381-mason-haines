@@ -45,13 +45,16 @@ This program is designed to create a simple window featuring a 3D plane plane ta
 # 5. Executable
 To exit program/window press X on top right of window and program will terminate. 
 
-    ./as0
+    ./as3
 
 # 6. Controls
 
 • Pressing W to go forward
-• Pressing S to go backwards
+• Pressing S to go slowdown
 • Pressing A to turn left 
 • Pressing D to turn right 
 • Pressing Q to go upwards
 • Pressing E to go downwards
+• Pressing space to stop
+• Pressing c to change camera
+• Pressing p tO reset controls
