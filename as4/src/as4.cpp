@@ -52,9 +52,9 @@ int main() {
     }
 
 
-    float scrollingBack = 0.0f;
-    float scrollingMid = 0.0f;
-    float scrollingFore = 0.0f;
+    float scrollingBack = 0;
+    float scrollingMid = 0;
+    float scrollingFore = 0;
 
     while (!window.ShouldClose()) {
         float height = window.GetHeight();
@@ -62,10 +62,16 @@ int main() {
 
         raylib::Vector2 velocity = {position.x * speed, position.y * speed *2};
         UpdateMusicStream(music);
+        
 
-        scrollingBack -= 0.1;
-        scrollingMid -= 0.5;
-        scrollingFore -= 1.0;
+        // scrollingBack -= 0.1;
+        // scrollingMid -= 0.5;
+        // scrollingFore -= .1;
+
+        // NOTE: Texture is scaled twice its size, so it could be considered on scrolling
+        // if (scrollingBack <= -background.width*2) scrollingBack = 0;
+        // if (scrollingMid <= -midground.width*2) scrollingMid = 0;
+        if (scrollingFore <= -foreground.width*2) scrollingFore = 0;
         
         // SetTargetFPS(60);      
         window.BeginDrawing();
@@ -82,13 +88,21 @@ int main() {
             // DrawTextureEx(midground, (Vector2){ scrollingMid, 20 }, 0.0f, 2.0f, WHITE);
             // DrawTextureEx(midground, (Vector2){ midground.width*2 + scrollingMid, 20 }, 0.0f, 2.0f, WHITE);
 
-            // Rectangle foreSource = (Rectangle){0, 0, 1024, 1024};
-            // Rectangle foreDest = (Rectangle){static_cast<float>(width/5), static_cast<float>(height/5), foreSource.width, foreSource.height};
-            // DrawTexturePro(wallpaper, foreSource, foreDest, position, rotate, WHITE);
+            // Rectangle wallSource = (Rectangle){0, 0, 1024, 1024};
+            // Rectangle wallDest = (Rectangle){static_cast<float>(width/5), static_cast<float>(height/5), wallSource.width, wallSource.height};
+            // DrawTexturePro(wallpaper, wallSource, wallDest, position, rotate, WHITE);
 
-            DrawTextureEx(foreground, (Vector2){ scrollingFore, 40}, 0, .5, WHITE);
-            DrawTextureEx(foreground, (Vector2){ foreground.width*2 + scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
+            DrawTextureEx(wallpaper, (Vector2){0, 0}, 0, 2.0, WHITE);
+            DrawTextureEx(foreground, (Vector2){ scrollingFore - 50, 70}, 0, .5, WHITE);
+            DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE);
             
+
+            // DrawTextureEx(foreground, (Vector2){ foreground.width * scrollingFore, 70 }, 0.0f, .5, WHITE);
+            
+
+            // // Draw foreground image twice
+            // DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
+            // DrawTextureEx(foreground, (Vector2){ foreground.width*2 + scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
 
             if (IsKeyDown(KEY_D)) {
                 position.x -= 4;
@@ -103,15 +117,12 @@ int main() {
             }
             // Jump physics
             if (isJumping) {
-                
                 position.y += 2.5;
-                // jumpSpeed -= gravity; // Apply gravity
             } else if (!isJumping) {
                 position.y -= 4;
             }
             // Check if the character has landed
             if (position.y >= 200) {
-                
                 isJumping = false;
             } else if (position.y <= -2.5) {
                 position.y = 0;
@@ -120,7 +131,7 @@ int main() {
             
             
             Rectangle linkSource = (Rectangle){0, 0, 350, 467};
-            Rectangle linkDest = (Rectangle){static_cast<float>(width / 2), static_cast<float>(height / 2), linkSource.width, linkSource.height};
+            Rectangle linkDest = (Rectangle){static_cast<float>(width / 2), 658, linkSource.width, linkSource.height};
             DrawTexturePro(characterLink, linkSource, linkDest, position, rotate, WHITE);
 
         }
