@@ -15,17 +15,15 @@ int main() {
     raylib::Window window(monitor, monitor, "CS381 - Assignment 2");
 
     InitAudioDevice();
-    Music music = LoadMusicStream("../Clock Town, First Day.mp3");
-    Sound naviWatch = LoadSound("../OOT_Navi_WatchOut3.wav");
-    Sound linkGrunt = LoadSound("../MM_Link_Attack4.wav");
+    Music music = LoadMusicStream("../sounds/clocktown.mp3");
+    Sound naviWatch = LoadSound("../sounds/OOT_Navi_WatchOut3.wav");
+    Sound linkGrunt = LoadSound("../sounds/MM_Link_Attack4.wav");
     
     PlayMusicStream(music);
 
-    Texture2D foreground = LoadTexture("../newground.png");
-    // Texture2D midground = LoadTexture("../ground.png");
-    // Texture2D background = LoadTexture("../ground.png");
-    Texture2D wallpaper = LoadTexture("../backgroundtrees.jpg");
-    Texture2D characterLink = LoadTexture("../linkpng.png");
+    Texture2D foreground = LoadTexture("../textures/newground.png");
+    Texture2D wallpaper = LoadTexture("../textures/backgroundtrees.jpg");
+    Texture2D characterLink = LoadTexture("../textures/linkpng.png");
     
 
     raylib::Text text;
@@ -51,11 +49,6 @@ int main() {
         std::cout << "------------------------------ * did not load in wallpaper * ------------------------------" << std::endl;
     }
 
-
-    float scrollingBack = 0;
-    float scrollingMid = 0;
-    float scrollingFore = 0;
-
     while (!window.ShouldClose()) {
         float height = window.GetHeight();
         float width = window.GetWidth();
@@ -63,47 +56,19 @@ int main() {
         raylib::Vector2 velocity = {position.x * speed, position.y * speed *2};
         UpdateMusicStream(music);
         
-
-        // scrollingBack -= 0.1;
-        // scrollingMid -= 0.5;
-        // scrollingFore -= .1;
-
-        // NOTE: Texture is scaled twice its size, so it could be considered on scrolling
-        // if (scrollingBack <= -background.width*2) scrollingBack = 0;
-        // if (scrollingMid <= -midground.width*2) scrollingMid = 0;
-        if (scrollingFore <= -foreground.width*2) scrollingFore = 0;
-        
-        // SetTargetFPS(60);      
+        SetTargetFPS(60);      
         window.BeginDrawing();
         {   
             window.ClearBackground(GREEN);
-            
-            
-
-            // // Draw background image twice
-            // // NOTE: Texture is scaled twice its size
-            // DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
-            // DrawTextureEx(background, (Vector2){ background.width*2 + scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
-            // // Draw midground image twice
-            // DrawTextureEx(midground, (Vector2){ scrollingMid, 20 }, 0.0f, 2.0f, WHITE);
-            // DrawTextureEx(midground, (Vector2){ midground.width*2 + scrollingMid, 20 }, 0.0f, 2.0f, WHITE);
-
-            // Rectangle wallSource = (Rectangle){0, 0, 1024, 1024};
-            // Rectangle wallDest = (Rectangle){static_cast<float>(width/5), static_cast<float>(height/5), wallSource.width, wallSource.height};
-            // DrawTexturePro(wallpaper, wallSource, wallDest, position, rotate, WHITE);
-
+            // Background and foreground for link
             DrawTextureEx(wallpaper, (Vector2){0, 0}, 0, 2.0, WHITE);
-            DrawTextureEx(foreground, (Vector2){ scrollingFore - 50, 70}, 0, .5, WHITE);
+            DrawTextureEx(foreground, (Vector2){ - 50, 70}, 0, .5, WHITE);
             DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE);
+            // Character creation
+            Rectangle linkSource = (Rectangle){0, 0, 350, 467};
+            Rectangle linkDest = (Rectangle){static_cast<float>(width / 2), 658, linkSource.width, linkSource.height};
+            DrawTexturePro(characterLink, linkSource, linkDest, position, rotate, WHITE);
             
-
-            // DrawTextureEx(foreground, (Vector2){ foreground.width * scrollingFore, 70 }, 0.0f, .5, WHITE);
-            
-
-            // // Draw foreground image twice
-            // DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
-            // DrawTextureEx(foreground, (Vector2){ foreground.width*2 + scrollingFore, 70 }, 0.0f, 2.0f, WHITE);
-
             if (IsKeyDown(KEY_D)) {
                 position.x -= 4;
             }
@@ -130,9 +95,7 @@ int main() {
             }
             
             
-            Rectangle linkSource = (Rectangle){0, 0, 350, 467};
-            Rectangle linkDest = (Rectangle){static_cast<float>(width / 2), 658, linkSource.width, linkSource.height};
-            DrawTexturePro(characterLink, linkSource, linkDest, position, rotate, WHITE);
+            
 
         }
         window.EndDrawing();
