@@ -12,6 +12,7 @@ configure_file(textures/skybox.png textures/skybox.png COPYONLY)
 configure_file(textures/grass.jpg textures/grass.jpg COPYONLY)
 configure_file(textures/water.jpg textures/water.jpg COPYONLY)
 configure_file(meshes/PolyPlane.glb meshes/PolyPlane.glb COPYONLY)
+configure_file(./newground.png ./newground.png COPYONLY)
 
 include(includeable.cmake)
 
