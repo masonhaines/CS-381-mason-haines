@@ -6,11 +6,6 @@
 #include <random>
 #include <string>
 
-template<typename T>
-concept Transformer = requires( T t, raylib::Transform m) {
-    {t.operator()(m)}->std::convertible_to<raylib::Transform>;
-};
-
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     int monitor = GetCurrentMonitor();
@@ -26,8 +21,10 @@ int main() {
     raylib::Text text;
     float textSize = 25;
     const char *totalRupeesTitle = {"Rupee Wallet "};
+    const char *heartCountTitle = {"Hearts "};
     const char *title = {"The Story of"};
     const char *title1 = {"Z3LDA"};
+    const char *GAMEOVER = {"GAMEOVER"};
 
     InitAudioDevice();
     Music music = LoadMusicStream("../sounds/clocktown.mp3");
@@ -64,6 +61,7 @@ int main() {
     int jumpCounter = 0; // Initial jump velocity
     float gravity = 4.9;  // Gravity to bring character back to the ground
     bool isJumping = false; // Flag to track if the character is currently jumping
+    bool gameOver = false;
 
     // 0 , 0 is the top left of screen, y+ is down into the screen and X+ is to the right 
     // Sprite positions 
@@ -93,7 +91,7 @@ int main() {
 
     
     SetTargetFPS(60);  
-    while (!window.ShouldClose()) {
+    while (!window.ShouldClose() && !gameOver) {
         
 
         std::random_device randomRunTime;
@@ -104,7 +102,6 @@ int main() {
         float randomized4 = dist(randomRunTime);
         float randomized5 = dist(randomRunTime);
 
-        Vector2 rupeePos = {random5, -90}; // Initializer for items in game 
         UpdateMusicStream(music);
 
         // Arrow movement 
@@ -126,10 +123,12 @@ int main() {
         // Reset arrow Pos if they hit within link position
         if (((arrowPos1.x - linkPos.x) < 126 && (arrowPos1.x - linkPos.x) > 36) && ((arrowPos1.y - linkPos.y) < 250 && (arrowPos1.y - linkPos.y) > 153)) {
             arrowPos1.x = 2150;
+            PlaySound(naviWatch);
             heartCount --;
         } 
         if (((arrowPos2.x - linkPos.x) < 126 && (arrowPos2.x - linkPos.x) > 36) && ((arrowPos2.y - linkPos.y) < 250 && (arrowPos2.y - linkPos.y) > 153)) {
             arrowPos2.x = 2450;
+            PlaySound(naviWatch);
             heartCount --;
         }
         // if (((arrowPos3.x - linkPos.x) < 126 && (arrowPos3.x - linkPos.x) > 36) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 153)) {
@@ -140,29 +139,28 @@ int main() {
         // }
         if (((arrowPos5.x - linkPos.x) < 126 && (arrowPos5.x - linkPos.x) > 36) && ((arrowPos5.y - linkPos.y) < 250 && (arrowPos5.y - linkPos.y) > 153)) {
             arrowPos5.x = 3050;
+            PlaySound(naviWatch);
             heartCount --;
         }
         // BLACK ARROW
         if (((arrowPos6.x - linkPos.x) < 126 && (arrowPos6.x - linkPos.x) > 36) && ((arrowPos6.y - linkPos.y) < 250 && (arrowPos6.y - linkPos.y) > 153)) {
             arrowPos6.x = 1950;
+            PlaySound(naviWatch);
             jumpCounter ++;
             heartCount -= 2;
         }
-
         // Fall gravity for rupees
         rupeePos1.y += gravity * .9; // RED
         rupeePos2.y += gravity * 1.8; // GREEN
         rupeePos3.y += gravity * .05; // GOLD
         rupeePos4.y += gravity * 1.2; // YELLOW 
         rupeePos5.y += gravity * 1; // BLUE 
-
         // Stop rupees when they reach y linkPos 885
         if (rupeePos1.y >= 875) rupeePos1.y = 880;
         if (rupeePos2.y >= 875) rupeePos2.y = 880;
         if (rupeePos3.y >= 875) rupeePos3.y = 880;
         if (rupeePos4.y >= 875) rupeePos4.y = 880;
         if (rupeePos5.y >= 875) rupeePos5.y = 880;
-
         // Reset rupee Pos if they hit within link position
         // Check and reset rupee linkPos individually
         // RED
@@ -209,8 +207,16 @@ int main() {
             DrawTextureEx(wallpaper, (Vector2){0, -150}, 0, 2, WHITE);
             DrawTextureEx(foreground, (Vector2){ - 50, 70}, 0, .5, WHITE);
             DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE);
-            text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
+            // On screen Information 
+            if (!gameOver) {
+                text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
             text.Draw(title1, (width / 2.5), height * .18, textSize * 3.25, raylib::Color::Black());
+            }
+            // Game over
+            if (heartCount <= 0) {
+                gravity = 0;
+                text.Draw(GAMEOVER, (width / 2.5), height * .18, textSize * 5.25, raylib::Color::Black());
+            }
             // Character creation
             DrawTextureEx(characterLink, linkPos, 0, 1, WHITE);
             // Rupee Creation
@@ -227,7 +233,7 @@ int main() {
             DrawTextureEx(arrow, arrowPos5, 0, 2, WHITE);
             DrawTextureEx(arrow, arrowPos6, 0, 2, BLACK);
 
-            // if (IsKeyDown(KEY_SPACE)) {gravity = 0;}
+            if (IsKeyDown(KEY_SPACE) && heartCount == 0) {gameOver = true;}
             if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;}
             // if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} 
             else speed = 1;
@@ -259,6 +265,8 @@ int main() {
             DrawFPS(10, 10);
             text.Draw(totalRupeesTitle, (width / 100), height * .91, textSize * 3.0, raylib::Color::RayWhite());
             text.Draw(std::to_string(counter), (width / 3.6), height * .91, textSize * 3.25, raylib::Color::White());
+            text.Draw(heartCountTitle, (width / 1.4), height * .91, textSize * 3.25, raylib::Color::RayWhite());
+            text.Draw(std::to_string(heartCount), (width / 1.1), height * .91, textSize * 3.25, raylib::Color::RayWhite());
             // text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
             text.Draw(std::to_string((arrowPos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
