@@ -36,7 +36,7 @@ int main() {
     float width = window.GetWidth();
     
     unsigned int seed = GetFrameTime();
-    srand(seed);
+    // srand(seed);
     std::random_device randomSet;
     std::uniform_int_distribution<int> dist(0, 1855);
     float random1 = dist(randomSet);
@@ -50,7 +50,7 @@ int main() {
     float speed = 5; // Initial speed 
     int jump = 10; // Jump multiplier 
     float jumpSpeed = 20; // Initial jump velocity
-    float gravity = 4.9;  // Gravity to bring character back to the ground
+    float gravity = .9;  // Gravity to bring character back to the ground
     bool isJumping = false; // Flag to track if the character is currently jumping
 
     // 0 , 0 is the top left of screen, y+ is down into the screen and X+ is to the right 
@@ -77,46 +77,55 @@ int main() {
     while (!window.ShouldClose()) {
         
 
+        std::random_device randomRunTime;
+        std::uniform_int_distribution<int> dist(0, 1855);
+        float randomized1 = dist(randomRunTime);
+        float randomized2 = dist(randomRunTime);
+        float randomized3 = dist(randomRunTime);
+        float randomized4 = dist(randomRunTime);
+        float randomized5 = dist(randomRunTime);
+
         Vector2 rupeePos = {random5, -90}; // Initializer for items in game 
         UpdateMusicStream(music);
 
         // raylib::Vector2 velocity = {linkPos.x * speed, linkPos.y * speed *2};
 
         rupeePos1.y += gravity;
-        // rupeePos2.y += gravity;
-        // rupeePos3.y += gravity;
-        // rupeePos4.y += gravity;
-        // rupeePos5.y += gravity;
+        rupeePos2.y += gravity;
+        rupeePos3.y += gravity;
+        rupeePos4.y += gravity;
+        rupeePos5.y += gravity;
 
         // Stop rupees when they reach y linkPos 885
         if (rupeePos1.y >= 875) rupeePos1.y = 880;
-        // if (rupeePos2.y >= 875) rupeePos2.y = 880;
-        // if (rupeePos3.y >= 875) rupeePos3.y = 880;
-        // if (rupeePos4.y >= 875) rupeePos4.y = 880;
-        // if (rupeePos5.y >= 875) rupeePos5.y = 880;
+        if (rupeePos2.y >= 875) rupeePos2.y = 880;
+        if (rupeePos3.y >= 875) rupeePos3.y = 880;
+        if (rupeePos4.y >= 875) rupeePos4.y = 880;
+        if (rupeePos5.y >= 875) rupeePos5.y = 880;
 
         // Reset rupee linkPoss if they are ±5 away from the initial linkPos
-        // Check and reset rupee linkPoss individually
-        
-        if ((rupeePos1.y - linkPos.y) < 200 && (rupeePos1.x - linkPos.x) < 175) {
+        // Check and reset rupee linkPos individually
+        if (((rupeePos1.y - linkPos.y) < 200 && (rupeePos1.y - linkPos.y) > 105) && ((rupeePos1.x - linkPos.x) < 160 && (rupeePos1.x - linkPos.x) > 90)) {
             std::cout << "Rupee 1 linkPos reset!" << std::endl;
-            rupeePos1 = {static_cast<float>(rand() % 1856), -90};
+            // rupeePos1 = {static_cast<float>(rand() % 1856), -90};
+            rupeePos1 = {randomized1, -90};
         }
-        // if (std::abs(rupeePos2.y - linkPos.y) < 5 || std::abs(rupeePos2.x - linkPos.x) < 5) {
-        //     rupeePos2 = {static_cast<float>(rand() % 1856), -90};
-        // }
+        
+        if (((rupeePos2.y - linkPos.y) < 200 && (rupeePos2.y - linkPos.y) > 105) && ((rupeePos2.x - linkPos.x) < 160 && (rupeePos2.x - linkPos.x) > 90)) {
+            rupeePos2 = {randomized2, -90};
+        }
 
-        // if (std::abs(rupeePos3.y - linkPos.y) < 5 || std::abs(rupeePos3.x - linkPos.x) < 5) {
-        //     rupeePos3 = {static_cast<float>(rand() % 1856), -90};
-        // }
+        if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
+            rupeePos3 = {randomized3, -90};
+        }
 
-        // if (std::abs(rupeePos4.y - linkPos.y) < 5 || std::abs(rupeePos4.x - linkPos.x) < 5) {
-        //     rupeePos4 = {static_cast<float>(rand() % 1856), -90};
-        // }
+        if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
+            rupeePos4 = {randomized4, -90};
+        }
 
-        // if (std::abs(rupeePos5.y - linkPos.y) < 5 || std::abs(rupeePos5.x - linkPos.x) < 5) {
-        //     rupeePos5 = {static_cast<float>(rand() % 1856), -90};
-        // }
+        if (((rupeePos5.y - linkPos.y) < 200 && (rupeePos5.y - linkPos.y) > 105) && ((rupeePos5.x - linkPos.x) < 160 && (rupeePos5.x - linkPos.x) > 90)) {
+            rupeePos5 = {randomized5, -90};
+        }
 
 
         // Wall boundary 
@@ -147,12 +156,13 @@ int main() {
 
             // Rupee Creation
             DrawTextureEx(Rupee, rupeePos1, 0, .5, RED);
-            // DrawTextureEx(Rupee, rupeePos2, 0, .5, GREEN);
-            // DrawTextureEx(Rupee, rupeePos3, 0, .5, GOLD);
-            // DrawTextureEx(Rupee, rupeePos4, 0, .5, DARKPURPLE);
-            // DrawTextureEx(Rupee, rupeePos5, 0, .5, DARKBLUE);
+            DrawTextureEx(Rupee, rupeePos2, 0, .5, GREEN);
+            DrawTextureEx(Rupee, rupeePos3, 0, .5, GOLD);
+            DrawTextureEx(Rupee, rupeePos4, 0, .5, DARKPURPLE);
+            DrawTextureEx(Rupee, rupeePos5, 0, .5, DARKBLUE);
 
-
+            if (IsKeyDown(KEY_SPACE)) {gravity = 0;}
+            if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;}
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} 
             else speed = 1;
             if (IsKeyDown(KEY_D)) {linkPos.x += 5 * speed;}
@@ -182,8 +192,8 @@ int main() {
             text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
             text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string(abs(rupeePos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string(abs(rupeePos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string((rupeePos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string((rupeePos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
             // text.Draw(title, (width / 2.5), height * .25, textSize * 2.25, raylib::Color::Black());
 
         }
