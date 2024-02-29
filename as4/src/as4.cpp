@@ -54,7 +54,7 @@ int main() {
     bool isJumping = false; // Flag to track if the character is currently jumping
 
     // 0 , 0 is the top left of screen, y+ is down into the screen and X+ is to the right 
-    Vector2 position = {width / 2, 500};
+    Vector2 position = {width / 2, 675};
     Vector2 rupeePos1 = {random1, -90};
     Vector2 rupeePos2 = {random2, -90};
     Vector2 rupeePos3 = {random3, -90};
@@ -89,44 +89,51 @@ int main() {
         rupeePos5.y += gravity;
 
         // Stop rupees when they reach y position 885
-        if (rupeePos1.y >= 885) rupeePos1.y = 890;
-        if (rupeePos2.y >= 885) rupeePos2.y = 890;
-        if (rupeePos3.y >= 885) rupeePos3.y = 890;
-        if (rupeePos4.y >= 885) rupeePos4.y = 890;
-        if (rupeePos5.y >= 885) rupeePos5.y = 890;
+        if (rupeePos1.y >= 875) rupeePos1.y = 880;
+        if (rupeePos2.y >= 875) rupeePos2.y = 880;
+        if (rupeePos3.y >= 875) rupeePos3.y = 880;
+        if (rupeePos4.y >= 875) rupeePos4.y = 880;
+        if (rupeePos5.y >= 875) rupeePos5.y = 880;
 
         // Reset rupee positions if they are ±5 away from the initial position
-        if (std::abs(rupeePos1.x - position.x) < 5 && std::abs(rupeePos1.y - position.y) < 10) {
-            // std::cout << "Rupee 1 position reset!" << std::endl;
-            rupeePos1 = {static_cast<float>(rand() % 1856), -90};
-        }
-        if (std::abs(rupeePos2.x - position.x) < 5 || std::abs(rupeePos2.y - position.y) < 10) {
-            rupeePos2 = {static_cast<float>(rand() % 1856), -90};
-        }
-        if (std::abs(rupeePos3.x - position.x) < 5 || std::abs(rupeePos3.y - position.y) < 10) {
-            rupeePos3 = {static_cast<float>(rand() % 1856), -90};
-        }
-        if (std::abs(rupeePos4.x - position.x) < 5 || std::abs(rupeePos4.y - position.y) < 10) {
-            rupeePos4 = {static_cast<float>(rand() % 1856), -90};
-        }
-        if (std::abs(rupeePos5.x - position.x) < 5 || std::abs(rupeePos5.y - position.y) < 10) {
-            rupeePos5 = {static_cast<float>(rand() % 1856), -90};
-        }
+        // Check and reset rupee positions individually
+        
+
+        // if (std::abs(rupeePos2.y - position.y) < 5 || std::abs(rupeePos2.x - position.x) < 5) {
+        //     rupeePos2 = {static_cast<float>(rand() % 1856), -90};
+        // }
+
+        // if (std::abs(rupeePos3.y - position.y) < 5 || std::abs(rupeePos3.x - position.x) < 5) {
+        //     rupeePos3 = {static_cast<float>(rand() % 1856), -90};
+        // }
+
+        // if (std::abs(rupeePos4.y - position.y) < 5 || std::abs(rupeePos4.x - position.x) < 5) {
+        //     rupeePos4 = {static_cast<float>(rand() % 1856), -90};
+        // }
+
+        // if (std::abs(rupeePos5.y - position.y) < 5 || std::abs(rupeePos5.x - position.x) < 5) {
+        //     rupeePos5 = {static_cast<float>(rand() % 1856), -90};
+        // }
 
 
         // Wall boundary 
         if (position.x > 1775) {// Right boundary
             PlaySound(naviWatch);
-            position.x = 1760;
+            position.x = 1774;
         } 
         else if (position.x < -190) {// Left boundary
             PlaySound(naviWatch);
-            position.x = -175; 
+            position.x = -189; 
         }
         
         
         window.BeginDrawing();
         {   
+
+            if (std::abs(rupeePos1.y - position.y) == 5 || std::abs(rupeePos1.x - position.x) == 5) {
+                std::cout << "Rupee 1 position reset!" << std::endl;
+                rupeePos1 = {static_cast<float>(rand() % 1856), -90};
+            }
             window.ClearBackground(GREEN);
             // Background and foreground for link
             DrawTextureEx(wallpaper, (Vector2){0, -150}, 0, 2, YELLOW);
@@ -158,14 +165,15 @@ int main() {
             // Jump physics
             if (isJumping) {
                 position.y -= 2.5;
-            } else if (position.y <= 558 && !isJumping) {
+            } 
+            else if (position.y <= 682 && !isJumping) {
                 position.y += 4;
             }
             // Check if the character has landed
-            if (position.y <= 0) {
+            if (position.y <= 535) {
                 isJumping = false;
-            } else if (position.y <= 678) {
-                position.y = 675;
+            } else if (position.y >= 682) {
+                position.y = 682;
                 isJumping = false;
             }
             
@@ -173,7 +181,8 @@ int main() {
             DrawFPS(10, 10);
             text.Draw(std::to_string(position.y), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(position.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string(position.x - rupeePos1.x), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string(abs(rupeePos1.x - position.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string(abs(rupeePos1.y - position.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
             text.Draw(title, (width / 2.5), height * .25, textSize * 2.25, raylib::Color::Black());
 
         }
