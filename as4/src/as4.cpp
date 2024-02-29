@@ -15,6 +15,13 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     int monitor = GetCurrentMonitor();
     raylib::Window window(GetMonitorWidth(monitor), GetMonitorHeight(monitor), "CS381 - Assignment 2");
+
+    // Define the duration of the timer in seconds
+    const int duration_seconds = 60; // 1 minute
+    // Start time
+    double startTime = GetTime();
+    // Calculate end time
+    double endTime = startTime + duration_seconds;
     
     raylib::Text text;
     float textSize = 25;
@@ -33,6 +40,7 @@ int main() {
     Texture2D wallpaper = LoadTexture("../textures/backgroundtrees.jpg");
     Texture2D characterLink = LoadTexture("../textures/linkpng.png");
     Texture2D Rupee = LoadTexture("../textures/white_rupee_small.png");
+    Texture2D arrow = LoadTexture("../textures/arrow.png");
 
     float height = window.GetHeight();
     float width = window.GetWidth();
@@ -52,17 +60,24 @@ int main() {
     int counter = 0;
     float speed = 5; // Initial speed 
     int jump = 10; // Jump multiplier 
-    float jumpSpeed = 20; // Initial jump velocity
-    float gravity = .9;  // Gravity to bring character back to the ground
+    int jumpCounter = 0; // Initial jump velocity
+    float gravity = 4.9;  // Gravity to bring character back to the ground
     bool isJumping = false; // Flag to track if the character is currently jumping
 
     // 0 , 0 is the top left of screen, y+ is down into the screen and X+ is to the right 
+    // Sprite positions 
     Vector2 linkPos = {width / 2, 675};
     Vector2 rupeePos1 = {random1, -90};
     Vector2 rupeePos2 = {random2, -90};
     Vector2 rupeePos3 = {random3, -90};
     Vector2 rupeePos4 = {random4, -90};
-    Vector2 rupeePos5 = {random5, -90};    
+    Vector2 rupeePos5 = {random5, -90};   
+    Vector2 arrowPos1 = {1800, 875}; // can be 825 - 925
+    Vector2 arrowPos2 = {1800, 895}; // can be 825 - 925
+    Vector2 arrowPos3 = {1800, 875}; // can be 825 - 925
+    Vector2 arrowPos4 = {1800, 855}; // can be 825 - 925
+    Vector2 arrowPos5 = {1800, 905}; // can be 825 - 925
+    Vector2 arrowPos6 = {1800, 805}; // can be 825 - 925
 
 
     if (characterLink.id <= 0) {
@@ -91,13 +106,57 @@ int main() {
         Vector2 rupeePos = {random5, -90}; // Initializer for items in game 
         UpdateMusicStream(music);
 
-        // raylib::Vector2 velocity = {linkPos.x * speed, linkPos.y * speed *2};
+        // Arrow movement 
+        arrowPos1.x -= gravity * .99;
+        arrowPos2.x -= gravity * .7;
+        arrowPos3.x -= gravity * 1.5;
+        arrowPos4.x -= gravity * .5;
+        arrowPos5.x -= gravity * 18;
+        arrowPos6.x -= gravity * .01;
 
-        rupeePos1.y += gravity * .6; // RED
-        rupeePos2.y += gravity * 1; // GREEN
-        rupeePos3.y += gravity * .1; // GOLD
-        rupeePos4.y += gravity * .9; // YELLOW 
-        rupeePos5.y += gravity * .8; // BLUE 
+        // Arrow Position reset after leaving left wall border
+        if (arrowPos1.x < -390) arrowPos1.x = 1800; 
+        if (arrowPos2.x < -390) arrowPos2.x = 1800; 
+        if (arrowPos3.x < -390) arrowPos3.x = 1800; 
+        if (arrowPos4.x < -390) arrowPos4.x = 1800; 
+        if (arrowPos5.x < -390) arrowPos5.x = 1800; 
+        if (arrowPos6.x < -390) arrowPos6.x = 1800; 
+
+        // Reset arrow Pos if they hit within link position
+        if (((arrowPos1.x - linkPos.x) < 126 && (arrowPos1.x - linkPos.x) > 36) && ((arrowPos1.y - linkPos.y) < 250 && (arrowPos1.y - linkPos.y) > 183)) {
+            arrowPos1.x = 1800;
+        } 
+
+        if (((arrowPos2.y - linkPos.y) < 126 && (arrowPos2.y - linkPos.y) > 36) && ((arrowPos2.y - linkPos.y) < 250 && (arrowPos2.y - linkPos.y) > 183)) {
+            arrowPos2.x = 1800;
+        }
+
+        if (((arrowPos3.y - linkPos.y) < 126 && (arrowPos3.y - linkPos.y) > 36) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 183)) {
+            arrowPos3.x = 1800;
+        }
+
+        if (((arrowPos4.y - linkPos.y) < 126 && (arrowPos4.y - linkPos.y) > 36) && ((arrowPos4.y - linkPos.y) < 250 && (arrowPos4.y - linkPos.y) > 183)) {
+            arrowPos4.x = 1800;
+        }
+
+        if (((arrowPos5.y - linkPos.y) < 126 && (arrowPos5.y - linkPos.y) > 36) && ((arrowPos5.y - linkPos.y) < 250 && (arrowPos5.y - linkPos.y) > 183)) {
+            arrowPos5.x = 1800;
+        }
+
+        // BLACK ARROW
+        if (((arrowPos6.y - linkPos.y) < 126 && (arrowPos6.y - linkPos.y) > 36) && ((arrowPos6.y - linkPos.y) < 250 && (arrowPos6.y - linkPos.y) > 183)) {
+            arrowPos6.x = 1800;
+            jumpCounter ++;
+        }
+
+
+
+        // Fall gravity for rupees
+        rupeePos1.y += gravity * .9; // RED
+        rupeePos2.y += gravity * 1.8; // GREEN
+        rupeePos3.y += gravity * .05; // GOLD
+        rupeePos4.y += gravity * 1.2; // YELLOW 
+        rupeePos5.y += gravity * 1; // BLUE 
 
         // Stop rupees when they reach y linkPos 885
         if (rupeePos1.y >= 875) rupeePos1.y = 880;
@@ -106,7 +165,7 @@ int main() {
         if (rupeePos4.y >= 875) rupeePos4.y = 880;
         if (rupeePos5.y >= 875) rupeePos5.y = 880;
 
-        // Reset rupee linkPoss if they are ±5 away from the initial linkPos
+        // Reset rupee Pos if they hit within link position
         // Check and reset rupee linkPos individually
         // RED
         if (((rupeePos1.y - linkPos.y) < 200 && (rupeePos1.y - linkPos.y) > 105) && ((rupeePos1.x - linkPos.x) < 160 && (rupeePos1.x - linkPos.x) > 90)) {
@@ -122,6 +181,7 @@ int main() {
         if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
             rupeePos3 = {randomized3, -90};
             counter += 100;
+            jumpCounter --;
         }
         // YELLOW
         if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
@@ -134,7 +194,7 @@ int main() {
             counter += 5;
         }
 
-        // Wall boundary 
+        // Character wall boundary 
         if (linkPos.x > 1775) {// Right boundary
             PlaySound(naviWatch);
             linkPos.x = 1774;
@@ -169,31 +229,37 @@ int main() {
             DrawTextureEx(Rupee, rupeePos4, 0, .5, YELLOW);
             DrawTextureEx(Rupee, rupeePos5, 0, .5, DARKBLUE);
 
+            // Arrow creation
+            DrawTextureEx(arrow, arrowPos1, 0, 2, WHITE);
+
             if (IsKeyDown(KEY_SPACE)) {gravity = 0;}
             if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;}
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} 
             else speed = 1;
-            if (IsKeyDown(KEY_D)) {linkPos.x += 12 * speed;}
-            if (IsKeyDown(KEY_A)) {linkPos.x -= 12 * speed;}
-            if (IsKeyPressed(KEY_W) && !isJumping) {
+            if (IsKeyDown(KEY_D)) {linkPos.x += 2 * speed;}
+            if (IsKeyDown(KEY_A)) {linkPos.x -= 2 * speed;}
+            if ((jumpCounter < 2) && IsKeyPressed(KEY_W) && !isJumping) {
                 // Start jumping only if not already jumping
                 isJumping = true;
                 PlaySound(linkGrunt);
+                jumpCounter ++;
             }
             // Jump physics
             if (isJumping) {
-                linkPos.y -= 2.5;
+                linkPos.y -= 2 * gravity;
             } 
             else if (linkPos.y <= 682 && !isJumping) {
-                linkPos.y += 4;
+                linkPos.y += gravity;
             }
             // Check if the character has landed
             if (linkPos.y <= 535) {
                 isJumping = false;
+                
             } else if (linkPos.y >= 682) {
                 linkPos.y = 682;
                 isJumping = false;
             }
+            if (linkPos.y >= 682 && jumpCounter == 2 && !isJumping) jumpCounter = 0;
             
             // Draw UI elements
             DrawFPS(10, 10);
@@ -201,9 +267,9 @@ int main() {
             text.Draw(std::to_string(counter), (width / 3.6), height * .91, textSize * 3.25, raylib::Color::White());
             // text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            // text.Draw(std::to_string((rupeePos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            // text.Draw(std::to_string((rupeePos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            
+            text.Draw(std::to_string((arrowPos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string((arrowPos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            text.Draw(std::to_string(jumpCounter), (width / 2), height * .91, textSize * 1.25, raylib::Color::White());
 
         }
         window.EndDrawing();
