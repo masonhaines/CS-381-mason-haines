@@ -25,6 +25,7 @@ int main() {
     const char *title = {"The Story of"};
     const char *title1 = {"Z3LDA"};
     const char *GAMEOVER = {"GAMEOVER"};
+    const char *instruction1 = {"Press Space to exit game, could have done better..."};
 
     InitAudioDevice();
     Music music = LoadMusicStream("../sounds/clocktown.mp3");
@@ -152,7 +153,7 @@ int main() {
         // Fall gravity for rupees
         rupeePos1.y += gravity * .9; // RED
         rupeePos2.y += gravity * 1.8; // GREEN
-        rupeePos3.y += gravity * .05; // GOLD
+        rupeePos3.y += gravity * .2; // GOLD
         rupeePos4.y += gravity * 1.2; // YELLOW 
         rupeePos5.y += gravity * 1; // BLUE 
         // Stop rupees when they reach y linkPos 885
@@ -178,6 +179,7 @@ int main() {
             rupeePos3 = {randomized3, -90};
             counter += 100;
             jumpCounter --;
+            heartCount ++;
         }
         // YELLOW
         if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
@@ -208,14 +210,15 @@ int main() {
             DrawTextureEx(foreground, (Vector2){ - 50, 70}, 0, .5, WHITE);
             DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE);
             // On screen Information 
-            if (!gameOver) {
+            if (gameOver) {
                 text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
             text.Draw(title1, (width / 2.5), height * .18, textSize * 3.25, raylib::Color::Black());
             }
             // Game over
-            if (heartCount <= 0) {
+            if (heartCount == 0 || heartCount <= 0) {
                 gravity = 0;
-                text.Draw(GAMEOVER, (width / 2.5), height * .18, textSize * 5.25, raylib::Color::Black());
+                text.Draw(GAMEOVER, ((width / 2) - (MeasureText(GAMEOVER, textSize * 2.625))), height * .18, textSize * 5.25, raylib::Color::Black());
+                text.Draw(instruction1, ((width / 2) - (MeasureText(instruction1, textSize * .625))), height * .33, textSize * 1.25, raylib::Color::Black());
             }
             // Character creation
             DrawTextureEx(characterLink, linkPos, 0, 1, WHITE);
