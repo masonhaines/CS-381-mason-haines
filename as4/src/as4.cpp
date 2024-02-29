@@ -18,7 +18,9 @@ int main() {
     
     raylib::Text text;
     float textSize = 25;
-    const char *title = {"ZELDA"};
+    const char *totalRupeesTitle = {"Rupee Wallet "};
+    const char *title = {"The Story of"};
+    const char *title1 = {"Z3LDA"};
 
     InitAudioDevice();
     Music music = LoadMusicStream("../sounds/clocktown.mp3");
@@ -47,6 +49,7 @@ int main() {
 
 
     // Game play and physics variables 
+    int counter = 0;
     float speed = 5; // Initial speed 
     int jump = 10; // Jump multiplier 
     float jumpSpeed = 20; // Initial jump velocity
@@ -106,27 +109,25 @@ int main() {
         // Reset rupee linkPoss if they are ±5 away from the initial linkPos
         // Check and reset rupee linkPos individually
         if (((rupeePos1.y - linkPos.y) < 200 && (rupeePos1.y - linkPos.y) > 105) && ((rupeePos1.x - linkPos.x) < 160 && (rupeePos1.x - linkPos.x) > 90)) {
-            std::cout << "Rupee 1 linkPos reset!" << std::endl;
-            // rupeePos1 = {static_cast<float>(rand() % 1856), -90};
             rupeePos1 = {randomized1, -90};
+            counter ++;
         }
-        
         if (((rupeePos2.y - linkPos.y) < 200 && (rupeePos2.y - linkPos.y) > 105) && ((rupeePos2.x - linkPos.x) < 160 && (rupeePos2.x - linkPos.x) > 90)) {
             rupeePos2 = {randomized2, -90};
+            counter ++;
         }
-
         if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
             rupeePos3 = {randomized3, -90};
+            counter ++;
         }
-
         if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
             rupeePos4 = {randomized4, -90};
+            counter ++;
         }
-
         if (((rupeePos5.y - linkPos.y) < 200 && (rupeePos5.y - linkPos.y) > 105) && ((rupeePos5.x - linkPos.x) < 160 && (rupeePos5.x - linkPos.x) > 90)) {
             rupeePos5 = {randomized5, -90};
+            counter ++;
         }
-
 
         // Wall boundary 
         if (linkPos.x > 1775) {// Right boundary
@@ -145,9 +146,11 @@ int main() {
             
             window.ClearBackground(GREEN);
             // Background and foreground for link
-            DrawTextureEx(wallpaper, (Vector2){0, -150}, 0, 2, YELLOW);
+            DrawTextureEx(wallpaper, (Vector2){0, -150}, 0, 2, WHITE);
             DrawTextureEx(foreground, (Vector2){ - 50, 70}, 0, .5, WHITE);
             DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE);
+            text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
+            text.Draw(title1, (width / 2.5), height * .18, textSize * 3.25, raylib::Color::Black());
             // Character creation
             // Rectangle linkSource = (Rectangle){0, 0, 350, 467};
             // Rectangle linkDest = (Rectangle){static_cast<float>(width / 2), 658, linkSource.width, linkSource.height};
@@ -189,12 +192,13 @@ int main() {
             
             // Draw UI elements
             DrawFPS(10, 10);
-            text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
+            text.Draw(totalRupeesTitle, (width / 100), height * .91, textSize * 3.0, raylib::Color::RayWhite());
+            text.Draw(std::to_string(counter), (width / 3.6), height * .91, textSize * 3.25, raylib::Color::White());
+            // text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string((rupeePos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string((rupeePos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            // text.Draw(title, (width / 2.5), height * .25, textSize * 2.25, raylib::Color::Black());
+            // text.Draw(std::to_string((rupeePos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            // text.Draw(std::to_string((rupeePos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            
 
         }
         window.EndDrawing();
