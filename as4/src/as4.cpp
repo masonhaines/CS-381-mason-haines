@@ -32,7 +32,7 @@ int main() {
     Texture2D foreground = LoadTexture("../textures/newground.png");
     Texture2D wallpaper = LoadTexture("../textures/backgroundtrees.jpg");
     Texture2D characterLink = LoadTexture("../textures/linkpng.png");
-    Texture2D Rupee = LoadTexture("../textures/green_rupee_small.png");
+    Texture2D Rupee = LoadTexture("../textures/white_rupee_small.png");
 
     float height = window.GetHeight();
     float width = window.GetWidth();
@@ -93,11 +93,11 @@ int main() {
 
         // raylib::Vector2 velocity = {linkPos.x * speed, linkPos.y * speed *2};
 
-        rupeePos1.y += gravity;
-        rupeePos2.y += gravity;
-        rupeePos3.y += gravity;
-        rupeePos4.y += gravity;
-        rupeePos5.y += gravity;
+        rupeePos1.y += gravity * .6; // RED
+        rupeePos2.y += gravity * 1; // GREEN
+        rupeePos3.y += gravity * .1; // GOLD
+        rupeePos4.y += gravity * .9; // YELLOW 
+        rupeePos5.y += gravity * .8; // BLUE 
 
         // Stop rupees when they reach y linkPos 885
         if (rupeePos1.y >= 875) rupeePos1.y = 880;
@@ -108,25 +108,30 @@ int main() {
 
         // Reset rupee linkPoss if they are ±5 away from the initial linkPos
         // Check and reset rupee linkPos individually
+        // RED
         if (((rupeePos1.y - linkPos.y) < 200 && (rupeePos1.y - linkPos.y) > 105) && ((rupeePos1.x - linkPos.x) < 160 && (rupeePos1.x - linkPos.x) > 90)) {
             rupeePos1 = {randomized1, -90};
-            counter ++;
-        }
+            counter += 20;
+        } 
+        // GREEN
         if (((rupeePos2.y - linkPos.y) < 200 && (rupeePos2.y - linkPos.y) > 105) && ((rupeePos2.x - linkPos.x) < 160 && (rupeePos2.x - linkPos.x) > 90)) {
             rupeePos2 = {randomized2, -90};
-            counter ++;
+            counter += 1;
         }
+        // GOLD
         if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
             rupeePos3 = {randomized3, -90};
-            counter ++;
+            counter += 100;
         }
+        // YELLOW
         if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
             rupeePos4 = {randomized4, -90};
-            counter ++;
+            counter += 10;
         }
+        // BLUE
         if (((rupeePos5.y - linkPos.y) < 200 && (rupeePos5.y - linkPos.y) > 105) && ((rupeePos5.x - linkPos.x) < 160 && (rupeePos5.x - linkPos.x) > 90)) {
             rupeePos5 = {randomized5, -90};
-            counter ++;
+            counter += 5;
         }
 
         // Wall boundary 
@@ -161,15 +166,15 @@ int main() {
             DrawTextureEx(Rupee, rupeePos1, 0, .5, RED);
             DrawTextureEx(Rupee, rupeePos2, 0, .5, GREEN);
             DrawTextureEx(Rupee, rupeePos3, 0, .5, GOLD);
-            DrawTextureEx(Rupee, rupeePos4, 0, .5, DARKPURPLE);
+            DrawTextureEx(Rupee, rupeePos4, 0, .5, YELLOW);
             DrawTextureEx(Rupee, rupeePos5, 0, .5, DARKBLUE);
 
             if (IsKeyDown(KEY_SPACE)) {gravity = 0;}
             if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;}
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} 
             else speed = 1;
-            if (IsKeyDown(KEY_D)) {linkPos.x += 5 * speed;}
-            if (IsKeyDown(KEY_A)) {linkPos.x -= 5 * speed;}
+            if (IsKeyDown(KEY_D)) {linkPos.x += 12 * speed;}
+            if (IsKeyDown(KEY_A)) {linkPos.x -= 12 * speed;}
             if (IsKeyPressed(KEY_W) && !isJumping) {
                 // Start jumping only if not already jumping
                 isJumping = true;
