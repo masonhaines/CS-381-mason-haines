@@ -1,8 +1,8 @@
-# Plane Takeoff! README
+# The story of Z3lda README
 
 
 
-# Instructions 
+# Instructions for install
 ## Please open your terminal and..
 
 
@@ -11,6 +11,8 @@
     sudo apt update
 
     sudo apt install xorg-dev
+
+    sudo apt install pulseaudio
 
     sudo apt install cmake
 
@@ -49,5 +51,17 @@ To exit program/window press X on top right of window and program will terminate
 
 # 6. Controls
 
-sudo apt install pulseaudio
-this is for audio if using wsl
+-   Press W to jump once. You only have two jumps and they reset after jumping twice and then hitting the ground. You can press w two times in a row and double jump.
+-   Press and hold D to move the character right on the screen.
+-   press and hold A to move the character left on the screen.
+-   press SPACE when you have lost the game. The screen will display game over and inform you to press space to end the game.
+
+# 7. Point of the game
+
+- Collect as many rupees as possible before losing all your hearts. Getting hit by an arrow will cause you to lose 1 heart and the black arrow 2 hearts.
+##Rupees colors and values
+-   Gold: 100 rupee value and will give you a heart back as well.
+-   Red: 20 rupees
+-   Green: 1 rupees
+-   Blue: 5 rupees
+-   Yellow: 10 rupees

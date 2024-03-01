@@ -55,7 +55,7 @@ int main() {
 
 
     // Game play and physics variables 
-    int heartCount = 5;
+    int heartCount = 3;
     int counter = 0;
     float speed = 5; // Initial speed 
     int jump = 10; // Jump multiplier 
@@ -147,7 +147,6 @@ int main() {
         if (((arrowPos6.x - linkPos.x) < 126 && (arrowPos6.x - linkPos.x) > 36) && ((arrowPos6.y - linkPos.y) < 250 && (arrowPos6.y - linkPos.y) > 153)) {
             arrowPos6.x = 1950;
             PlaySound(naviWatch);
-            jumpCounter ++;
             heartCount -= 2;
         }
         // Fall gravity for rupees
@@ -178,7 +177,6 @@ int main() {
         if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
             rupeePos3 = {randomized3, -90};
             counter += 100;
-            jumpCounter --;
             heartCount ++;
         }
         // YELLOW
@@ -272,9 +270,9 @@ int main() {
             text.Draw(std::to_string(heartCount), (width / 1.1), height * .91, textSize * 3.25, raylib::Color::RayWhite());
             // text.Draw(std::to_string(linkPos.y), (width / 1.5), height * .15, textSize * 1.25, raylib::Color::Black());
             // text.Draw(std::to_string(linkPos.x), (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string((arrowPos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string((arrowPos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
-            text.Draw(std::to_string(jumpCounter), (width / 2), height * .91, textSize * 1.25, raylib::Color::White());
+            // text.Draw(std::to_string((arrowPos1.x - linkPos.x)), (width / 1.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            // text.Draw(std::to_string((arrowPos1.y - linkPos.y)), (width / 2.5), height * .5, textSize * 1.25, raylib::Color::Black());
+            // text.Draw(std::to_string(jumpCounter), (width / 2), height * .91, textSize * 1.25, raylib::Color::White());
         }
         window.EndDrawing();
     }
