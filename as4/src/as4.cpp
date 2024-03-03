@@ -4,7 +4,6 @@
 #include "rlgl.h"
 #include "skybox.hpp"
 #include "raylib.h"
-#include <iostream>
 #include <random>
 #include <string>
 
@@ -79,15 +78,16 @@ int main() {
     Vector2 arrowPos6 = {1950, 875}; // can be 825 - 925
 
     // Edge case for if textures did not load correctly 
-    if (characterLink.id <= 0) {
-        std::cout << "------------------------------ * did not load in character * ------------------------------" << std::endl;
-    }
-    if (foreground.id <= 0) {
-        std::cout << "------------------------------ * did not load in foreground * ------------------------------" << std::endl;
-    }
-    if (wallpaper.id <= 0) {
-        std::cout << "------------------------------ * did not load in wallpaper * ------------------------------" << std::endl;
-    }
+    // #include <iostream>
+    // if (characterLink.id <= 0) {
+    //     std::cout << "------------------------------ * did not load in character * ------------------------------" << std::endl;
+    // }
+    // if (foreground.id <= 0) {
+    //     std::cout << "------------------------------ * did not load in foreground * ------------------------------" << std::endl;
+    // }
+    // if (wallpaper.id <= 0) {
+    //     std::cout << "------------------------------ * did not load in wallpaper * ------------------------------" << std::endl;
+    // }
 
     SetTargetFPS(60); // Set frames per second
     while (!window.ShouldClose() && !gameOver) {
@@ -120,34 +120,34 @@ int main() {
         if (arrowPos5.x < -990) arrowPos5.x = 1950; 
         if (arrowPos6.x < -390) arrowPos6.x = 1950; 
 
-        // Reset arrow Pos if they hit within link position
-        if (((arrowPos1.x - linkPos.x) < 126 && (arrowPos1.x - linkPos.x) > 36) && ((arrowPos1.y - linkPos.y) < 250 && (arrowPos1.y - linkPos.y) > 153)) {
+        // Reset arrow Pos if they hit within link position // 36 -126 to land on arrow and collision
+        if (((arrowPos1.x - linkPos.x) < 126 && (arrowPos1.x - linkPos.x) > 85) && ((arrowPos1.y - linkPos.y) < 250 && (arrowPos1.y - linkPos.y) > 153)) {
             arrowPos1.x = 2150;
             PlaySound(naviWatch); // Play sound to indicate player was hit by arrow
             heartCount --;
         } 
-        if (((arrowPos2.x - linkPos.x) < 126 && (arrowPos2.x - linkPos.x) > 36) && ((arrowPos2.y - linkPos.y) < 250 && (arrowPos2.y - linkPos.y) > 153)) {
+        if (((arrowPos2.x - linkPos.x) < 126 && (arrowPos2.x - linkPos.x) > 85) && ((arrowPos2.y - linkPos.y) < 250 && (arrowPos2.y - linkPos.y) > 153)) {
             arrowPos2.x = 2450;
             PlaySound(naviWatch);
             heartCount --;
         }
-        if (((arrowPos3.x - linkPos.x) < 126 && (arrowPos3.x - linkPos.x) > 36) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 153)) {
+        if (((arrowPos3.x - linkPos.x) < 126 && (arrowPos3.x - linkPos.x) > 85) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 153)) {
             arrowPos3.x = 2750;
             PlaySound(naviWatch);
             heartCount --;
         }
-        if (((arrowPos4.x - linkPos.x) < 126 && (arrowPos4.x - linkPos.x) > 36) && ((arrowPos4.y - linkPos.y) < 250 && (arrowPos4.y - linkPos.y) > 153)) {
+        if (((arrowPos4.x - linkPos.x) < 126 && (arrowPos4.x - linkPos.x) > 85) && ((arrowPos4.y - linkPos.y) < 250 && (arrowPos4.y - linkPos.y) > 153)) {
             arrowPos4.x = 3550;
             PlaySound(naviWatch);
             heartCount --;
         }
-        if (((arrowPos5.x - linkPos.x) < 126 && (arrowPos5.x - linkPos.x) > 36) && ((arrowPos5.y - linkPos.y) < 250 && (arrowPos5.y - linkPos.y) > 153)) {
+        if (((arrowPos5.x - linkPos.x) < 126 && (arrowPos5.x - linkPos.x) > 85) && ((arrowPos5.y - linkPos.y) < 250 && (arrowPos5.y - linkPos.y) > 153)) {
             arrowPos5.x = 3050;
             PlaySound(naviWatch);
             heartCount --;
         }
         // BLACK ARROW
-        if (((arrowPos6.x - linkPos.x) < 126 && (arrowPos6.x - linkPos.x) > 36) && ((arrowPos6.y - linkPos.y) < 250 && (arrowPos6.y - linkPos.y) > 153)) {
+        if (((arrowPos6.x - linkPos.x) < 126 && (arrowPos6.x - linkPos.x) > 85) && ((arrowPos6.y - linkPos.y) < 250 && (arrowPos6.y - linkPos.y) > 153)) {
             arrowPos6.x = 1950;
             PlaySound(naviWatch);
             heartCount -= 2; // lowers health by greater amount 
@@ -214,12 +214,6 @@ int main() {
             DrawTextureEx(foreground, (Vector2){ - 50, 70}, 0, .5, WHITE); // Floor part 1 , left side of screen 
             DrawTextureEx(foreground, (Vector2){ 600, 70}, 0, .5, WHITE); // Floor part 2, right side of screen 
 
-            // On screen Information 
-            if (gameOver) {
-                text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
-            text.Draw(title1, (width / 2.5), height * .18, textSize * 3.25, raylib::Color::Black());
-            }
-
             // Game over condition and actions
             if (heartCount == 0 || heartCount <= 0) {
                 gravity = 0; // set gravity/ const speed for rupees an arrows to zero
@@ -228,6 +222,10 @@ int main() {
                 // Display end game text 
                 text.Draw(GAMEOVER, ((width / 2) - (MeasureText(GAMEOVER, textSize * 2.625))), height * .18, textSize * 5.25, raylib::Color::Black());
                 text.Draw(instruction1, ((width / 2) - (MeasureText(instruction1, textSize * .625))), height * .33, textSize * 1.25, raylib::Color::Black());
+            } 
+            else { // On screen Title 
+                text.Draw(title, (width / 2.5), height * .15, textSize * 1, raylib::Color::Black());
+                text.Draw(title1, (width / 2.5), height * .18, textSize * 3.25, raylib::Color::Black());
             }
 
             // Character creation
@@ -249,7 +247,7 @@ int main() {
             DrawTextureEx(arrow, arrowPos6, 0, 2, BLACK);
 
             // End game and close window 
-            if (IsKeyDown(KEY_SPACE) && heartCount == 0) {gameOver = true;} 
+            if (IsKeyDown(KEY_SPACE) && heartCount <= 0) {gameOver = true;} 
             // if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;} // For reseting gravity during testing 
             // if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} // For reseting speed during testing 
             // else speed = 1;
