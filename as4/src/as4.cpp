@@ -74,8 +74,8 @@ int main() {
     Vector2 rupeePos5 = {random5, -90};   
     Vector2 arrowPos1 = {2350, 875}; // can be 825 - 925
     Vector2 arrowPos2 = {2550, 875}; // can be 825 - 925
-    // Vector2 arrowPos3 = {1950, 875}; // can be 825 - 925
-    // Vector2 arrowPos4 = {1950, 875}; // can be 825 - 925
+    Vector2 arrowPos3 = {2750, 875}; // can be 825 - 925
+    Vector2 arrowPos4 = {2150, 875}; // can be 825 - 925
     Vector2 arrowPos5 = {3050, 875}; // can be 825 - 925
     Vector2 arrowPos6 = {1950, 875}; // can be 825 - 925
 
@@ -108,16 +108,16 @@ int main() {
         // Arrow movement 
         arrowPos1.x -= gravity * .5;
         arrowPos2.x -= gravity * .5;
-        // arrowPos3.x -= gravity * 1.5;
-        // arrowPos4.x -= gravity * .5;
+        arrowPos3.x -= gravity * 1;
+        arrowPos4.x -= gravity * .5;
         arrowPos5.x -= gravity * .5;
         arrowPos6.x -= gravity * .1;
 
         // Arrow Position reset after leaving left wall border
         if (arrowPos1.x < -690) arrowPos1.x = 1950; 
         if (arrowPos2.x < -890) arrowPos2.x = 1950; 
-        // if (arrowPos3.x < -390) arrowPos3.x = 1950; 
-        // if (arrowPos4.x < -390) arrowPos4.x = 1950; 
+        if (arrowPos3.x < -390) arrowPos3.x = 1950; 
+        if (arrowPos4.x < -390) arrowPos4.x = 1950; 
         if (arrowPos5.x < -990) arrowPos5.x = 1950; 
         if (arrowPos6.x < -390) arrowPos6.x = 1950; 
 
@@ -132,12 +132,12 @@ int main() {
             PlaySound(naviWatch);
             heartCount --;
         }
-        // if (((arrowPos3.x - linkPos.x) < 126 && (arrowPos3.x - linkPos.x) > 36) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 153)) {
-        //     arrowPos3.x = 1950;
-        // }
-        // if (((arrowPos4.x - linkPos.x) < 126 && (arrowPos4.x - linkPos.x) > 36) && ((arrowPos4.y - linkPos.y) < 250 && (arrowPos4.y - linkPos.y) > 153)) {
-        //     arrowPos4.x = 1950;
-        // }
+        if (((arrowPos3.x - linkPos.x) < 126 && (arrowPos3.x - linkPos.x) > 36) && ((arrowPos3.y - linkPos.y) < 250 && (arrowPos3.y - linkPos.y) > 153)) {
+            arrowPos3.x = 2750;
+        }
+        if (((arrowPos4.x - linkPos.x) < 126 && (arrowPos4.x - linkPos.x) > 36) && ((arrowPos4.y - linkPos.y) < 250 && (arrowPos4.y - linkPos.y) > 153)) {
+            arrowPos4.x = 3550;
+        }
         if (((arrowPos5.x - linkPos.x) < 126 && (arrowPos5.x - linkPos.x) > 36) && ((arrowPos5.y - linkPos.y) < 250 && (arrowPos5.y - linkPos.y) > 153)) {
             arrowPos5.x = 3050;
             PlaySound(naviWatch);
@@ -177,7 +177,7 @@ int main() {
         if (((rupeePos3.y - linkPos.y) < 200 && (rupeePos3.y - linkPos.y) > 105) && ((rupeePos3.x - linkPos.x) < 160 && (rupeePos3.x - linkPos.x) > 90)) {
             rupeePos3 = {randomized3, -90};
             counter += 100;
-            heartCount ++;
+            if (counter > 1000) heartCount ++;
         }
         // YELLOW
         if (((rupeePos4.y - linkPos.y) < 200 && (rupeePos4.y - linkPos.y) > 105) && ((rupeePos4.x - linkPos.x) < 160 && (rupeePos4.x - linkPos.x) > 90)) {
@@ -215,6 +215,8 @@ int main() {
             // Game over
             if (heartCount == 0 || heartCount <= 0) {
                 gravity = 0;
+                speed = 0;
+                heartCount = 0;
                 text.Draw(GAMEOVER, ((width / 2) - (MeasureText(GAMEOVER, textSize * 2.625))), height * .18, textSize * 5.25, raylib::Color::Black());
                 text.Draw(instruction1, ((width / 2) - (MeasureText(instruction1, textSize * .625))), height * .33, textSize * 1.25, raylib::Color::Black());
             }
@@ -229,8 +231,8 @@ int main() {
             // Arrow creation
             DrawTextureEx(arrow, arrowPos1, 0, 2, WHITE);
             DrawTextureEx(arrow, arrowPos2, 0, 2, WHITE);
-            // DrawTextureEx(arrow, arrowPos3, 0, 2, WHITE);
-            // DrawTextureEx(arrow, arrowPos4, 0, 2, WHITE);
+            DrawTextureEx(arrow, arrowPos3, 0, 2, WHITE);
+            DrawTextureEx(arrow, arrowPos4, 0, 2, WHITE);
             DrawTextureEx(arrow, arrowPos5, 0, 2, WHITE);
             DrawTextureEx(arrow, arrowPos6, 0, 2, BLACK);
 
