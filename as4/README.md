@@ -1,5 +1,5 @@
 # The story of Z3lda README
-
+## Assignment AS4 AD HOC game CS 381
 
 
 # Instructions for install
@@ -60,8 +60,9 @@ To exit program/window press X on top right of window and program will terminate
 
 - Collect as many rupees as possible before losing all your hearts. Getting hit by an arrow will cause you to lose 1 heart and the black arrow 2 hearts.
 ##Rupees colors and values
--   Gold: 100 rupee value and will give you a heart back as well.
+-   Gold: 100 rupees
 -   Red: 20 rupees
--   Green: 1 rupees
+-   Green: 1 rupee
 -   Blue: 5 rupees
 -   Yellow: 10 rupees
+After hitting 1000 rupees in your wallet you will gain a heart back!
