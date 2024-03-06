@@ -6,6 +6,8 @@
 #include "raylib.h"
 #include <random>
 #include <string>
+#include <fstream>
+#include <iostream>
 
 int main() {
     // Set configuration of window
@@ -14,6 +16,8 @@ int main() {
     raylib::Window window(GetMonitorWidth(monitor), GetMonitorHeight(monitor), "CS381 - Assignment 2");
     float height = window.GetHeight(); // window height variable 
     float width = window.GetWidth(); // window width variable 
+
+    std::ofstream scoreboard("../ScoreBoard.txt", std::ios::app);
 
     // Create text object and strings for game display
     raylib::Text text;
@@ -78,7 +82,6 @@ int main() {
     Vector2 arrowPos6 = {1950, 875}; // can be 825 - 925
 
     // Edge case for if textures did not load correctly 
-    // #include <iostream>
     // if (characterLink.id <= 0) {
     //     std::cout << "------------------------------ * did not load in character * ------------------------------" << std::endl;
     // }
@@ -216,10 +219,18 @@ int main() {
 
             // Game over condition and actions
             if (heartCount == 0 || heartCount <= 0) {
+                // std::string playerName;
                 gravity = 0; // set gravity/ const speed for rupees an arrows to zero
                 speed = 0; // Set character speed to zero
                 heartCount = 0; // Set edge case if multiple arrows cause death 
+                //Write to ScoreBoard 
+                // std::cin >> playerName;
+                if(scoreboard.is_open()) {
+                    scoreboard << "Wallet Size : " << counter << std::endl;
+                }
+                scoreboard.close();
                 // Display end game text 
+                // text.Draw(playerName, ((width / 2) - (MeasureText(GAMEOVER, textSize * 2.625))), height * .1, textSize * 1.25, raylib::Color::Black());
                 text.Draw(GAMEOVER, ((width / 2) - (MeasureText(GAMEOVER, textSize * 2.625))), height * .18, textSize * 5.25, raylib::Color::Black());
                 text.Draw(instruction1, ((width / 2) - (MeasureText(instruction1, textSize * .625))), height * .33, textSize * 1.25, raylib::Color::Black());
             } 
@@ -247,7 +258,7 @@ int main() {
             DrawTextureEx(arrow, arrowPos6, 0, 2, BLACK);
 
             // End game and close window 
-            if (IsKeyDown(KEY_SPACE) && heartCount <= 0) {gameOver = true;} 
+            if (IsKeyDown(KEY_SPACE) && heartCount == 0) {gameOver = true;} 
             // if (IsKeyDown(KEY_LEFT_SHIFT)) {gravity = 4.9;} // For reseting gravity during testing 
             // if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {speed = 10;} // For reseting speed during testing 
             // else speed = 1;
