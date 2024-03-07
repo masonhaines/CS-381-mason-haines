@@ -7,3 +7,7 @@ Wallet Size : 224
 Wallet Size : 906
 Wallet Size : 317
 Wallet Size : 656
+Wallet Size : 50
+Wallet Size : 60
+Wallet Size : 957
+Wallet Size : 166

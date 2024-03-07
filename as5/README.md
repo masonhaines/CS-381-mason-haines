@@ -1,10 +1,8 @@
-# The Story of Z3lda README
-
-## Assignment AS4 AD HOC game CS 381
+# Assignment AS5 Audio GUI CS 381
 
 ### Instructions for Installation
 
-Please follow the steps below to install The Story of Z3lda game:
+Please follow the steps below to install AUDIO GUI
 
 ### 1. Update System and Install Dependencies
 
@@ -19,7 +17,7 @@ sudo apt install cmake
 
 ```bash
 git clone https://github.com/masonhaines/CS-381-mason-haines.git
-cd CS-381-mason-haines/as4/
+cd CS-381-mason-haines/as5/
 ```
 
 ### 3. Fetch Git Submodules
@@ -56,40 +54,11 @@ To exit the program/window, press 'X' on the top right of the window, and the pr
 
 ## 6. Controls
 
-- **Jumping**: 
-  - Press 'W' to jump once. You have a maximum of two jumps, which reset upon landing after the second jump. You can execute a double jump by pressing 'W' twice consecutively.
-- **Moving Right**: 
-  - Press and hold 'D' to move the character towards the right side of the screen.
-- **Moving Left**: 
-  - Press and hold 'A' to move the character towards the left side of the screen.
-- **Game Over**: 
-  - Press 'SPACE' when the game ends. The screen will display "Game Over" and prompt you to press 'SPACE' to end the game.
+- **Volume Sliders**: 
+  - o adjust the volume, with the mouse left-click and hold on the blue bar, then drag right to increase the volume or left to decrease it.
+- **Ping**: 
+  - Press the 'Space' key to play the ping sound. Alternatively, you can use the mouse to left-click on the ping button.
+- **Change dialogue**: 
+  - Press 'c' to switch to a different dialogue audio while the current one is playing.
 
-## 7. Point of the Game
 
-- **Objective**: 
-  - Collect as many rupees as possible before losing all your hearts. Each hit by a regular arrow deducts 1 heart, while black arrows deduct 2 hearts.
-  
-### Rupees Colors and Values
-
-- **Gold**: 
-  - Value: 100 rupees
-- **Red**: 
-  - Value: 20 rupees
-- **Green**: 
-  - Value: 1 rupee
-- **Blue**: 
-  - Value: 5 rupees
-- **Yellow**: 
-  - Value: 10 rupees
-
-Once you accumulate 1000 rupees, you gain one heart back.
-
-# Game Assets
-
-## Assets Created or Edited
-
-- **Character, Castle Background, and Floor**:
-  - Created using DALL·E-3 via Windows CoPilot. These assets were subsequently edited, involving cropping and detail adjustments. All assets were converted into PNG format.
-- **Extra Credit**:
-  - Arrows in the game were created by myself using Procreate.
