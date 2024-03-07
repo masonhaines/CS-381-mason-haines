@@ -48,7 +48,7 @@ make
 To exit the program/window, press 'X' on the top right of the window, and the program will terminate.
 
 ```bash
-./as4
+./as5
 ```
 
 
