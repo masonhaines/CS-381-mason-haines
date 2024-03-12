@@ -1,3 +1,5 @@
+#include <concepts>
+#include <cstddef>
 #include <raylib-cpp.hpp>
 
 #include <memory>
@@ -8,22 +10,14 @@
 #include "rlgl.h"
 #include "skybox.hpp"
 #include "raylib.h"
+#include <BufferedInput.hpp>
+#include <utility>
+#include <vector>
 
 template<typename T>
 concept Transformer = requires(T t, raylib::Transform m) {
 	{ t.operator()(m) } -> std::convertible_to<raylib::Transform>;
 };
-
-
-
-
-
-// ---------------------------------------------------------------28th and 21st for entities
-
-
-
-
-
 
 struct CalculateVelocityParams {
 	static constexpr float acceleration = 5;
@@ -45,12 +39,58 @@ void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
 void DrawModel(raylib::Model& model, Transformer auto transformer);
 
 
+
+
+
+// ---------------------------------------------------------------28th and 21st for entities
+
+//video 21 at 50 min
+struct Component {
+	struct Entity* object; // object prototype
+
+	Component(struct Entity& e) : object(&e) {} //constructor 
+
+	virtual void setup() = 0;
+	virtual void cleanup() = 0;
+	virtual void tick(float dt) = 0;
+
+};
+
+struct Entity {
+	std::vector<std::unique_ptr<Component>> components;
+
+	// size_t AddComponent(std::unique_ptr<Component> c) {
+	// 	components.push_back(std::move(c));
+	// 	components.back()->object = this;
+	// 	return components.size() - 1;
+	// }
+
+	template<std::derived_from<Component> T, typename... Ts>
+	size_t AddComponent(Ts... args) {
+		auto c = std::make_unique<T>(*this, std::forward<T>(args)...); 
+		components.back()->object = this;
+		return components.size() - 1;
+	}
+
+	// void      ------------------------------ 1 hour 5 minutes left off
+};
+
+
+
+
 int main() {
 	// Create window
 	const int screenWidth = 800 * 2;
 	const int screenHeight = 450 * 2;
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 3");
 	// cs381::Inputs inputs(window);
+
+
+	std::vector<Entity> entities;
+
+
+
+
 
 	// Create camera
 	auto camera = raylib::Camera(
@@ -149,6 +189,13 @@ int main() {
 
 			camera.BeginMode();
 			{
+
+				for (Entity& e: entities) {
+					for(auto& c : e.components) {
+						c->tick(window.GetFrameTime());
+					}
+				}
+
 				// Render skybox and ground
 				skybox.Draw();
 				ground.Draw({});
