@@ -1,5 +1,7 @@
 #include <concepts>
 #include <cstddef>
+#include <functional>
+#include <optional>
 #include <raylib-cpp.hpp>
 
 #include <memory>
@@ -56,8 +58,22 @@ struct Component {
 
 };
 
+struct TransformComponent : public Component{
+	using Component::Component;
+	raylib::Vector3 position = {0, 0, 0};
+	raylib::Quaternion rotation = raylib::Quaternion::Identity();
+};
+
 struct Entity {
 	std::vector<std::unique_ptr<Component>> components;
+
+	Entity() { AddComponent<TransformComponent>(); }
+	Entity(const Entity&) = delete;
+	Entity(Entity&& other) : components(std::move(other.components)) {
+		for (auto& c :components) {
+			c->object = this;
+		}
+	}
 
 	// size_t AddComponent(std::unique_ptr<Component> c) {
 	// 	components.push_back(std::move(c));
@@ -72,7 +88,42 @@ struct Entity {
 		return components.size() - 1;
 	}
 
-	// void      ------------------------------ 1 hour 5 minutes left off
+	template<std::derived_from<Component> T> 
+	std::optional<std::reference_wrapper<T>> GetComponent() {
+
+		if constexpr(std::is_same_v<T, TransformComponent>) {
+			T* cast = dynamic_cast<T>(components[0].get()); // dynamic cast means if pointer can be converted, convert it 
+			if (cast) return *cast;
+		}
+
+		for(auto& c : components) {
+			T* cast = dynamic_cast<T>(c.get()); // dynamic cast means if pointer can be converted, convert it 
+			if (cast) return *cast;
+		}
+
+		return std::nullopt; // nullptr for options 
+	}
+
+	void tick (float dt) {
+		for (auto& c : components) {
+			c->tick(dt);
+		}
+	}
+
+	void setup() {
+		for (auto& c : components) {
+			c->setup();
+		}
+	}
+
+	void cleanup() {
+		for (auto& c : components) {
+			c->cleanup();
+		}
+	}
+
+
+
 };
 
 
@@ -189,13 +240,10 @@ int main() {
 
 			camera.BeginMode();
 			{
-
-				for (Entity& e: entities) {
-					for(auto& c : e.components) {
-						c->tick(window.GetFrameTime());
-					}
-				}
-
+				////////////////////
+				for (Entity& e: entities) e.tick(window.GetFrameTime());
+					
+				/////////////////////////////////////////////
 				// Render skybox and ground
 				skybox.Draw();
 				ground.Draw({});
