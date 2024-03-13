@@ -1,20 +1,22 @@
-#include <concepts>
+// #include <concepts>
 #include <cstddef>
 #include <functional>
 #include <optional>
 #include <raylib-cpp.hpp>
-
+#include "BufferedInput.hpp"
+#include <utility>
+#include <vector>
 #include <memory>
-#include <ranges>
-#include <iostream>
-
-// #include "inputs.hpp"
 #include "rlgl.h"
 #include "skybox.hpp"
 #include "raylib.h"
-#include <BufferedInput.hpp>
-#include <utility>
-#include <vector>
+
+
+// #include <ranges>
+// #include <iostream>
+// #include "inputs.hpp"
+// #include "BufferedInput.hpp"
+
 
 template<typename T>
 concept Transformer = requires(T t, raylib::Transform m) {
@@ -44,9 +46,7 @@ void DrawModel(raylib::Model& model, Transformer auto transformer);
 
 
 
-// ---------------------------------------------------------------28th and 21st for entities
 
-//video 21 at 50 min
 struct Component {
 	struct Entity* object; // object prototype
 
@@ -83,7 +83,7 @@ struct Entity {
 
 	template<std::derived_from<Component> T, typename... Ts>
 	size_t AddComponent(Ts... args) {
-		auto c = std::make_unique<T>(*this, std::forward<T>(args)...); 
+		auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
 		components.back()->object = this;
 		return components.size() - 1;
 	}
@@ -92,12 +92,12 @@ struct Entity {
 	std::optional<std::reference_wrapper<T>> GetComponent() {
 
 		if constexpr(std::is_same_v<T, TransformComponent>) {
-			T* cast = dynamic_cast<T>(components[0].get()); // dynamic cast means if pointer can be converted, convert it 
+			T* cast = dynamic_cast<T*>(components[0].get()); // dynamic cast means if pointer can be converted, convert it 
 			if (cast) return *cast;
 		}
 
 		for(auto& c : components) {
-			T* cast = dynamic_cast<T>(c.get()); // dynamic cast means if pointer can be converted, convert it 
+			T* cast = dynamic_cast<T*>(c.get()); // dynamic cast means if pointer can be converted, convert it 
 			if (cast) return *cast;
 		}
 
@@ -121,11 +121,20 @@ struct Entity {
 			c->cleanup();
 		}
 	}
-
-
-
 };
 
+struct RenderingComponent : public Component{
+	raylib::Model model;
+	
+	void tick(float dt) override {
+		auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+		if (!ref) return; // does it exist 
+		auto& transform = ref->get(); // get values stored in reference if it exists
+
+		auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
+		model.Draw(transform.position, axis ,angle);
+	}
+};
 
 
 
@@ -133,16 +142,17 @@ int main() {
 	// Create window
 	const int screenWidth = 800 * 2;
 	const int screenHeight = 450 * 2;
-	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 3");
+	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
 
 
 	std::vector<Entity> entities;
+	Entity& e = entities.emplace_back();
+	e.AddComponent<RenderingComponent>(raylib::Model("bad.obj"));
 
 
 
-
-
+	raylib::Model bad("bad.obj");
 	// Create camera
 	auto camera = raylib::Camera(
 		raylib::Vector3(0, 120, -500), // Position
