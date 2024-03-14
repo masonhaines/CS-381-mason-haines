@@ -13,6 +13,7 @@
 #include "raylib.h"
 #include "entity.hpp"
 #include "renderingComponent.hpp"
+#include "physicsComponent.hpp"
 #include "transformComponent.hpp"
 
 
@@ -56,13 +57,18 @@ int main() {
 	// Create vector of entities
 	std::vector<Entity> entities;
 	int numberOfPlanes = 6;
-	// for (int i = 0; i < numberOfPlanes; i++) {
-	// 	Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
-	// 	// Render entities
-	// 	entityObjects.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
-	// }
 
-	DrawPlaneModels(numberOfPlanes, entities);
+	for (int i = 0; i < numberOfPlanes; i++) {
+		Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
+
+		entityObjects.AddComponent<RenderingComponent>
+		(raylib::Model("meshes/PolyPlane.glb"));
+		entityObjects.AddComponent<TransformComponent>
+		(Vector3{i * 5.0f, 200, 5}, Vector3{5, 5, 5}, Vector3{5, 5, 5}, 45 * i , GREEN);
+		entityObjects.AddComponent<PhysicsComponent>(Vector3{}, 5);
+	}
+
+	// DrawPlaneModels(numberOfPlanes, entities);
 
 	// Create camera
 	auto camera = raylib::Camera(
@@ -169,6 +175,8 @@ int main() {
 				skybox.Draw();
 				ground.Draw({});
 				for (Entity& e: entities) e.tick(window.GetFrameTime());
+				
+				
 				// updateEntities(entities, window.GetFrameTime());
 
 				// // Draw the planes with a bounding box around the selected plane
@@ -282,16 +290,15 @@ void DrawModel(raylib::Model& model, Transformer auto transformer) {
 	model.transform = backupTransform;
 }
 
-void DrawPlaneModels(int numberOfPlanes, std::vector<Entity>& entities) {
-	for (int i = 0; i < numberOfPlanes; i++) {
-		Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
-
-		entityObjects.AddComponent<RenderingComponent>
-		(raylib::Model("meshes/PolyPlane.glb"));
-		entityObjects.AddComponent<TransformComponent>
-		(Vector3{i * 5.0f, 200, 5}, 45 * i, Vector3{5, 5, 5}, GREEN);
-	}
-}
+// void DrawPlaneModels(int numberOfPlanes, std::vector<Entity>& entities) {
+// 	for (int i = 0; i < numberOfPlanes; i++) {
+// 		Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
+// 		entityObjects.AddComponent<RenderingComponent>
+// 		(raylib::Model("meshes/PolyPlane.glb"));
+// 		entityObjects.AddComponent<TransformComponent>
+// 		(Vector3{i * 5.0f, 200, 5}, 45 * i, Vector3{5, 5, 5}, GREEN);
+// 	}
+// }
 
 void updateEntities(std::vector<Entity>& entities, float dt) {
     for (Entity& e : entities) {

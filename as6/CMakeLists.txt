@@ -10,6 +10,8 @@ set(sources
     src/component.hpp
     src/transformComponent.hpp
     src/renderingComponent.hpp
+    src/physicsComponent.hpp
+    src/bufferedInputComponent.hpp
     src/entity.hpp
     src/skybox.hpp
     src/skybox.cpp
