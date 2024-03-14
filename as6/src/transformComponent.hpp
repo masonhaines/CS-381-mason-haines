@@ -23,7 +23,7 @@ struct TransformComponent : public Component{
         Vector3 VEL,
         Vector3 SCALE,
         raylib::Color COLOR, 
-        // float& HEADING,
+        // float HEADING,
         raylib::Quaternion ROTATION) 
             : Component(ENTITY), position(POS), velocity(VEL), scale(SCALE), 
         /*heading(HEADING),*/ rotation(ROTATION), shade(COLOR) {}

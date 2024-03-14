@@ -3,8 +3,7 @@
 // #include <functional>
 
 #include <raylib-cpp.hpp>
-#include <BufferedInput.hpp>
-#include "delegate.hpp"
+
 // #include <utility>
 #include <vector>
 // #include <memory>
@@ -14,6 +13,7 @@
 #include "entity.hpp"
 #include "renderingComponent.hpp"
 #include "physicsComponent.hpp"
+#include "bufferedInputComponent.hpp"
 #include "transformComponent.hpp"
 
 
@@ -52,12 +52,12 @@ int main() {
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
 
-	raylib::BufferedInput inputs; // Manager for actions 
+	// raylib::BufferedInput inputs; // Manager for actions 
 
 	// Create vector of entities
 	std::vector<Entity> entities;
 	int numberOfPlanes = 6;
-
+	///-------------------------------------------------------------------------------------------------------------------------------
 	for (int i = 0; i < numberOfPlanes; i++) {
 		Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
 
@@ -66,8 +66,9 @@ int main() {
 		entityObjects.AddComponent<TransformComponent>
 		(Vector3{i * 5.0f, 200, 5}, Vector3{5, 5, 5}, Vector3{5, 5, 5}, 45 * i , GREEN);
 		entityObjects.AddComponent<PhysicsComponent>(Vector3{}, 5);
+		// entityObjects.AddComponent<bufferedComponent>(inputs);
 	}
-
+	///-------------------------------------------------------------------------------------------------------------------------------
 	// DrawPlaneModels(numberOfPlanes, entities);
 
 	// Create camera
@@ -169,13 +170,13 @@ int main() {
 				////////////////////
 				
 
-					
+				///-------------------------------------------------------------------------------------------------------------------------------	
 				/////////////////////////////////////////////
 				// Render skybox and ground
 				skybox.Draw();
 				ground.Draw({});
 				for (Entity& e: entities) e.tick(window.GetFrameTime());
-				
+				///-------------------------------------------------------------------------------------------------------------------------------
 				
 				// updateEntities(entities, window.GetFrameTime());
 

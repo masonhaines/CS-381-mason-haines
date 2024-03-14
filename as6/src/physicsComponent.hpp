@@ -20,7 +20,7 @@ struct PhysicsComponent : public Component {
         auto& transform = ref->get(); // get values stored in reference if it exists
 
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
-        raylib::Vector3 velocity3D = {cos(angle) * speed, velocity.y, -sin(angle) * speed}; // Compute 3D velocity based on heading
+        raylib::Vector3 velocity3D = {cos(angle) * speed, velocity.y, -sin(angle) * speed}; 
         // Update position
         transform.position.x += velocity3D.x * dt; 
         transform.position.y += velocity3D.y * dt;
@@ -28,4 +28,4 @@ struct PhysicsComponent : public Component {
     }
 };
 
-#endif // PHYSICSCOMPONENT_HPP
+#endif 

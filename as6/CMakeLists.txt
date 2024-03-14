@@ -12,6 +12,7 @@ set(sources
     src/renderingComponent.hpp
     src/physicsComponent.hpp
     src/bufferedInputComponent.hpp
+    src/delegate.hpp
     src/entity.hpp
     src/skybox.hpp
     src/skybox.cpp
