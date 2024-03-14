@@ -289,9 +289,8 @@ void DrawPlaneModels(int numberOfPlanes, std::vector<Entity>& entities) {
 		entityObjects.AddComponent<RenderingComponent>
 		(raylib::Model("meshes/PolyPlane.glb"));
 		entityObjects.AddComponent<TransformComponent>
-		(Vector3{i * 5.0f, 200, 5000}, 45 * i);
+		(Vector3{i * 5.0f, 200, 5}, 45 * i, Vector3{5, 5, 5}, GREEN);
 	}
-	
 }
 
 void updateEntities(std::vector<Entity>& entities, float dt) {

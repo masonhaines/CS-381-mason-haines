@@ -55,17 +55,17 @@ struct Entity {
         }
     }
 
-    void setup() {
-        for (auto& c : components) {
-            c->setup();
-        }
-    }
+    // void setup() {
+    //     for (auto& c : components) {
+    //         c->setup();
+    //     }
+    // }
 
-    void cleanup() {
-        for (auto& c : components) {
-            c->cleanup();
-        }
-    }
+    // void cleanup() {
+    //     for (auto& c : components) {
+    //         c->cleanup();
+    //     }
+    // }
 };
 
 #endif

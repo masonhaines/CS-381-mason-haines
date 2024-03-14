@@ -16,7 +16,8 @@ struct RenderingComponent : public Component{
         auto& transform = ref->get(); // get values stored in reference if it exists
 
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
-        model.Draw(transform.position, axis ,angle);
+        // model.Draw(transform.position, axis ,angle);
+        model.Draw(transform.position, axis ,angle, transform.scale, transform.shade);
     }
 };
 
