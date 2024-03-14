@@ -1,0 +1,23 @@
+#ifndef RENDERINGCOMPONENT_HPP
+#define RENDERINGCOMPONENT_HPP
+
+#include "component.hpp" // Include the Component header
+#include "entity.hpp" // Include the Entity header
+#include "transformComponent.hpp" // Include the TransformComponent header
+
+struct RenderingComponent : public Component{
+    raylib::Model model;
+
+    RenderingComponent(Entity& e, raylib::Model&& model = {}) : Component(e), model(std::move(model)) {}
+    
+    void tick(float dt) override {
+        auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+        if (!ref) return; // does it exist 
+        auto& transform = ref->get(); // get values stored in reference if it exists
+
+        auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
+        model.Draw(transform.position, axis ,angle);
+    }
+};
+
+#endif

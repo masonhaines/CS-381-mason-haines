@@ -3,7 +3,17 @@ project(as0 LANGUAGES CXX)
 
 add_subdirectory(raylib-cpp)
 
-file(GLOB sources "src/*.cpp" "src/*.c")
+# file(GLOB sources "src/*.cpp" "src/*.c")
+# this is to help manage the new files with structs
+set(sources
+    src/as6.cpp
+    src/component.hpp
+    src/transformComponent.hpp
+    src/renderingComponent.hpp
+    src/entity.hpp
+    src/skybox.hpp
+    src/skybox.cpp
+)
 add_executable(as6 ${sources})
 target_link_libraries(as6 PUBLIC raylib raylib_cpp raylib::buffered)
 set_property(TARGET as6 PROPERTY CXX_STANDARD 20)
