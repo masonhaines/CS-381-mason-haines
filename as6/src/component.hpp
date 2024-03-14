@@ -8,7 +8,7 @@
 struct Component {
     struct Entity* object; // object prototype
 
-    // Component() = default; // Default constructor
+    // Component() = default; 
 
     Component(struct Entity& e) : object(&e) {} //constructor 
 

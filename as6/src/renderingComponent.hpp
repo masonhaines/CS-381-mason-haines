@@ -1,9 +1,9 @@
 #ifndef RENDERINGCOMPONENT_HPP
 #define RENDERINGCOMPONENT_HPP
 
-#include "component.hpp" // Include the Component header
-#include "entity.hpp" // Include the Entity header
-#include "transformComponent.hpp" // Include the TransformComponent header
+#include "component.hpp" 
+#include "entity.hpp" 
+#include "transformComponent.hpp" 
 
 struct RenderingComponent : public Component{
     raylib::Model model;

@@ -1,8 +1,8 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
-#include "component.hpp" // Include the Component header
-#include "transformComponent.hpp" // Include the TransformComponent header
+#include "component.hpp" 
+#include "transformComponent.hpp" 
 #include <optional>
 
 struct Entity {
