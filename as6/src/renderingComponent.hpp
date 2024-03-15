@@ -4,6 +4,7 @@
 #include "component.hpp" 
 #include "entity.hpp" 
 #include "transformComponent.hpp" 
+#include <iostream>
 
 struct RenderingComponent : public Component{
     raylib::Model model;
@@ -17,6 +18,7 @@ struct RenderingComponent : public Component{
 
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
         // model.Draw(transform.position, axis ,angle);
+        // std::cout << transform.position.x << std::endl;
         model.Draw(transform.position, axis ,angle, transform.scale, transform.shade);
     }
 };

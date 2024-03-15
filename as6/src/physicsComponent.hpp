@@ -4,6 +4,7 @@
 #include "component.hpp"
 #include "entity.hpp" 
 #include "transformComponent.hpp" 
+#include <iostream>
 
 
 struct PhysicsComponent : public Component {
@@ -20,6 +21,7 @@ struct PhysicsComponent : public Component {
         auto& transform = ref->get(); // get values stored in reference if it exists
 
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
+        // std::cout << velocity.y << std::endl;
         raylib::Vector3 velocity3D = {cos(angle) * speed, velocity.y, -sin(angle) * speed}; 
         // Update position
         transform.position.x += velocity3D.x * dt; 

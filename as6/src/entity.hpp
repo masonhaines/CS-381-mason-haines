@@ -17,20 +17,21 @@ struct Entity {
         }
     }
 
-    // template<std::derived_from<Component> T, typename... Ts>
-    // size_t AddComponent(Ts... args) {
-    //     auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
-    //     components.back()->object = this;
-    //     return components.size() - 1;
-    // }
-
     template<std::derived_from<Component> T, typename... Ts>
     size_t AddComponent(Ts... args) {
         auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
-        c->object = this; // Set the object pointer
-        components.push_back(std::move(c)); // Push the new component
+        // components.back()->object = this;
+        components.emplace_back(std::move(c));
         return components.size() - 1;
     }
+
+    // template<std::derived_from<Component> T, typename... Ts>
+    // size_t AddComponent(Ts... args) {
+    //     auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
+    //     c->object = this; // Set the object pointer
+    //     components.push_back(std::move(c)); // Push the new component
+    //     return components.size() - 1;
+    // }
 
 
     template<std::derived_from<Component> T> 
@@ -55,11 +56,11 @@ struct Entity {
         }
     }
 
-    // void setup() {
-    //     for (auto& c : components) {
-    //         c->setup();
-    //     }
-    // }
+    void setup() {
+        for (auto& c : components) {
+            c->setup();
+        }
+    }
 
     // void cleanup() {
     //     for (auto& c : components) {
