@@ -27,6 +27,7 @@ struct PhysicsComponent : public Component {
         transform.position.x += velocity3D.x * dt; 
         transform.position.y += velocity3D.y * dt;
         transform.position.z += velocity3D.z * dt;
+        transform.rotation.x += velocity3D.x;
     }
 };
 

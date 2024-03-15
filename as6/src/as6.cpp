@@ -56,10 +56,14 @@ int main() {
 
 	// Create vector of entities
 	std::vector<Entity> entities;
-	int numberOfPlanes = 6;
+	int numberOfPlanes = 2;
 	int counter = -1;
 
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
+	inputs["backwards"] = raylib::Action::key(KEY_A).move();
+	inputs["right"] = raylib::Action::key(KEY_D).move();
+	inputs["left"] = raylib::Action::key(KEY_A).move();
+
 	inputs["change"] = raylib::Action::key(KEY_TAB).SetPressedCallback([&entities, &counter](){
 		counter = (counter + 1) % entities.size();
 		for (int i = 0; i < entities.size(); i++) {

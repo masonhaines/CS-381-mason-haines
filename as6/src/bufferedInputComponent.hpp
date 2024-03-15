@@ -27,8 +27,23 @@ struct bufferedComponent : public Component {
       
 
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
-            std::cout << "W" << std::endl;
-            if(selected) physics.speed++;//physics.velocity.y += ; // thus doing 
+            // std::cout << "W" << std::endl;
+            if(selected) physics.speed++;// thus doing 
+        });
+        (*inputs)["backwards"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+            // std::cout << "S" << std::endl;
+            if(selected) physics.speed--;//physics.velocity.y += ; // thus doing 
+        });
+        (*inputs)["right"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+            // std::cout << "D" << std::endl;
+            if(selected) physics.velocity.y += 5; // thus doing 
+        });
+        (*inputs)["left"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+            // std::cout << "A" << std::endl;
+            if(selected) {
+                physics.velocity.x -=5 ; // thus doing 
+                // physics.
+            }
         });
         // When space key is hit action happens
         
