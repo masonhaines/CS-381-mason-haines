@@ -36,12 +36,12 @@ struct bufferedComponent : public Component {
         });
         (*inputs)["right"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
-            if(selected) physics.velocity.y += 5; // thus doing 
+            if(selected) physics.velocity.x -= 50; // thus doing 
         });
         (*inputs)["left"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "A" << std::endl;
             if(selected) {
-                physics.velocity.x -=5 ; // thus doing 
+                physics.velocity.x += 50 ; // thus doing 
                 // physics.
             }
         });

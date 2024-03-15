@@ -21,13 +21,23 @@ struct PhysicsComponent : public Component {
         auto& transform = ref->get(); // get values stored in reference if it exists
 
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
-        // std::cout << velocity.y << std::endl;
+        
         raylib::Vector3 velocity3D = {cos(angle) * speed, velocity.y, -sin(angle) * speed}; 
+        // std::cout << angle << std::endl;
         // Update position
+        transform.rotation.Identity();
         transform.position.x += velocity3D.x * dt; 
         transform.position.y += velocity3D.y * dt;
         transform.position.z += velocity3D.z * dt;
-        transform.rotation.x += velocity3D.x;
+
+        // QuaternionToEuler(transform.rotation)
+ 
+
+         
+
+   
+
+        
     }
 };
 

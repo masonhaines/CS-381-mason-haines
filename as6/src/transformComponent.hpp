@@ -14,7 +14,7 @@ struct TransformComponent : public Component{
     // Vector3 velocity = {0, 0, 0}; 
     Vector3 scale = {1, 1, 1};
     raylib::Color shade = WHITE;
-    // float heading = 0; 
+    // float rotation = 0; 
     
     raylib::Quaternion rotation = raylib::Quaternion::Identity(); 
 
