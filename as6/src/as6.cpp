@@ -19,8 +19,8 @@
 
 int main() {
 	// Create window
-	const int screenWidth = 800 * 2;
-	const int screenHeight = 450 * 2;
+	const int screenWidth = 200* 2;
+	const int screenHeight = 200 * 2;
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
 
@@ -49,14 +49,15 @@ int main() {
 	///-------------------------------------------------------------------------------------------------------------------------------
 	for (int i = 0; i < numberOfPlanes; i++) {
 		Entity& entityObjects = entities.emplace_back(); // Add anew entity to to back of entities vector create refernce e to the newly made entity object 
-
+		
 		entityObjects.AddComponent<RenderingComponent>
 		(raylib::Model("meshes/PolyPlane.glb"));
+		// DrawBoundingBox(entityObjects.GetComponent<RenderingComponent>()->get().box, PINK);
 		entityObjects.GetComponent<TransformComponent>()->get().position.x = i * 25;
 		entityObjects.GetComponent<TransformComponent>()->get().scale = {1,2,3};
 		entityObjects.GetComponent<TransformComponent>()->get().shade = GREEN;
-		// entityObjects.GetComponent<TransformComponent>()->get().rotation.z = 180 * DEG2RAD; // this makes it wiggle?
-		entityObjects.AddComponent<PhysicsComponent>(Vector3{}, 5);
+		entityObjects.GetComponent<TransformComponent>()->get().rotation = raylib::Quaternion::FromAxisAngle({0, 1, 0}, 180 * DEG2RAD); // this makes it wiggle?
+		entityObjects.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0);
 		entityObjects.AddComponent<bufferedComponent>(&inputs);
 
 
@@ -88,6 +89,8 @@ int main() {
 
 
 	// size_t selectedPlane = 0;
+
+	SetTargetFPS(15);
 
 	// Main loop
 	bool keepRunning = true;
