@@ -10,35 +10,32 @@
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
     float speed = 5;
-    // float heading = 0; 
+    float heading = 0; 
 
-    PhysicsComponent(Entity& entity, const raylib::Vector3& initialVelocity = {0, 0, 0}, float initialSpeed = 0)
-        : Component(entity), velocity(initialVelocity), speed(initialSpeed) {}
+    PhysicsComponent(Entity& entity, const raylib::Vector3& initialVelocity = {0, 0, 0}, float initialSpeed = 0, float HEADING= 0 )
+        : Component(entity), velocity(initialVelocity), speed(initialSpeed), heading(HEADING){}
 
     void tick(float dt) override {
-        auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
-        if (!ref) return; // does it exist 
-        auto& transform = ref->get(); // get values stored in reference if it exists
+    auto ref = object->GetComponent<TransformComponent>(); // Get reference to transform component
+    if (!ref) return;
 
-        auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
-        
-        raylib::Vector3 velocity3D = {cos(angle) * speed, velocity.y, -sin(angle) * speed}; 
-        // std::cout << angle << std::endl;
-        // Update position
-        transform.rotation.Identity();
-        transform.position.x += velocity3D.x * dt; 
-        transform.position.y += velocity3D.y * dt;
-        transform.position.z += velocity3D.z * dt;
+    auto& transform = ref->get(); // Get the actual transform component
+    auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
+    
+    //Accumulate rotation based on heading
+    raylib::Quaternion rotationDelta = QuaternionFromAxisAngle(raylib::Vector3{0, 1, 0}, heading * dt);
+    transform.rotation = rotationDelta * transform.rotation;
 
-        // QuaternionToEuler(transform.rotation)
- 
+    // Update velocity based on speed and heading
+    velocity.x = speed * cos(heading);
+    velocity.z = -speed * sin(heading);
 
-         
+    // Update position based on velocity
+    transform.position.x += velocity.x * dt;
+    transform.position.y += velocity.y * dt;
+    transform.position.z += velocity.z * dt;
+}
 
-   
-
-        
-    }
 };
 
 #endif 

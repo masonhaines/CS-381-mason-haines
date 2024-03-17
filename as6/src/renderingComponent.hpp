@@ -19,6 +19,8 @@ struct RenderingComponent : public Component{
         auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
         // model.Draw(transform.position, axis ,angle);
         // std::cout << transform.position.x << std::endl;
+        // float deg = angle;
+        // deg = 0;
         model.Draw(transform.position, axis ,angle, transform.scale, transform.shade);
     }
 };
