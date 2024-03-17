@@ -23,6 +23,8 @@ struct bufferedComponent : public Component {
         if (!ref) return; // does it exist 
         auto& physics = ref->get(); // get values stored in reference if it exists
 
+
+
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "W" << std::endl;
             if(selected) physics.speed++;// thus doing 

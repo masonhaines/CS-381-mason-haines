@@ -22,15 +22,14 @@ struct PhysicsComponent : public Component {
     auto& transform = ref->get(); // Get the actual transform component
     auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
     
-    //Accumulate rotation based on heading
+  
     raylib::Quaternion rotationDelta = QuaternionFromAxisAngle(raylib::Vector3{0, 1, 0}, heading * dt);
     transform.rotation = rotationDelta * transform.rotation;
-
-    // Update velocity based on speed and heading
+    
+  
     velocity.x = speed * cos(heading);
     velocity.z = -speed * sin(heading);
 
-    // Update position based on velocity
     transform.position.x += velocity.x * dt;
     transform.position.y += velocity.y * dt;
     transform.position.z += velocity.z * dt;
