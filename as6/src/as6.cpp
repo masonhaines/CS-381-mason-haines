@@ -53,11 +53,12 @@ int main() {
 		entityObjects.AddComponent<RenderingComponent>
 		(raylib::Model("meshes/PolyPlane.glb"));
 		// DrawBoundingBox(entityObjects.GetComponent<RenderingComponent>()->get().box, PINK);
-		entityObjects.GetComponent<TransformComponent>()->get().position.x = i * 25;
-		entityObjects.GetComponent<TransformComponent>()->get().scale = {5,5,5};
-		entityObjects.GetComponent<TransformComponent>()->get().shade = GREEN;
-		entityObjects.GetComponent<TransformComponent>()->get().rotation.x = 4;
-		entityObjects.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0);
+		entityObjects.GetComponent<TransformComponent>()->get().position.x = i * 50;
+		entityObjects.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0f, 1.0f, 1.0f);
+		// entityObjects.GetComponent<TransformComponent>()->get().shade = RED;
+		// entityObjects.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(1.0f, 1.0f, 1.0f);
+		// entityObjects.GetComponent<TransformComponent>()->get().heading = 5 * DEG2RAD;
+		entityObjects.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1);
 		entityObjects.AddComponent<bufferedComponent>(&inputs);
 
 
