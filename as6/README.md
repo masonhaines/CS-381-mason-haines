@@ -1,6 +1,6 @@
 # AS6 - Object Oriented Entity Component Ships and Planes - README
 
-This program is designed to create a simple window featuring a three 3D plane planes taking off and flying and allowing you to fly each one! After taking off user can control the plane as it flies and switch between each plane on screen.
+This program is designed to create a simple window featuring a ton a planes 3D planes taking off and flying and allowing you to fly each one! After taking off user can control the plane as it flies and switch between each plane on screen.
 
 # Instructions 
 ## Please open your terminal and..
@@ -53,8 +53,4 @@ To exit program/window press X on top right of window and program will terminate
 • Pressing S to go slowdown
 • Pressing A to turn left 
 • Pressing D to turn right 
-• Pressing Q to go upwards
-• Pressing E to go downwards
-• Pressing space to stop
-• Pressing c to change camera
-• Pressing p tO reset controls
+• Pressing tab to cycle between planes

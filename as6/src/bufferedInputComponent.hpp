@@ -5,7 +5,6 @@
 #include "entity.hpp"
 // #include "delegate.hpp"
 #include "src/physicsComponent.hpp"
-#include "src/renderingComponent.hpp"
 #include "src/transformComponent.hpp"
 #include <BufferedInput.hpp>
 
@@ -13,8 +12,8 @@ struct bufferedComponent : public Component {
     raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
 
-    bufferedComponent(Entity& entity, raylib::BufferedInput* Input)
-        : Component(entity), inputs(Input) {}
+    bufferedComponent(Entity& entity, raylib::BufferedInput* Input, bool selected)
+        : Component(entity), inputs(Input), selected(selected) {}
 
     void setup() override {
         // Check if the controlled entity is selected

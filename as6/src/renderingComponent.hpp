@@ -3,8 +3,9 @@
 
 #include "component.hpp" 
 #include "entity.hpp" 
+// #include "src/bufferedInputComponent.hpp"
 #include "transformComponent.hpp" 
-#include <iostream>
+// #include <iostream>
 
 template<typename T>
     concept Transformer = requires( T t, raylib::Transform m) {
@@ -15,9 +16,10 @@ template<typename T>
 struct RenderingComponent : public Component{
 
     void DrawModel(raylib::Model& model, Transformer auto transformer) {
+        
         raylib::Transform backupTransform = model.transform; // Save the model's transform
         model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
-        
+        // model.GetTransformedBoundingBox().Draw();
         model.Draw({});
         model.transform = backupTransform; // Restore the original transform
     }
@@ -41,7 +43,15 @@ struct RenderingComponent : public Component{
         // transform.scale, 
         // transform.shade);
 
-         DrawModel(model, [&transformC](raylib::Transform t) -> raylib::Transform {
+        // auto ref3 = object->GetComponent<bufferedComponent>(); // get optional reference to transform component 
+        // if (!ref3) return; // does it exist 
+        // auto& buffer = ref3->get() ; // get values stored in reference if it exists
+        // if (buffer.selected) {
+        //     model.GetTransformedBoundingBox().Draw();
+        // }
+        
+
+        DrawModel(model, [&transformC](raylib::Transform t) -> raylib::Transform {
             return t.Translate(transformC.position).
             RotateY(transformC.rotation.y).
             RotateX(transformC.rotation.x).

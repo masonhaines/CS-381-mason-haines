@@ -10,10 +10,10 @@
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
     float speed = 5;
-    // float heading = 0; 
+    float heading = 0; 
 
     PhysicsComponent(Entity& entity, const raylib::Vector3& initialVelocity = {0, 0, 0}, float initialSpeed = 0, float HEADING = 0 )
-        : Component(entity), velocity(initialVelocity), speed(initialSpeed){}
+        : Component(entity), velocity(initialVelocity), speed(initialSpeed), heading(HEADING){}
 
     void tick(float dt) override {
         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
