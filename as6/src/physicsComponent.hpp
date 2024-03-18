@@ -10,10 +10,10 @@
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
     float speed = 5;
-    float heading = 0; 
+    // float heading = 0; 
 
     PhysicsComponent(Entity& entity, const raylib::Vector3& initialVelocity = {0, 0, 0}, float initialSpeed = 0, float HEADING = 0 )
-        : Component(entity), velocity(initialVelocity), speed(initialSpeed), heading(HEADING){}
+        : Component(entity), velocity(initialVelocity), speed(initialSpeed){}
 
     void tick(float dt) override {
         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
@@ -31,9 +31,9 @@ struct PhysicsComponent : public Component {
         // Debug output
         std::cout << "PhysicsComponent tick function called." << std::endl;
         std::cout << "Position: (" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << ")" << std::endl;
-        std::cout << "Position: (" << transform.rotation.x << ", " << transform.rotation.y << ", " << transform.rotation.z << ")" << std::endl;
+        std::cout << "axis: (" << transform.rotation.x << ", " << transform.rotation.y << ", " << transform.rotation.z << ")" << std::endl;
+        std::cout << "Velocity mag: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")" << std::endl;
     }
-
 };
 
 #endif 

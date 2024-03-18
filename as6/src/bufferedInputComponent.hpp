@@ -51,6 +51,12 @@ struct bufferedComponent : public Component {
                 transform.rotation.y += 5 * DEG2RAD;
             }
         });
+        (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+            // std::cout << "A" << std::endl;
+            if(selected) { 
+                physics.speed = 0;
+            }
+        });
     }
 
    
