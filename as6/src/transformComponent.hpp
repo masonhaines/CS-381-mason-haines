@@ -2,7 +2,7 @@
 #define TRANSFORMCOMPONENT_HPP
 
 #include "component.hpp" 
-#include <X11/extensions/randr.h>
+// #include <X11/extensions/randr.h>
 // #include "entity.hpp" 
 
 

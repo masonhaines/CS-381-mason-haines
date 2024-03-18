@@ -41,6 +41,7 @@ struct bufferedComponent : public Component {
             // std::cout << "D" << std::endl;
             if(selected) {
                 transform.heading -= 5 * DEG2RAD;
+
                 transform.rotation.y -= 5 * DEG2RAD;
             }
         });
@@ -48,6 +49,7 @@ struct bufferedComponent : public Component {
             // std::cout << "A" << std::endl;
             if(selected) { 
                 transform.heading += 5 *DEG2RAD;
+                
                 transform.rotation.y += 5 * DEG2RAD;
             }
         });
