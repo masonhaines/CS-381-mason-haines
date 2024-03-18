@@ -2,6 +2,7 @@
 #define TRANSFORMCOMPONENT_HPP
 
 #include "component.hpp" 
+#include <X11/extensions/randr.h>
 // #include "entity.hpp" 
 
 
@@ -17,6 +18,8 @@ struct TransformComponent : public Component{
     // float rotation = 0; 
     
     raylib::Quaternion rotation = raylib::Quaternion::Identity(); 
+    // raylib::Quaternion rotation = rotation.Normalize();
+    
 
     TransformComponent(Entity& ENTITY, 
         Vector3 POS, 

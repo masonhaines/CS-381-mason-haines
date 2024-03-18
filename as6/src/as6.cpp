@@ -54,9 +54,9 @@ int main() {
 		(raylib::Model("meshes/PolyPlane.glb"));
 		// DrawBoundingBox(entityObjects.GetComponent<RenderingComponent>()->get().box, PINK);
 		entityObjects.GetComponent<TransformComponent>()->get().position.x = i * 25;
-		entityObjects.GetComponent<TransformComponent>()->get().scale = {1,2,3};
+		entityObjects.GetComponent<TransformComponent>()->get().scale = {5,5,5};
 		entityObjects.GetComponent<TransformComponent>()->get().shade = GREEN;
-		entityObjects.GetComponent<TransformComponent>()->get().rotation = raylib::Quaternion::FromAxisAngle({0, 1, 0}, 180 * DEG2RAD); // this makes it wiggle?
+		entityObjects.GetComponent<TransformComponent>()->get().rotation.x = 4;
 		entityObjects.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0);
 		entityObjects.AddComponent<bufferedComponent>(&inputs);
 

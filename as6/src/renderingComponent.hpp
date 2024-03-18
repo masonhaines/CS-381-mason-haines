@@ -22,6 +22,7 @@ struct RenderingComponent : public Component{
         // float deg = angle;
         // deg = 0;
         model.Draw(transform.position, axis ,angle, transform.scale, transform.shade);
+        
     }
 };
 

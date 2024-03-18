@@ -5,6 +5,8 @@
 #include "entity.hpp"
 // #include "delegate.hpp"
 #include "src/physicsComponent.hpp"
+#include "src/renderingComponent.hpp"
+#include "src/transformComponent.hpp"
 #include <BufferedInput.hpp>
 
 struct bufferedComponent : public Component {
@@ -23,6 +25,12 @@ struct bufferedComponent : public Component {
         if (!ref) return; // does it exist 
         auto& physics = ref->get(); // get values stored in reference if it exists
 
+        auto ref2 = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+        if (!ref2) return; // does it exist 
+        auto& transform = ref2->get() ; // get values stored in reference if it exists
+        // auto [axis, angle] = transform.rotation.ToAxisAngle(); // gets quaternion
+        transform.rotation.Normalize();
+
 
 
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
@@ -37,18 +45,32 @@ struct bufferedComponent : public Component {
                 physics.speed--; // thus doing 
                 
         });
-        (*inputs)["right"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["right"].AddPressedCallback([&transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
-                // physics.velocity.x -= 50; // thus doing 
-                physics.heading -= 45 * DEG2RAD;
+               // Rotate right (clockwise)
+               transform.rotation.ToEuler();
+                // transform.rotation = QuaternionMultiply(transform.rotation, QuaternionFromAxisAngle({0, 0, 0}, -1.0f));
+                // transform.rotation.x += .5;
+                transform.rotation.y += .50 * DEG2RAD;
+                
             }
         });
-        (*inputs)["left"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["left"].AddPressedCallback([&transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "A" << std::endl;
             if(selected) {
-                // physics.velocity.x += 50 ; // thus doing 
-                physics.heading += 45 * DEG2RAD;
+                // Rotate left (counter-clockwise)
+                // transform.rotation.ToEuler();
+                
+                // transform.rotation
+                // transform.rotation
+                // transform.rotation
+                // transform.rotation
+                // transform.rotation = QuaternionMultiply(transform.rotation, QuaternionFromAxisAngle({0, 0, 0}, 1.0f));
+                // transform.rotation.x -= .5;
+                transform.rotation.y += 50 * DEG2RAD;
+                
+                
             }
         });
         // When space key is hit action happens
