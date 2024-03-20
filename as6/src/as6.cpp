@@ -13,7 +13,7 @@
 
 int main() {
 	// Create window
-	const int screenWidth = 800* 2;
+	const int screenWidth = 400* 2;
 	const int screenHeight = 450 * 2;
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
@@ -23,7 +23,7 @@ int main() {
 	// Create vector of entities
 	std::vector<Entity> entities;
 	int numberOfPlanes = 1;
-	int counter = -1;
+	int counter = 0;
 
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
 	inputs["backwards"] = raylib::Action::key(KEY_S).move();
@@ -53,28 +53,28 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 50;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0f, 1.0f, 1.0f);
 		entityPlanes.GetComponent<TransformComponent>()->get().shade = RED;
-		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 180 * DEG2RAD, 0); // these are in radians 
+		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); // these are in radians 
 		// entityPlanes.GetComponent<TransformComponent>()->get().heading = 5 * DEG2RAD;
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 0);
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 
 
 	}
 
 	// for (int i = 0; i < numberOfPlanes; i++) {
-		Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+		// Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
-		entityShips.AddComponent<RenderingComponent>
-		(raylib::Model("meshes/SmitHouston_Tug.glb"));
-		// DrawBoundingBox(entityShips.GetComponent<RenderingComponent>()->get().box, PINK);
-		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
-		// entityShips.GetComponent<TransformComponent>()->get().position.y = 50;
-		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
-		entityShips.GetComponent<TransformComponent>()->get().shade = RED;
-		entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90 * DEG2RAD, 0.0f);
-		// entityShips.GetComponent<TransformComponent>()->get().heading = 0;
-		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 0);
-		entityShips.AddComponent<bufferedComponent>(&inputs, false);
+		// entityShips.AddComponent<RenderingComponent>
+		// (raylib::Model("meshes/SmitHouston_Tug.glb"));
+		// // DrawBoundingBox(entityShips.GetComponent<RenderingComponent>()->get().box, PINK);
+		// entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
+		// // entityShips.GetComponent<TransformComponent>()->get().position.y = 50;
+		// entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
+		// entityShips.GetComponent<TransformComponent>()->get().shade = RED;
+		// entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90 * DEG2RAD, 0.0f);
+		// // entityShips.GetComponent<TransformComponent>()->get().heading = 0;
+		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
+		// entityShips.AddComponent<bufferedComponent>(&inputs, false);
 
 
 	// }

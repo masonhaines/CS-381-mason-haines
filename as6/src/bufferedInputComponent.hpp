@@ -27,35 +27,40 @@ struct bufferedComponent : public Component {
         auto ref2 = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
         if (!ref2) return; // does it exist 
         auto& transform = ref2->get() ; // get values stored in reference if it exists 
+
+        
+
         
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "W" << std::endl;
             if(selected) {
-                physics.speed++;// thus doing 
+                physics.targetSpeed++;// thus doing 
             }
         });
         (*inputs)["backwards"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "S" << std::endl;
             if(selected) {
-                physics.speed--; // thus doing 
+                physics.targetSpeed--; // thus doing 
             }
         });
         (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
-                
+                // physics.targetHeading -= 5 * DEG2RAD;
+                physics.targetHeading -= 10;
+                // transform.rotation.y = physics.targetHeading;
 
-                physics.heading -= 5 * DEG2RAD;
-
-                transform.rotation.y -= 5 * DEG2RAD;
+                // transform.rotation.y -= 5 * DEG2RAD;
             }
         });
         (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             
             if(selected) { 
-                physics.heading += 5 *DEG2RAD;
+                // physics.targetHeading += 5 *DEG2RAD;
+                physics.targetHeading += 10;
+                // transform.rotation.y = physics.targetHeading;
                 
-                transform.rotation.y += 5 * DEG2RAD;
+                // transform.rotation.y += 5 * DEG2RAD;
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
