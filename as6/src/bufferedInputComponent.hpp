@@ -12,10 +12,13 @@ struct bufferedComponent : public Component {
     raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
 
+    
+
     bufferedComponent(Entity& entity, raylib::BufferedInput* Input, bool selected)
         : Component(entity), inputs(Input), selected(selected) {}
 
     void setup() override {
+
         // Check if the controlled entity is selected
         auto ref = object->GetComponent<PhysicsComponent>(); // get optional reference to transform component 
         if (!ref) return; // does it exist 
@@ -23,7 +26,7 @@ struct bufferedComponent : public Component {
 
         auto ref2 = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
         if (!ref2) return; // does it exist 
-        auto& transform = ref2->get() ; // get values stored in reference if it exists
+        auto& transform = ref2->get() ; // get values stored in reference if it exists 
         
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "W" << std::endl;
@@ -37,24 +40,26 @@ struct bufferedComponent : public Component {
                 physics.speed--; // thus doing 
             }
         });
-        (*inputs)["right"].AddPressedCallback([&transform, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
-                transform.heading -= 5 * DEG2RAD;
+                
+
+                physics.heading -= 5 * DEG2RAD;
 
                 transform.rotation.y -= 5 * DEG2RAD;
             }
         });
-        (*inputs)["left"].AddPressedCallback([&transform, this]()-> void { //lambda function that is creating call back for action named "forward"
-            // std::cout << "A" << std::endl;
+        (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
+            
             if(selected) { 
-                transform.heading += 5 *DEG2RAD;
+                physics.heading += 5 *DEG2RAD;
                 
                 transform.rotation.y += 5 * DEG2RAD;
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
-            // std::cout << "A" << std::endl;
+            
             if(selected) { 
                 physics.speed = 0;
             }

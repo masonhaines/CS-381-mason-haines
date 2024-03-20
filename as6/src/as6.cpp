@@ -22,7 +22,7 @@ int main() {
 
 	// Create vector of entities
 	std::vector<Entity> entities;
-	int numberOfPlanes = 6;
+	int numberOfPlanes = 1;
 	int counter = -1;
 
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -53,7 +53,7 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 50;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0f, 1.0f, 1.0f);
 		entityPlanes.GetComponent<TransformComponent>()->get().shade = RED;
-		// entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(1.0f, 1.0f, 1.0f);
+		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 180 * DEG2RAD, 0); // these are in radians 
 		// entityPlanes.GetComponent<TransformComponent>()->get().heading = 5 * DEG2RAD;
 		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 0);
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
@@ -71,7 +71,7 @@ int main() {
 		// entityShips.GetComponent<TransformComponent>()->get().position.y = 50;
 		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
 		entityShips.GetComponent<TransformComponent>()->get().shade = RED;
-		entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90.0f, 0.0f);
+		entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90 * DEG2RAD, 0.0f);
 		// entityShips.GetComponent<TransformComponent>()->get().heading = 0;
 		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 0);
 		entityShips.AddComponent<bufferedComponent>(&inputs, false);

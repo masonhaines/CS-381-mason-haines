@@ -15,7 +15,6 @@ struct Component {
     virtual void setup() {}
     virtual void cleanup() {}
     virtual void tick(float dt) {}
-    
 };
 
 #endif // COMPONENT_HPP

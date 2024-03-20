@@ -14,20 +14,20 @@ struct TransformComponent : public Component{
     raylib::Vector3 scale = {1, 1, 1};
     raylib::Color shade = WHITE;
     raylib::Vector3 rotation = {};
-    float heading = 0; 
+    // float heading = 0; 
     
     // raylib::Quaternion rotation = raylib::Quaternion::Identity(); 
     // raylib::Quaternion rotation = rotation.Normalize();
     
     TransformComponent(Entity& ENTITY, 
         raylib::Vector3& POS, 
-        raylib::Vector3 SCALE,
+        raylib::Vector3& SCALE,
         raylib::Color COLOR, 
-        raylib::Vector3& ROTATION,
-        float HEADING
+        raylib::Vector3& ROTATION
+        // float HEADING
         ) 
             : Component(ENTITY), position(POS), scale(SCALE), 
-        rotation(ROTATION), heading(HEADING), shade(COLOR) {}
+        rotation(ROTATION), shade(COLOR) {}
 };
 
 #endif
