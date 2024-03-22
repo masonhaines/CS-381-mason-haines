@@ -47,7 +47,7 @@ int main() {
 		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
 		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
-
+		
 		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.50f, .50f, .50f);
@@ -59,18 +59,21 @@ int main() {
 	}
 
 	// for (int i = 0; i < numberOfPlanes; i++) {
-		// Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+		Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
-		// entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+		// entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/oilTanker.glb"));
 		
-		// entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
-		// entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
-		// entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90, 0.0f);
+		
+		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
+
+		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
+		entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0,0,0).Perpendicular();
 		// entityShips.GetComponent<TransformComponent>()->get().rotation.SetY(90);
 		
-		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
+		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
 		
-		// entityShips.AddComponent<bufferedComponent>(&inputs, false);
+		entityShips.AddComponent<bufferedComponent>(&inputs, false);
 
 
 	// }
