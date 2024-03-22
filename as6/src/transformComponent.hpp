@@ -22,12 +22,11 @@ struct TransformComponent : public Component{
     TransformComponent(Entity& ENTITY, 
         raylib::Vector3& POS, 
         raylib::Vector3& SCALE,
-        raylib::Color COLOR, 
         raylib::Vector3& ROTATION
         // float HEADING
         ) 
             : Component(ENTITY), position(POS), scale(SCALE), 
-        rotation(ROTATION), shade(COLOR) {}
+        rotation(ROTATION) {}
 };
 
 #endif

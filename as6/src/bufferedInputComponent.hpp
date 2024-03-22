@@ -28,27 +28,31 @@ struct bufferedComponent : public Component {
         if (!ref2) return; // does it exist 
         auto& transform = ref2->get() ; // get values stored in reference if it exists 
 
+        auto ref3 = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+        if (!ref3) return; // does it exist 
+        auto& render= ref3->get() ; // get values stored in reference if it exists 
+
         
 
         
-        (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["forward"].AddPressedCallback([&physics, &render, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "W" << std::endl;
             if(selected) {
                 physics.targetSpeed += 5;// thus doing 
             }
         });
-        (*inputs)["backwards"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["backwards"].AddPressedCallback([&physics, &render, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "S" << std::endl;
             if(selected)  {
                 physics.targetSpeed -= 5; // thus doing 
                 
             }
         });
-        (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["right"].AddPressedCallback([&physics, &transform,  this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
                 physics.targetHeading -= 5;
-                // if (abs(transform.rotation.z) > 45 * DEG2RAD) transform.rotation.z += 45 * DEG2RAD;
+                // if (transform.rotation.x > 45 * DEG2RAD) transform.rotation.x += 45 * DEG2RAD;
                 
             }
         });
@@ -56,7 +60,7 @@ struct bufferedComponent : public Component {
             
             if(selected) { 
                 physics.targetHeading += 5;
-                // if (abs(transform.rotation.z) > 45 * DEG2RAD) transform.rotation.z += 45 * DEG2RAD;
+                // if (transform.rotation.x > 45 * DEG2RAD) transform.rotation.x += 45 * DEG2RAD;
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"

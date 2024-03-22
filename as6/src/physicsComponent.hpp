@@ -65,15 +65,16 @@ struct PhysicsComponent : public Component {
 
 
 
-        velocity.x = speed * cos(angle * DEG2RAD);
-        velocity.z = -speed * sin(angle * DEG2RAD);
+        velocity.x = speed * cos(angle * DEG2RAD * 2);
+        velocity.z = -speed * sin(angle * DEG2RAD * 2);
 
         // Update position based on velocity
         transform.position.x += velocity.x * dt;
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        transform.rotation.y = angle * DEG2RAD;
+        transform.rotation.y = angle * DEG2RAD *2;
+        // transform.rotation.x = -.1* angle * DEG2RAD;
 
         // Debug output
         std::cout << "PhysicsComponent tick function called." << std::endl;

@@ -13,7 +13,7 @@
 
 int main() {
 	// Create window
-	const int screenWidth = 400* 2;
+	const int screenWidth = 800 * 2;
 	const int screenHeight = 450 * 2;
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
@@ -22,8 +22,8 @@ int main() {
 
 	// Create vector of entities
 	std::vector<Entity> entities;
-	int numberOfPlanes = 6;
-	int counter = 0;
+	int numberOfPlanes = 1;
+	int counter = -1;
 
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
 	inputs["backwards"] = raylib::Action::key(KEY_S).move();
@@ -46,33 +46,30 @@ int main() {
 	for (float i = 0; i < numberOfPlanes; i++) {
 		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
-		entityPlanes.AddComponent<RenderingComponent>
-		(raylib::Model("meshes/PolyPlane.glb"));
+		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
+
 		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0f, 1.0f, 1.0f);
-		entityPlanes.GetComponent<TransformComponent>()->get().shade = RED;
-		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 45.0f); // these are in radians 
+		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.50f, .50f, .50f);
+		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); // these are in radians 
+
 		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0, 0, 0, 25, 0);
-		// entityPlanes.GetComponent<PhysicsComponent>()->get().heading = 0;
+
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
-
-
 	}
 
 	// for (int i = 0; i < numberOfPlanes; i++) {
 		// Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
-		// entityShips.AddComponent<RenderingComponent>
-		// (raylib::Model("meshes/SmitHouston_Tug.glb"));
-		// // DrawBoundingBox(entityShips.GetComponent<RenderingComponent>()->get().box, PINK);
+		// entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+		
 		// entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
-		// // entityShips.GetComponent<TransformComponent>()->get().position.y = 50;
 		// entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
-		// entityShips.GetComponent<TransformComponent>()->get().shade = RED;
-		// entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90 * DEG2RAD, 0.0f);
-		// // entityShips.GetComponent<TransformComponent>()->get().heading = 0;
+		// entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0.0f, 90, 0.0f);
+		// entityShips.GetComponent<TransformComponent>()->get().rotation.SetY(90);
+		
 		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
+		
 		// entityShips.AddComponent<bufferedComponent>(&inputs, false);
 
 
@@ -94,14 +91,14 @@ int main() {
 	// Create ground
 	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 25);
 	raylib::Model ground = ((raylib::Mesh*)&mesh)->LoadModelFrom();
-	raylib::Texture grass("textures/grass.jpg");
+	raylib::Texture grass("textures/water.jpg");
 	grass.SetFilter(TEXTURE_FILTER_BILINEAR);
 	grass.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = grass;
 
 	for (Entity& e: entities) e.setup();
 
-	SetTargetFPS(15);
+	SetTargetFPS(60);
 
 	// Main loop
 	bool keepRunning = true;
