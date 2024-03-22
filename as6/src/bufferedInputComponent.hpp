@@ -34,33 +34,29 @@ struct bufferedComponent : public Component {
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "W" << std::endl;
             if(selected) {
-                physics.targetSpeed++;// thus doing 
+                physics.targetSpeed += 5;// thus doing 
             }
         });
         (*inputs)["backwards"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "S" << std::endl;
-            if(selected) {
-                physics.targetSpeed--; // thus doing 
+            if(selected)  {
+                physics.targetSpeed -= 5; // thus doing 
+                
             }
         });
         (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
-                // physics.targetHeading -= 5 * DEG2RAD;
-                physics.targetHeading -= 10;
-                // transform.rotation.y = physics.targetHeading;
-
-                // transform.rotation.y -= 5 * DEG2RAD;
+                physics.targetHeading -= 5;
+                // if (abs(transform.rotation.z) > 45 * DEG2RAD) transform.rotation.z += 45 * DEG2RAD;
+                
             }
         });
         (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             
             if(selected) { 
-                // physics.targetHeading += 5 *DEG2RAD;
-                physics.targetHeading += 10;
-                // transform.rotation.y = physics.targetHeading;
-                
-                // transform.rotation.y += 5 * DEG2RAD;
+                physics.targetHeading += 5;
+                // if (abs(transform.rotation.z) > 45 * DEG2RAD) transform.rotation.z += 45 * DEG2RAD;
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"

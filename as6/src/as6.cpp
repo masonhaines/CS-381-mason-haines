@@ -22,7 +22,7 @@ int main() {
 
 	// Create vector of entities
 	std::vector<Entity> entities;
-	int numberOfPlanes = 1;
+	int numberOfPlanes = 6;
 	int counter = 0;
 
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -43,19 +43,18 @@ int main() {
 	}).move();
 
 	///-------------------------------------------------------------------------------------------------------------------------------
-	for (int i = 0; i < numberOfPlanes; i++) {
+	for (float i = 0; i < numberOfPlanes; i++) {
 		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
 		entityPlanes.AddComponent<RenderingComponent>
 		(raylib::Model("meshes/PolyPlane.glb"));
-		// DrawBoundingBox(entityPlanes.GetComponent<RenderingComponent>()->get().box, PINK);
 		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 50;
+		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0f, 1.0f, 1.0f);
 		entityPlanes.GetComponent<TransformComponent>()->get().shade = RED;
-		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); // these are in radians 
-		// entityPlanes.GetComponent<TransformComponent>()->get().heading = 5 * DEG2RAD;
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
+		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 45.0f); // these are in radians 
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0, 0, 0, 25, 0);
+		// entityPlanes.GetComponent<PhysicsComponent>()->get().heading = 0;
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 
 

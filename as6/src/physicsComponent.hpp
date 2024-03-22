@@ -9,29 +9,30 @@
 
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
-    float speed = 5;
-    float targetSpeed = 0;
-    float targetHeading = 0;
-    float heading = 0; 
+    float speed;
+    float targetSpeed;
+    raylib::Degree targetHeading;
+    raylib::Degree heading = 0; 
 
-    float minSpeed = 0;
-    float maxSpeed = 50;
+    int minSpeed = 0;
+    int maxSpeed = 25;
 
     static constexpr float acceleration = 10;
-    static constexpr float angularAcceleration = 30;
+    static constexpr float angularAcceleration = 15;
 
 
 
-    PhysicsComponent(Entity& entity, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float HEADING = 0, float targSpeed = 0, float targHEADING = 0 )
-        : Component(entity), velocity(initVELO), speed(initSPEED), heading(HEADING), targetHeading(targHEADING), targetSpeed(targSpeed) {}
+    PhysicsComponent(Entity& entity, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float HEADING = 0, float targSpeed = 0, float targHEADING = 0, int MAX = 50, int MIN = 0)
+        : Component(entity), velocity(initVELO), speed(initSPEED), heading(HEADING), targetHeading(targHEADING), targetSpeed(targSpeed), maxSpeed(MAX), minSpeed(MIN) {}
 
     void tick(float dt) override {
 
         static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-            float decimal = float(angle) - int(angle);
-            int whole = int(angle) % 360;
-            whole += (whole < 0) * 360;
-            return decimal + whole;
+            int intPart = angle;
+            float floatPart = float(angle) - intPart;
+            intPart %= 360;
+            intPart += (intPart < 0) * 360;
+            return intPart + floatPart;
         };
 
 
@@ -39,16 +40,18 @@ struct PhysicsComponent : public Component {
         if (!ref) return; // does it exist 
         auto& transform = ref->get(); // get values stored in reference if it exists
 
-        float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+        float target = Clamp(targetSpeed, 0, 50);
         if(speed < target) speed += acceleration * dt;
         else if(speed > target) speed -= acceleration * dt;
-        speed = Clamp(speed, minSpeed, maxSpeed);
+        if (speed > maxSpeed) speed = maxSpeed;
+        else if (speed < minSpeed) speed = minSpeed;
+        // speed = Clamp(speed, minSpeed, maxSpeed);
 
         std::cout << speed << "<< speed >> " << std::endl;
-        std::cout << targetSpeed << "<< target speed >> " << std::endl;
+        
 
         target = AngleClamp(targetHeading);
-        float difference = abs(target - heading);
+        int difference = abs(target - heading);
         if(target > heading) {
             if(difference < 180) heading += angularAcceleration * dt;
             else if(difference > 180) heading -= angularAcceleration * dt;
@@ -58,19 +61,19 @@ struct PhysicsComponent : public Component {
         } 
         if(difference < .5) heading = target; // If the heading is really close to correct 
         heading = AngleClamp(heading);
-        raylib::Radian angle = raylib::Degree(heading);
+        float angle = raylib::Degree(heading);
 
 
 
-        velocity.x = speed * cos(angle);
-        velocity.z = -speed * sin(angle);
+        velocity.x = speed * cos(angle * DEG2RAD);
+        velocity.z = -speed * sin(angle * DEG2RAD);
 
         // Update position based on velocity
         transform.position.x += velocity.x * dt;
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        transform.rotation.y = angle;
+        transform.rotation.y = angle * DEG2RAD;
 
         // Debug output
         std::cout << "PhysicsComponent tick function called." << std::endl;

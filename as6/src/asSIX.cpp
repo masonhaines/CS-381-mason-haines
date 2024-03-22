@@ -87,3 +87,88 @@
 
 // 	return 0;
 // }
+
+// #ifndef PHYSICSCOMPONENT_HPP
+// #define PHYSICSCOMPONENT_HPP
+
+// #include "component.hpp"
+// #include "entity.hpp" 
+// #include "transformComponent.hpp" 
+// #include <iostream>
+
+
+// struct PhysicsComponent : public Component {
+//     raylib::Vector3 velocity = {0, 0, 0};
+//     float speed = 5;
+//     float targetSpeed = 0;
+//     raylib::Degree targetHeading = 0;
+//     raylib::Degree heading = 0; 
+
+//     float minSpeed = 0;
+//     float maxSpeed = 50;
+
+//     static constexpr float acceleration = 10;
+//     static constexpr float angularAcceleration = 30;
+
+
+
+//     PhysicsComponent(Entity& en/tity, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float HEADING = 0, float targSpeed = 0, float targHEADING = 0 )
+//         : Component(entity), velocity(initVELO), speed(initSPEED), heading(HEADING), targetHeading(targHEADING), targetSpeed(targSpeed) {}
+
+//     void tick(float dt) override {
+
+//         static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+//             int intPart = angle;
+//             float floatPart = float(angle) - intPart;
+//             intPart %= 360;
+//             intPart += (intPart < 0) * 360;
+//             return intPart + floatPart;
+//         };
+
+
+//         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+//         if (!ref) return; // does it exist 
+//         auto& transform = ref->get(); // get values stored in reference if it exists
+
+//         float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+//         if(speed < target) speed += acceleration * dt;
+//         else if(speed > target) speed -= acceleration * dt;
+//         speed = Clamp(speed, minSpeed, maxSpeed);
+
+//         std::cout << speed << "<< speed >> " << std::endl;
+//         std::cout << targetSpeed << "<< target speed >> " << std::endl;
+
+//         target = AngleClamp(targetHeading);
+//         float difference = abs(target - heading);
+//         if(target > heading) {
+//             if(difference < 180) heading += angularAcceleration * dt;
+//             else if(difference > 180) heading -= angularAcceleration * dt;
+//         } else if(target < heading) {
+//             if(difference < 180) heading -= angularAcceleration * dt;
+//             else if(difference > 180) heading += angularAcceleration * dt;
+//         } 
+//         if(difference < .0001) heading = target; // If the heading is really close to correct 
+//         heading = AngleClamp(heading);
+//         raylib::Radian angle = raylib::Degree(heading);
+
+
+
+//         velocity.x = speed * cos(angle);
+//         velocity.z = -speed * sin(angle);
+
+//         // Update position based on velocity
+//         transform.position.x += velocity.x * dt;
+//         transform.position.y += velocity.y * dt;
+//         transform.position.z += velocity.z * dt;
+
+//         transform.rotation.y = angle;
+
+//         // Debug output
+//         std::cout << "PhysicsComponent tick function called." << std::endl;
+//         // std::cout << "Position: (" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << ")" << std::endl;
+//         std::cout << "axis: (" << transform.rotation.x << ", " << transform.rotation.y << ", " << transform.rotation.z << ")" << std::endl;
+//         // std::cout << "Velocity mag: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")" << std::endl;
+//     }
+// };
+
+// #endif 
