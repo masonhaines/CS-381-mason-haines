@@ -22,6 +22,7 @@ struct Entity {
         auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
         // components.back()->object = this;
         components.emplace_back(std::move(c));
+        // components.push_back()(std::move(c));
         return components.size() - 1;
     }
 
@@ -61,12 +62,6 @@ struct Entity {
             c->setup();
         }
     }
-
-    // void cleanup() {
-    //     for (auto& c : components) {
-    //         c->cleanup();
-    //     }
-    // }
 };
 
 #endif

@@ -9,7 +9,7 @@
 
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
-    float speed;
+    float speed = 3;
     float targetSpeed;
     raylib::Degree targetHeading;
     raylib::Degree heading = 0; 
@@ -73,7 +73,7 @@ struct PhysicsComponent : public Component {
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        transform.rotation.y = angle * DEG2RAD *2;
+        // transform.rotation.y = angle * DEG2RAD *2;
         // transform.rotation.x = -.1* angle * DEG2RAD;
 
         // Debug output

@@ -45,15 +45,18 @@ int main() {
 	///-------------------------------------------------------------------------------------------------------------------------------
 	for (float i = 0; i < numberOfPlanes; i++) {
 		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+
+
+		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
+		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
+		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0f, 2.0f, 2.0f);
+		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
 		
 		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
 		
-		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.50f, .50f, .50f);
-		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); // these are in radians 
+		
 
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0, 0, 0, 25, 0);
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0, 0, 0);
 
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
@@ -62,18 +65,14 @@ int main() {
 		Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 		
 		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
-		// entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/oilTanker.glb"));
-		
-		
-		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
-
-		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3( 1.0f, 1.0f, 1.0f);
-		entityShips.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0,0,0).Perpendicular();
-		// entityShips.GetComponent<TransformComponent>()->get().rotation.SetY(90);
-		
 		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
-		
 		entityShips.AddComponent<bufferedComponent>(&inputs, false);
+		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
+		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1, 1, 1);
+		entityShips.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
+		
+		
+		
 
 
 	// }
@@ -94,14 +93,14 @@ int main() {
 	// Create ground
 	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 25);
 	raylib::Model ground = ((raylib::Mesh*)&mesh)->LoadModelFrom();
-	raylib::Texture grass("textures/water.jpg");
-	grass.SetFilter(TEXTURE_FILTER_BILINEAR);
-	grass.SetWrap(TEXTURE_WRAP_REPEAT);
-	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = grass;
+	raylib::Texture water("textures/water.jpg");
+	water.SetFilter(TEXTURE_FILTER_BILINEAR);
+	water.SetWrap(TEXTURE_WRAP_REPEAT);
+	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
 	for (Entity& e: entities) e.setup();
 
-	SetTargetFPS(60);
+	SetTargetFPS(30);
 
 	// Main loop
 	bool keepRunning = true;

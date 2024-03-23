@@ -40,6 +40,7 @@ struct RenderingComponent : public Component{
     RenderingComponent(Entity& e, raylib::Model model = {}) : Component(e), model(std::move(model)) {}
     
     void tick(float dt) override {
+        
         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
         if (!ref) return; // does it exist 
         auto& transformC = ref->get(); // get values stored in reference if it exists
@@ -63,17 +64,14 @@ struct RenderingComponent : public Component{
         // model.Draw(
         //     transformC.position, 
         // transformC.rotation, 
-        // physics.heading,
-        // transformC.scale, aa
+        // transformC.rotation.x,
+        // transformC.scale, 
         // PINK);
-
-        
         
 
         DrawModel(model, [&transformC](raylib::Transform t) -> raylib::Transform {
             return t.Translate(transformC.position).
-            RotateY(transformC.rotation.y).
-            RotateX(transformC.rotation.x).
+            RotateXYZ(transformC.rotation.x, transformC.rotation.y,transformC.rotation.z).
             Scale(transformC.scale.x, transformC.scale.y, transformC.scale.z);
         });
 

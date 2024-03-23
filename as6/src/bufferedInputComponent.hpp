@@ -32,7 +32,7 @@ struct bufferedComponent : public Component {
         if (!ref3) return; // does it exist 
         auto& render= ref3->get() ; // get values stored in reference if it exists 
 
-        
+        float angle = raylib::Degree(physics.heading);
 
         
         (*inputs)["forward"].AddPressedCallback([&physics, &render, this]()-> void { //lambda function that is creating call back for action named "forward"
@@ -48,18 +48,20 @@ struct bufferedComponent : public Component {
                 
             }
         });
-        (*inputs)["right"].AddPressedCallback([&physics, &transform,  this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["right"].AddPressedCallback([&physics, &transform, &angle, this]()-> void { //lambda function that is creating call back for action named "forward"
             // std::cout << "D" << std::endl;
             if(selected) {
                 physics.targetHeading -= 5;
+                transform.rotation.y -= angle * DEG2RAD *2;
                 // if (transform.rotation.x > 45 * DEG2RAD) transform.rotation.x += 45 * DEG2RAD;
                 
             }
         });
-        (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
+        (*inputs)["left"].AddPressedCallback([&physics, &transform, &angle, this]()-> void { //lambda function that is creating call back for action named "forward"
             
             if(selected) { 
                 physics.targetHeading += 5;
+                transform.rotation.y += angle * DEG2RAD *2;
                 // if (transform.rotation.x > 45 * DEG2RAD) transform.rotation.x += 45 * DEG2RAD;
             }
         });
