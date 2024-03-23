@@ -51,8 +51,8 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0f, 2.0f, 2.0f);
 		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
 		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
-		// entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 5); //offset - velo - speed - target speed - heading - target heading
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 0); //offset - velo - speed - target speed - heading - target heading
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 5); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+		// entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 0); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
 
@@ -62,8 +62,8 @@ int main() {
 		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1, 1, 1);
 		entityShips.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
-		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 1); //offset - velo - speed - target speed - heading - target heading
-		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 0); //offset - velo - speed - target speed - heading - target heading
+		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 1, 2.5f, 5); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 0);
 		entityShips.AddComponent<bufferedComponent>(&inputs, false);
 		
 

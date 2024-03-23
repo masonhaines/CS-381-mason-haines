@@ -19,14 +19,14 @@ struct PhysicsComponent : public Component {
     int minSpeed = 0;
     int maxSpeed = 25;
 
-    static constexpr float acceleration = 10;
-    static constexpr float angularAcceleration = 15;
+    float acceleration = 10;
+    float angularAcceleration = 15;
     
     raylib::Vector3 offsetROT = {0, 0, 0};
 
 
-    PhysicsComponent(Entity& entity,Vector3 OFFSET, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float targSpeed = 0, float HEADING = 0, float targHEADING = 0, int MAX = 50, int MIN = 0)
-        : Component(entity), offsetROT(OFFSET), velocity(initVELO), speed(initSPEED), targetSpeed(targSpeed), heading(HEADING), targetHeading(targHEADING),  maxSpeed(MAX), minSpeed(MIN) {}
+    PhysicsComponent(Entity& entity,Vector3 OFFSET, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float ACC = 10, float angAcc = 15, float targSpeed = 0, float HEADING = 0, float targHEADING = 0)
+        : Component(entity), offsetROT(OFFSET), velocity(initVELO), speed(initSPEED), targetSpeed(targSpeed), acceleration(ACC), angularAcceleration(angAcc), heading(HEADING), targetHeading(targHEADING){}
     
     void tick(float dt) override {
 
@@ -40,26 +40,14 @@ struct PhysicsComponent : public Component {
             return intPart + floatPart;
         };
 
-        std::cout << speed << "<< speed before clamp>> " << std::endl;
-
-       
-
-        // auto ref2 = object->GetComponent<bufferedComponent>(); // get optional ref2erence to transform component 
-        // if (!ref2) return; // does it exist 
-        // auto& bufferInput = ref2->get(); // get values stored in reference if it exists
-
         if (speed < targetSpeed) {
             speed += acceleration * dt;
         } else if (speed > targetSpeed) {
             speed -= acceleration * dt;
         }
-
         // Ensure speed stays within bounds
         speed = Clamp(speed, minSpeed, maxSpeed);
-
-        std::cout << speed << "<< speed post clamp >> " << std::endl;
         
-
        float target = AngleClamp(targetHeading);
         int difference = abs(target - heading);
         if(target > heading) {
@@ -76,6 +64,7 @@ struct PhysicsComponent : public Component {
 
 
         velocity.x = speed * cos(angle * DEG2RAD * 2);
+        velocity.y = 0;
         velocity.z = -speed * sin(angle * DEG2RAD * 2);
 
          auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
@@ -87,8 +76,6 @@ struct PhysicsComponent : public Component {
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        
-        
         transform.rotation.y = (angle * DEG2RAD *2) + offsetROT.y;
         // transform.rotation.x = -.1* angle * DEG2RAD;
 
