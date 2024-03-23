@@ -22,7 +22,6 @@ struct RenderingComponent : public Component{
         if (!ref3) return; // does it exist 
         auto& buffer = ref3->get() ; // get values stored in reference if it exists
         
-        
         raylib::Transform backupTransform = model.transform; // Save the model's transform
         model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
         // model.GetTransformedBoundingBox().Draw(raylib::Color(BLACK));

@@ -3,13 +3,15 @@
 
 #include "component.hpp"
 #include "entity.hpp" 
+// #include "src/bufferedInputComponent.hpp"
+// #include "src/bufferedInputComponent.hpp"
 #include "transformComponent.hpp" 
 #include <iostream>
 
 
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
-    float speed = 3;
+    float speed;
     float targetSpeed;
     raylib::Degree targetHeading;
     raylib::Degree heading = 0; 
@@ -19,13 +21,16 @@ struct PhysicsComponent : public Component {
 
     static constexpr float acceleration = 10;
     static constexpr float angularAcceleration = 15;
+    
+    raylib::Vector3 offsetROT = {0, 0, 0};
 
 
-
-    PhysicsComponent(Entity& entity, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float HEADING = 0, float targSpeed = 0, float targHEADING = 0, int MAX = 50, int MIN = 0)
-        : Component(entity), velocity(initVELO), speed(initSPEED), heading(HEADING), targetHeading(targHEADING), targetSpeed(targSpeed), maxSpeed(MAX), minSpeed(MIN) {}
-
+    PhysicsComponent(Entity& entity,Vector3 OFFSET, const raylib::Vector3& initVELO = {0, 0, 0}, float initSPEED = 0, float targSpeed = 0, float HEADING = 0, float targHEADING = 0, int MAX = 50, int MIN = 0)
+        : Component(entity), offsetROT(OFFSET), velocity(initVELO), speed(initSPEED), targetSpeed(targSpeed), heading(HEADING), targetHeading(targHEADING),  maxSpeed(MAX), minSpeed(MIN) {}
+    
     void tick(float dt) override {
+
+        
 
         static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
             int intPart = angle;
@@ -35,22 +40,27 @@ struct PhysicsComponent : public Component {
             return intPart + floatPart;
         };
 
+        std::cout << speed << "<< speed before clamp>> " << std::endl;
 
-        auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
-        if (!ref) return; // does it exist 
-        auto& transform = ref->get(); // get values stored in reference if it exists
+       
 
-        float target = Clamp(targetSpeed, 0, 50);
-        if(speed < target) speed += acceleration * dt;
-        else if(speed > target) speed -= acceleration * dt;
-        if (speed > maxSpeed) speed = maxSpeed;
-        else if (speed < minSpeed) speed = minSpeed;
-        // speed = Clamp(speed, minSpeed, maxSpeed);
+        // auto ref2 = object->GetComponent<bufferedComponent>(); // get optional ref2erence to transform component 
+        // if (!ref2) return; // does it exist 
+        // auto& bufferInput = ref2->get(); // get values stored in reference if it exists
 
-        std::cout << speed << "<< speed >> " << std::endl;
+        if (speed < targetSpeed) {
+            speed += acceleration * dt;
+        } else if (speed > targetSpeed) {
+            speed -= acceleration * dt;
+        }
+
+        // Ensure speed stays within bounds
+        speed = Clamp(speed, minSpeed, maxSpeed);
+
+        std::cout << speed << "<< speed post clamp >> " << std::endl;
         
 
-        target = AngleClamp(targetHeading);
+       float target = AngleClamp(targetHeading);
         int difference = abs(target - heading);
         if(target > heading) {
             if(difference < 180) heading += angularAcceleration * dt;
@@ -68,12 +78,18 @@ struct PhysicsComponent : public Component {
         velocity.x = speed * cos(angle * DEG2RAD * 2);
         velocity.z = -speed * sin(angle * DEG2RAD * 2);
 
+         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+        if (!ref) return; // does it exist 
+        auto& transform = ref->get(); // get values stored in reference if it exists
+
         // Update position based on velocity
         transform.position.x += velocity.x * dt;
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        // transform.rotation.y = angle * DEG2RAD *2;
+        
+        
+        transform.rotation.y = (angle * DEG2RAD *2) + offsetROT.y;
         // transform.rotation.x = -.1* angle * DEG2RAD;
 
         // Debug output
@@ -85,3 +101,15 @@ struct PhysicsComponent : public Component {
 };
 
 #endif 
+
+
+//  auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+//         if (!ref) return; // does it exist 
+//         auto& transform = ref->get(); // get values stored in reference if it exists
+
+//         // auto [axis, angle] = transform.rotation // gets quaternion
+//         raylib::Vector3 velocity3D = {cos(transform.rotation.y) * speed, velocity.y, -sin(transform.rotation.y) * speed}; 
+//         // Update position
+//         transform.position.x += velocity3D.x * dt; 
+//         transform.position.y += velocity3D.y * dt;
+//         transform.position.z += velocity3D.z * dt;

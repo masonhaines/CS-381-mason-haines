@@ -11,9 +11,9 @@ struct TransformComponent : public Component{
     raylib::Vector3 rotation;
     
     TransformComponent(Entity& ENTITY, 
-        raylib::Vector3 POS, 
-        raylib::Vector3 SCALE,
-        raylib::Vector3 ROTATION
+        raylib::Vector3& POS, 
+        raylib::Vector3& SCALE,
+        raylib::Vector3& ROTATION
         ) 
             : Component(ENTITY), position(POS), scale(SCALE), 
         rotation(ROTATION) {}

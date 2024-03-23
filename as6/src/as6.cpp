@@ -13,7 +13,7 @@
 
 int main() {
 	// Create window
-	const int screenWidth = 800 * 2;
+	const int screenWidth = 400 * 2;
 	const int screenHeight = 450 * 2;
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 6");
 	// cs381::Inputs inputs(window);
@@ -46,37 +46,26 @@ int main() {
 	for (float i = 0; i < numberOfPlanes; i++) {
 		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 
-
 		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0f, 2.0f, 2.0f);
 		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
-		
 		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
-		
-		
-
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 5, 0, 0, 0);
-
+		// entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 5); //offset - velo - speed - target speed - heading - target heading
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 0); //offset - velo - speed - target speed - heading - target heading
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
 
-	// for (int i = 0; i < numberOfPlanes; i++) {
 		Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
-		
-		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
-		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, 1, 0, 0, 0);
-		entityShips.AddComponent<bufferedComponent>(&inputs, false);
+
 		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
 		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1, 1, 1);
 		entityShips.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
+		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 1); //offset - velo - speed - target speed - heading - target heading
+		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 0); //offset - velo - speed - target speed - heading - target heading
+		entityShips.AddComponent<bufferedComponent>(&inputs, false);
 		
-		
-		
-
-
-	// }
-	///-------------------------------------------------------------------------------------------------------------------------------
 
 	// Create camera
 	auto camera = raylib::Camera(
