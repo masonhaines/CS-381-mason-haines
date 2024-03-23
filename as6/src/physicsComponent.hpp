@@ -43,6 +43,8 @@ struct PhysicsComponent : public Component {
         } else if (speed > targetSpeed) {
             speed -= acceleration * dt;
         }
+
+        std::cout << "SPEED : " << speed << std::endl;
         // Ensure speed stays within bounds
         speed = Clamp(speed, minSpeed, maxSpeed);
         

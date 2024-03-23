@@ -60,7 +60,7 @@ struct bufferedComponent : public Component {
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             
             if(selected) { 
-                physics.speed = 0;
+                physics.targetSpeed = 0;
             }
         });
     }
