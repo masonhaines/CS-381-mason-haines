@@ -42,29 +42,41 @@ int main() {
 		}
 	}).move();
 
+
+	// offsetROT(OFFSET), velocity(initVELO), speed(initSPEED), targetSpeed(targSpeed), acceleration(ACC), angularAcceleration(angAcc), heading(HEADING), targetHeading(targHEADING){}
 	///-------------------------------------------------------------------------------------------------------------------------------
-	for (float i = 0; i < numberOfPlanes; i++) {
-		Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+	// for (float i = 0; i < numberOfPlanes; i++) {
+	// 	Entity& entityPlanes = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 
-		entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
-		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0f, 2.0f, 2.0f);
-		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
-		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 5); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
-		// entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 0); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
-		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
-	}
+	// 	entityPlanes.GetComponent<TransformComponent>()->get().position.x = i * 50 - 100;
+	// 	entityPlanes.GetComponent<TransformComponent>()->get().position.y = 100;
+	// 	entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0f, 2.0f, 2.0f);
+	// 	entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
+	// 	entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
+	// 	entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 2, 5, 10, 45); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+	// 	// entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{}, 5, 0); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+	// 	entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
+	// }
 
-		Entity& entityShips = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+		Entity& ship1 = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
 
-		entityShips.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
-		entityShips.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1, 1, 1);
-		entityShips.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-		entityShips.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
-		entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 1, 2.5f, 5); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
-		// entityShips.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 0);
-		entityShips.AddComponent<bufferedComponent>(&inputs, false);
+		ship1.GetComponent<TransformComponent>()->get().position.x = 50 - 100;
+		ship1.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1, 1, 1);
+		ship1.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
+		ship1.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+		ship1.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{}, 1, 0, 2.5f, 5); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+		ship1.AddComponent<bufferedComponent>(&inputs, false);
+
+		Entity& ship2 = entities.emplace_back(); // Add anew entity to to back of entities vector create reference e to the newly made entity object 
+		ship2.GetComponent<TransformComponent>()->get().position.x = 100;
+		ship2.GetComponent<TransformComponent>()->get().position.z = 300;
+		ship2.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.009, .009, .009);
+		ship2.GetComponent<TransformComponent>()->get().rotation = Vector3{90 * DEG2RAD, 0, 90 * DEG2RAD};
+		ship2.AddComponent<RenderingComponent>(raylib::Model("meshes/OilTanker.glb"));
+		ship2.AddComponent<PhysicsComponent>(Vector3{90 * DEG2RAD, 0, 0}, Vector3{}, .4, .4, .5f, 1); //offset - velo - speed - target speed - acceleration - ang acc- heading - target heading
+		ship2.AddComponent<bufferedComponent>(&inputs, false);
+
+
 		
 
 	// Create camera
@@ -89,7 +101,7 @@ int main() {
 
 	for (Entity& e: entities) e.setup();
 
-	SetTargetFPS(30);
+	SetTargetFPS(85);
 
 	// Main loop
 	bool keepRunning = true;

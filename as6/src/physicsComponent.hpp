@@ -30,8 +30,6 @@ struct PhysicsComponent : public Component {
     
     void tick(float dt) override {
 
-        
-
         static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
             int intPart = angle;
             float floatPart = float(angle) - intPart;
@@ -57,7 +55,7 @@ struct PhysicsComponent : public Component {
             if(difference < 180) heading -= angularAcceleration * dt;
             else if(difference > 180) heading += angularAcceleration * dt;
         } 
-        if(difference < .5) heading = target; // If the heading is really close to correct 
+        // if(difference < .001) heading = target; // If the heading is really close to correct 
         heading = AngleClamp(heading);
         float angle = raylib::Degree(heading);
 

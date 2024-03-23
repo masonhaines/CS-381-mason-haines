@@ -45,18 +45,21 @@ struct bufferedComponent : public Component {
         (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
 
             if(selected) {
-                physics.targetHeading -= 5;
+                if(physics.angularAcceleration < 10) physics.targetHeading -= 5;
+                else physics.targetHeading -= 20;
             }
         });
         (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
             
             if(selected) { 
-                physics.targetHeading += 5;
+                if(physics.angularAcceleration < 10) physics.targetHeading += 5;
+                else physics.targetHeading += 20;
+                
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             
-            while(selected) { 
+            if(selected) { 
                 physics.speed = 0;
             }
         });
