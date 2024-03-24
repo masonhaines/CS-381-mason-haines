@@ -3,17 +3,12 @@
 
 #include "component.hpp"
 #include "entity.hpp"
-// #include "delegate.hpp"
 #include "src/physicsComponent.hpp"
-// #include "src/renderingComponent.hpp"
-// #include "src/transformComponent.hpp"
 #include <BufferedInput.hpp>
 
 struct bufferedComponent : public Component {
     raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
-
-    
 
     bufferedComponent(Entity& entity, raylib::BufferedInput* Input, bool selected)
         : Component(entity), inputs(Input), selected(selected) {}
@@ -25,10 +20,6 @@ struct bufferedComponent : public Component {
         if (!ref) return; // does it exist 
         auto& physics = ref->get(); // get values stored in reference if it exists
 
-        auto ref2 = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
-        if (!ref2) return; // does it exist 
-        auto& transform = ref2->get() ; // get values stored in reference if it exists 
-
         (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
        
             if(selected) {
@@ -39,26 +30,19 @@ struct bufferedComponent : public Component {
             
             if(selected)  {
                 physics.targetSpeed -= 5; // thus doing 
-                
             }
         });
-        (*inputs)["right"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
-
+        (*inputs)["right"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             if(selected) {
-                if(physics.angularAcceleration < 10) physics.targetHeading -= 5;
-                else physics.targetHeading -= 20;
+                physics.targetHeading -= 10;
             }
         });
-        (*inputs)["left"].AddPressedCallback([&physics, &transform, this]()-> void { //lambda function that is creating call back for action named "forward"
-            
+        (*inputs)["left"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
             if(selected) { 
-                if(physics.angularAcceleration < 10) physics.targetHeading += 5;
-                else physics.targetHeading += 20;
-                
+                physics.targetHeading += 10;
             }
         });
         (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action named "forward"
-            
             if(selected) { 
                 physics.targetSpeed = 0;
             }
