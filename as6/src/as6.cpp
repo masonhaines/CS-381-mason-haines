@@ -54,7 +54,7 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().position.z = i * 50;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.65, .65, .65);
 		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
-		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"), GOLD);
+		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"), GRAY);
 		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{0, 0, 0}, 1, 1.0f, 10, 20, 0, 50); 
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
@@ -128,6 +128,7 @@ int main() {
 	raylib::Text text;
     float textSize = 25;
     const char *speed = {"Speed: "};
+	const char *start = {"Press TAB begin simulation"};
 
 	SetTargetFPS(60);
 	bool changeCamera = false; // camera change
@@ -180,11 +181,18 @@ int main() {
 				for (Entity& e: entities) e.tick(window.GetFrameTime());
 			}
 			camera.EndMode();
-			float activeSpeed;
-			if (counter < 0) activeSpeed = 0; // If there is no plane selected set current speed to zero
-			else activeSpeed = round((int)entities[counter].GetComponent<PhysicsComponent>()->get().speed); // Round active speed for more well rounded visual speed
+
 			int height = window.GetHeight();
         	int width = window.GetWidth();
+
+			float activeSpeed;
+			if (counter < 0) {
+				activeSpeed = 0; // If there is no plane selected set current speed to zero
+				// Start 
+				text.Draw(start, (width / 2.5), height * .15, textSize * 1.25, raylib::Color::Black());
+			}
+			else activeSpeed = round((int)entities[counter].GetComponent<PhysicsComponent>()->get().speed); // Round active speed for more well rounded visual speed
+			
 			// Speedometer for screen 
 			text.Draw(speed, (width * .005), height * .1, textSize, raylib::Color::Black());  
 			// Updated speed value

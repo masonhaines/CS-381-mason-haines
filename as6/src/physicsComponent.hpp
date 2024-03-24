@@ -74,6 +74,7 @@ struct PhysicsComponent : public Component {
             if(difference < 180) heading -= angularAcceleration * dt;
             else if(difference > 180) heading += angularAcceleration * dt;
         } 
+        if(difference < .005) heading = target; // If the heading is really close to correct 
         heading = AngleClamp(heading);
         float angle = raylib::Degree(heading); // convert heading
 
