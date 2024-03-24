@@ -10,6 +10,7 @@ struct bufferedComponent : public Component {
     raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
 
+    //Default Constructor
     bufferedComponent(Entity& entity, raylib::BufferedInput* Input, bool selected)
         : Component(entity), inputs(Input), selected(selected) {}
 

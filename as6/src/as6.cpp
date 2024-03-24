@@ -52,7 +52,8 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().position.z = i * 50;
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.65, .65, .65);
 		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
-		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"));
+		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"), GOLD);
+		// entityPlanes.GetComponent<RenderingComponent>()
 		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{0, 0, 0}, .025, 1.0f, 10, 20, 0, 50); 
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
@@ -62,7 +63,7 @@ int main() {
 	ship1.GetComponent<TransformComponent>()->get().position.z = -100;
 	ship1.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.5, .5, .5);
 	ship1.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-	ship1.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+	ship1.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), GRAY);
 	ship1.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 2.5f, 7, 0, 15); 
 	ship1.AddComponent<bufferedComponent>(&inputs, false);
 
@@ -71,7 +72,7 @@ int main() {
 			ship2.GetComponent<TransformComponent>()->get().position.z = -50;
 			ship2.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0, 1.0, 1.0);
 			ship2.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-			ship2.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+			ship2.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), RED);
 			ship2.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 2.0f, 5, 0, 12);  
 			ship2.AddComponent<bufferedComponent>(&inputs, false);
 
@@ -79,7 +80,7 @@ int main() {
 	ship3.GetComponent<TransformComponent>()->get().position.x = -250;
 	ship3.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(5, 1.35, 1.35);
 	ship3.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-	ship3.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+	ship3.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), ORANGE);
 	ship3.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, .25f, 2, 0, 10);  
 	ship3.AddComponent<bufferedComponent>(&inputs, false);
 
@@ -88,7 +89,7 @@ int main() {
 			ship4.GetComponent<TransformComponent>()->get().position.z = 150;
 			ship4.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(3.0, 2.0, .5);
 			ship4.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-			ship4.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+			ship4.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), YELLOW);
 			ship4.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 1.5f, 4, 0, 7.5);  
 			ship4.AddComponent<bufferedComponent>(&inputs, false);
 
@@ -97,7 +98,7 @@ int main() {
 	ship5.GetComponent<TransformComponent>()->get().position.z = 250;
 	ship5.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0, 6.0, 2.0);
 	ship5.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
-	ship5.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"));
+	ship5.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), SKYBLUE);
 	ship5.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, .5f, 10, 0, 5);  
 	ship5.AddComponent<bufferedComponent>(&inputs, false);
 
