@@ -1,5 +1,6 @@
 // Mason Haines CS 381 3/17
 #include <raylib-cpp.hpp>
+#include <string>
 #include <vector>
 #include "rlgl.h"
 #include "skybox.hpp"
@@ -9,6 +10,7 @@
 #include "physicsComponent.hpp"
 #include "bufferedInputComponent.hpp"
 #include "transformComponent.hpp"
+#include <iostream>
 
 int main() {
 	// Create window
@@ -20,7 +22,7 @@ int main() {
 
 	// Create vector of entities
 	std::vector<Entity> entities;
-	int numberOfPlanes = 6;
+	int numberOfPlanes = 5;
 	int counter = -1;
 
 	// Buffered input actions for setup in buffered input component
@@ -53,8 +55,7 @@ int main() {
 		entityPlanes.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.65, .65, .65);
 		entityPlanes.GetComponent<TransformComponent>()->get().rotation = raylib::Vector3(0, 0, 0); 
 		entityPlanes.AddComponent<RenderingComponent>(raylib::Model("meshes/PolyPlane.glb"), GOLD);
-		// entityPlanes.GetComponent<RenderingComponent>()
-		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{0, 0, 0}, .025, 1.0f, 10, 20, 0, 50); 
+		entityPlanes.AddComponent<PhysicsComponent>(Vector3{0, 0, 0}, Vector3{0, 0, 0}, 1, 1.0f, 10, 20, 0, 50); 
 		entityPlanes.AddComponent<bufferedComponent>(&inputs, false);
 	}
 
@@ -64,7 +65,7 @@ int main() {
 	ship1.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(.5, .5, .5);
 	ship1.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 	ship1.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), GRAY);
-	ship1.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 2.5f, 7, 0, 15); 
+	ship1.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 1, 1, 2.5f, 7, 0, 15); 
 	ship1.AddComponent<bufferedComponent>(&inputs, false);
 
 			Entity& ship2 = entities.emplace_back(); // Add a new entity to to back of entities vector create reference e to the newly made entity object 
@@ -73,7 +74,7 @@ int main() {
 			ship2.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(1.0, 1.0, 1.0);
 			ship2.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 			ship2.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), RED);
-			ship2.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 2.0f, 5, 0, 12);  
+			ship2.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 1, 1, 2.0f, 5, 0, 12);  
 			ship2.AddComponent<bufferedComponent>(&inputs, false);
 
 	Entity& ship3 = entities.emplace_back(); // Add a new entity to to back of entities vector create reference e to the newly made entity object 
@@ -81,7 +82,7 @@ int main() {
 	ship3.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(5, 1.35, 1.35);
 	ship3.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 	ship3.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), ORANGE);
-	ship3.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, .25f, 2, 0, 10);  
+	ship3.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 1, 1, .25f, 2, 0, 10);  
 	ship3.AddComponent<bufferedComponent>(&inputs, false);
 
 			Entity& ship4 = entities.emplace_back(); // Add a new entity to to back of entities vector create reference e to the newly made entity object 
@@ -90,7 +91,7 @@ int main() {
 			ship4.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(3.0, 2.0, .5);
 			ship4.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 			ship4.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), YELLOW);
-			ship4.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, 1.5f, 4, 0, 7.5);  
+			ship4.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 1, 1, 1.5f, 4, 0, 7.5);  
 			ship4.AddComponent<bufferedComponent>(&inputs, false);
 
 	Entity& ship5 = entities.emplace_back(); // Add a new entity to to back of entities vector create reference e to the newly made entity object 
@@ -99,7 +100,7 @@ int main() {
 	ship5.GetComponent<TransformComponent>()->get().scale = raylib::Vector3(2.0, 6.0, 2.0);
 	ship5.GetComponent<TransformComponent>()->get().rotation = Vector3{0, 90 * DEG2RAD, 0};
 	ship5.AddComponent<RenderingComponent>(raylib::Model("meshes/SmitHouston_Tug.glb"), SKYBLUE);
-	ship5.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 0, 1, .5f, 10, 0, 5);  
+	ship5.AddComponent<PhysicsComponent>(Vector3{0, 90 * DEG2RAD, 0}, Vector3{0, 0, 0}, 1, 1, .5f, 10, 0, 5);  
 	ship5.AddComponent<bufferedComponent>(&inputs, false);
 
 	for (Entity& e: entities) e.setup(); // Initialize input for entities
@@ -124,13 +125,22 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	SetTargetFPS(85);
+	raylib::Text text;
+    float textSize = 25;
+    const char *speed = {"Speed: "};
+
+	SetTargetFPS(60);
+	bool changeCamera = false; // camera change
 
 	// Main loop
 	bool keepRunning = true;
 	while(!window.ShouldClose() && keepRunning) {
 
 		inputs.PollEvents(); // Poll buffered input from user and 
+		if (IsKeyReleased(KEY_C)) { // press C to chnage camera veiw
+                if (changeCamera == false) changeCamera = true;
+                else changeCamera = false;
+            }
 		
 		// Rendering
 		window.BeginDrawing();
@@ -139,14 +149,46 @@ int main() {
 			window.ClearBackground(BLACK);
 
 			camera.BeginMode();
-			{
+			{	
+				if (counter == 10) camera.fovy = 65.0; // Change feild of veiw for largest ship
+				if (changeCamera) { // Target is now position of current selected model
+					camera.target = (Vector3){
+						entities[counter].GetComponent<TransformComponent>()->get().position.x, 
+						entities[counter].GetComponent<TransformComponent>()->get().position.y, 
+						entities[counter].GetComponent<TransformComponent>()->get().position.z
+					};
+					camera.position = (Vector3){ // Camera position
+						0, 
+						entities[counter].GetComponent<TransformComponent>()->get().position.y + 105, 
+						0
+					};  
+					camera.up = raylib::Vector3::Up(); // Up direction         
+					if (counter == 9) camera.fovy = 60.0;
+					else camera.fovy = 35.0f; // Camera field-of-view Y
+					camera.projection = CAMERA_PERSPECTIVE;
+				} else { // revert to old camera settings 
+					camera.target = raylib::Vector3(0, 0, 300), // Target
+					camera.position = raylib::Vector3(0, 120, -500), // Position
+					camera.up = raylib::Vector3::Up(), 
+					camera.fovy = 50.0f; // Camera field-of-view Y
+					camera.projection = CAMERA_PERSPECTIVE;
+				}
+				
 				// Render skybox and ground
 				skybox.Draw();
 				ground.Draw({});
 				for (Entity& e: entities) e.tick(window.GetFrameTime());
 			}
 			camera.EndMode();
-
+			float activeSpeed;
+			if (counter < 0) activeSpeed = 0; // If there is no plane selected set current speed to zero
+			else activeSpeed = round((int)entities[counter].GetComponent<PhysicsComponent>()->get().speed); // Round active speed for more well rounded visual speed
+			int height = window.GetHeight();
+        	int width = window.GetWidth();
+			// Speedometer for screen 
+			text.Draw(speed, (width * .005), height * .1, textSize, raylib::Color::Black());  
+			// Updated speed value
+            text.Draw(std::to_string(activeSpeed), (width * .05), height * .1 , textSize , raylib::Color::Black());
 			// Measure our FPS
 			DrawFPS(10, 10);
 		}

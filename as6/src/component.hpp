@@ -8,8 +8,6 @@
 struct Component {
     struct Entity* object; // object prototype
 
-    // Component() = default; 
-
     Component(struct Entity& e) : object(&e) {} //constructor 
 
     virtual void setup() {}

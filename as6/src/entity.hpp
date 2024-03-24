@@ -20,12 +20,10 @@ struct Entity {
     template<std::derived_from<Component> T, typename... Ts>
     size_t AddComponent(Ts... args) {
         auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
-        // components.back()->object = this;
         components.emplace_back(std::move(c));
-        // components.push_back()(std::move(c));
         return components.size() - 1;
     }
-
+    
     // template<std::derived_from<Component> T, typename... Ts>
     // size_t AddComponent(Ts... args) {
     //     auto c = std::make_unique<T>(*this, std::forward<Ts>(args)...);
@@ -33,7 +31,6 @@ struct Entity {
     //     components.push_back(std::move(c)); // Push the new component
     //     return components.size() - 1;
     // }
-
 
     template<std::derived_from<Component> T> 
     std::optional<std::reference_wrapper<T>> GetComponent() {

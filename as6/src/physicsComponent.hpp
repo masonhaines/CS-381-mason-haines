@@ -6,7 +6,6 @@
 #include "transformComponent.hpp" 
 // #include <iostream>
 
-
 struct PhysicsComponent : public Component {
     raylib::Vector3 velocity = {0, 0, 0};
     raylib::Vector3 offsetROT = {0, 0, 0};
@@ -54,7 +53,7 @@ struct PhysicsComponent : public Component {
         } else if (speed > targetSpeed) {
             speed -= acceleration * dt;
         }
-
+        speed = Clamp(speed, minSpeed, maxSpeed); // Restricting speed range
         // std::cout << "speed: " << speed << std::endl;
         // std::cout << "targetSpeed: " << targetSpeed << std::endl;
         // std::cout << "minSpeed: " << minSpeed << std::endl;
@@ -64,7 +63,7 @@ struct PhysicsComponent : public Component {
         // std::cout << "targetHeading: " << targetHeading << std::endl;
         // std::cout << "heading: " << heading << std::endl;
         // Ensure speed stays within bounds
-        speed = Clamp(speed, minSpeed, maxSpeed); // Restricting speed range
+        
         
         target = AngleClamp(targetHeading);
         int difference = abs(target - heading);
@@ -76,15 +75,14 @@ struct PhysicsComponent : public Component {
             else if(difference > 180) heading += angularAcceleration * dt;
         } 
         heading = AngleClamp(heading);
-        float angle = raylib::Degree(heading);
+        float angle = raylib::Degree(heading); // convert heading
 
-
-
+        // Initial velocity 
         velocity.x = speed * cos(angle * DEG2RAD * 2);
         velocity.y = 0;
         velocity.z = -speed * sin(angle * DEG2RAD * 2);
 
-         auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
+        auto ref = object->GetComponent<TransformComponent>(); // get optional reference to transform component 
         if (!ref) return; // does it exist 
         auto& transform = ref->get(); // get values stored in reference if it exists
 
@@ -93,7 +91,7 @@ struct PhysicsComponent : public Component {
         transform.position.y += velocity.y * dt;
         transform.position.z += velocity.z * dt;
 
-        transform.rotation.y = (angle * DEG2RAD *2) + offsetROT.y;
+        transform.rotation.y = (angle * DEG2RAD *2) + offsetROT.y; // physically rotate plane 
 
         // // Debug output
         // std::cout << "PhysicsComponent tick function called." << std::endl;
