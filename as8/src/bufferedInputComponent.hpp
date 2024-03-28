@@ -1,0 +1,56 @@
+#ifndef INPUTCOMPONENT_HPP
+#define INPUTCOMPONENT_HPP
+
+#include "component.hpp"
+#include "entity.hpp"
+#include "src/physicsComponent.hpp"
+#include <BufferedInput.hpp>
+
+struct bufferedComponent : public Component {
+    raylib::BufferedInput* inputs; // Manager for actions 
+    bool selected = false;
+
+    //Default Constructor
+    bufferedComponent(Entity& entity, raylib::BufferedInput* Input, bool selected)
+        : Component(entity), inputs(Input), selected(selected) {}
+
+    void setup() override {
+
+        // Check if the controlled entity is selected
+        auto ref = object->GetComponent<PhysicsComponent>(); // get optional reference to transform component 
+        if (!ref) return; // does it exist 
+        auto& physics = ref->get(); // get values stored in reference if it exists
+
+        (*inputs)["forward"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action 
+       
+            if(selected) {
+                physics.targetSpeed += 5;// thus doing 
+            }
+        });
+        (*inputs)["backwards"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action 
+            
+            if(selected)  {
+                physics.targetSpeed -= 5; // thus doing 
+            }
+        });
+        (*inputs)["right"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action 
+            if(selected) {
+                physics.targetHeading -= 10;
+            }
+        });
+        (*inputs)["left"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action 
+            if(selected) { 
+                physics.targetHeading += 10;
+            }
+        });
+        (*inputs)["space"].AddPressedCallback([&physics, this]()-> void { //lambda function that is creating call back for action 
+            if(selected) { 
+                physics.targetSpeed = 0;
+            }
+        });
+    }
+
+   
+};
+
+#endif 
