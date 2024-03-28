@@ -3,23 +3,23 @@ project(as0 LANGUAGES CXX)
 
 add_subdirectory(raylib-cpp)
 
-# file(GLOB sources "src/*.cpp" "src/*.c")
+file(GLOB sources "src/*.cpp" "src/*.c" "src/*hpp")
 # this is to help manage the new files with structs
-set(sources
-    src/as6.cpp
-    src/component.hpp
-    src/transformComponent.hpp
-    src/renderingComponent.hpp
-    src/physicsComponent.hpp
-    src/bufferedInputComponent.hpp
-    src/delegate.hpp
-    src/entity.hpp
-    src/skybox.hpp
-    src/skybox.cpp
-)
-add_executable(as6 ${sources})
-target_link_libraries(as6 PUBLIC raylib raylib_cpp raylib::buffered)
-set_property(TARGET as6 PROPERTY CXX_STANDARD 20)
+# set(sources
+#     src/as8.cpp
+#     src/component.hpp
+#     src/transformComponent.hpp
+#     src/renderingComponent.hpp
+#     src/physicsComponent.hpp
+#     src/bufferedInputComponent.hpp
+#     src/delegate.hpp
+#     src/entity.hpp
+#     src/skybox.hpp
+#     src/skybox.cpp
+# )
+add_executable(as8 ${sources})
+target_link_libraries(as8 PUBLIC raylib raylib_cpp raylib::buffered)
+set_property(TARGET as8 PROPERTY CXX_STANDARD 20)
 
 configure_file(textures/skybox.png textures/skybox.png COPYONLY)
 configure_file(textures/grass.jpg textures/grass.jpg COPYONLY)
