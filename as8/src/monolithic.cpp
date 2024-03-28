@@ -1,6 +1,7 @@
 //  3/11 goes over component storages 
 
 // can only store one type of thing 
+// #include "src/transformComponent.hpp"
 #include <raylib-cpp.hpp>
 #include <cstddef>
 #include <cassert>
@@ -124,6 +125,36 @@ struct Scene {
 struct Rendering {
     raylib::Model* model;
     bool drawBoundingBox = false;
+    
 };
 
+struct transform {
+    raylib::Vector3 position;
+    raylib::Vector3 scale;
+    raylib::Vector3 rotation;
+};
 
+template<typename T>
+concept Transformer = requires( T t, raylib::Transform m) {
+    {t.operator()(m)}->std::convertible_to<raylib::Transform>;
+};
+
+void Draw(Scene& scene) {
+
+    raylib::Color color;
+
+    for(Entity e = 0; e < scene.entityMasks.size(); e++) {
+        if(!scene.hasComponent<Rendering>(e)) continue;
+
+        auto & rendering = scene.getComponent<Rendering>(e);
+        raylib::Transform backupTransform = rendering.model->transform; // Save the model's transform
+
+        
+
+        // it's up to you to implement that transformer given a transform component that you write.
+        rendering.model->transform = Transformer<Rendering>();
+
+        rendering.model->Draw({}, 1.0f, color);//Default position, scale, color-tint
+        rendering.model->transform = backupTransform; // Restore the original transform
+    }
+}
