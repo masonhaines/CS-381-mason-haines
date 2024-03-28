@@ -89,6 +89,7 @@ struct Scene {
     Tcomponent& AddComponent(Entity e) {
         size_t id = getComponentID<Tcomponent>();
         auto& eMask = entityMasks[e];
+        
         if (eMask.size() <= id) {
             eMask.resize(id + 1, false);
         }
@@ -100,10 +101,9 @@ struct Scene {
     void RemoveComponent(Entity e) {
         size_t id = getComponentID<Tcomponent>(); // Get ID
         auto& eMask = entityMasks[e]; // Access the entity mask for the given entity
-        // Check if the component exists for the entity
-        if (eMask.size() > id) {
-            eMask[id] = false;// Set the corresponding flag in the entity mask to false to indicate removal of the component
-            GetStorage<Tcomponent>().Remove(e); // Remove component
+        
+        if (eMask.size() > id) { // if amount of masks is greater than number of components
+            eMask[id] = false; // Set entity mask at component index to false, swap bit set 
         }
     }
 
