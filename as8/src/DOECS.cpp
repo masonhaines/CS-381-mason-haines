@@ -13,34 +13,42 @@
 
 using Entity = uint8_t;
 
-struct ComponentStorage {
+struct SkipListComponentStorage {
     size_t elementSize = -1;
+    std::vector<uint16_t> indicies;
     std::vector<std::byte> data; // buffer that is 4 bytes long 
 
-    ComponentStorage() : elementSize(-1), data(1, std::byte{0}) {};
-    ComponentStorage (size_t elementSize) : elementSize(elementSize) {data.resize(5 * elementSize);}
+    SkipListComponentStorage() : elementSize(-1), data(1, std::byte{0}) {};
+    SkipListComponentStorage (size_t elementSize) : elementSize(elementSize) {data.resize(5 * elementSize);}
 
     template<typename Tcomponent> 
-    ComponentStorage(Tcomponent reference = {}) : ComponentStorage(sizeof(Tcomponent)) {}
+    SkipListComponentStorage(Tcomponent reference = {}) : SkipListComponentStorage(sizeof(Tcomponent)) {}
 
     template<typename Tcomponent> 
     Tcomponent& Get(Entity e) {
         assert(sizeof(Tcomponent) == elementSize);
-        assert(e < (data.size() / elementSize));
+        // assert(e < (data.size() / elementSize));
+        assert(e < indicies.size());
+        assert(indicies[e] != std::numeric_limits<uint16_t>::max());
         return *(Tcomponent*)(data.data() + e * elementSize);
     }
 
+private:
     template<typename Tcomponent> 
-    std::pair<Tcomponent&, Entity> Allocate(size_t count = 1) {
+    std::pair<Tcomponent&, Entity> Allocate() {
         assert(sizeof(Tcomponent) == elementSize);
-        assert (count < 255);
+
         auto originalEnd = data.size();
-        data.insert(data.end(), elementSize * count, std::byte{0});
-        for (size_t i = 0; i < count - 1; i ++) 
-            new(data.data() + originalEnd + i * elementSize) Tcomponent();
+        data.insert(data.end(), elementSize, std::byte{0});
         return {
             *new(data.data() + data.size() - elementSize) Tcomponent(), data.size() / elementSize
         };
+
+    }
+public:
+    template<typename Tcomponent> 
+    std::pair<Tcomponent&, Entity> Allocate(Entity e) {
+        auto[ret, i] = Allocate<Tcomponent>();
 
     }
 
@@ -65,16 +73,16 @@ size_t getComponentID(T reference = {}) {
 
 struct Scene {
     std::vector<std::vector<bool>> entityMasks;
-    std::vector<ComponentStorage> storages = {ComponentStorage()};
+    std::vector<SkipListComponentStorage> storages = {SkipListComponentStorage()};
 
     template<typename Tcomponent>
-    ComponentStorage& GetStorage() {
+    SkipListComponentStorage& GetStorage() {
         size_t id = getComponentID<Tcomponent>();
         if (storages.size() <= id) {
             storages.insert(storages.cend(), std::max<int64_t>(id - storages.size(), 1));
         }
         if (storages[id].elementSize == std::numeric_limits<size_t>::max()) 
-            storages[id] = ComponentStorage(Tcomponent{});
+            storages[id] = SkipListComponentStorage(Tcomponent{});
         return storages[id];
     }
 
@@ -139,7 +147,7 @@ concept Transformer = requires( T t, raylib::Transform m) {
     {t.operator()(m)}->std::convertible_to<raylib::Transform>;
 };
 
-void Draw(Scene& scene) {
+void DrawSystem(Scene& scene) {
 
     raylib::Color color;
 
@@ -154,7 +162,7 @@ void Draw(Scene& scene) {
         // it's up to you to implement that transformer given a transform component that you write.
         rendering.model->transform = Transformer<Rendering>();
 
-        rendering.model->Draw({}, 1.0f, color);//Default position, scale, color-tint
+        rendering.model->Draw({});//Default position, scale, color-tint
         rendering.model->transform = backupTransform; // Restore the original transform
     }
 }
