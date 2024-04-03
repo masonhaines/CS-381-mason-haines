@@ -1,7 +1,7 @@
 
 
 
-#include "Counter.cpp"
+
 #include <raylib-cpp.hpp>
 #include <cstddef>
 #include <cassert>
@@ -16,6 +16,7 @@
 // #include <memory>
 
 using Entity = uint8_t;
+
 
 struct ComponentStorage {
     size_t elementSize = -1;
@@ -135,7 +136,7 @@ struct Rendering {
 struct transform {
     raylib::Vector3 position;
     raylib::Vector3 scale;
-    raylib::Vector3 rotation;
+    // raylib::Vector3 rotation;
 };
 
 template<typename T>
@@ -166,9 +167,13 @@ void DrawSystem(Scene& scene) {
 
     for(Entity e = 0; e < scene.entityMasks.size(); e++) {
         if(!scene.hasComponent<Rendering>(e)) continue;
+        if(!scene.hasComponent<transform>(e)) continue;
         auto & rendering = scene.getComponent<Rendering>(e);
+        auto & transformComponent = scene.getComponent<transform>(e);
 
-        auto Transformer = [](raylib::Transform t) -> raylib::Transform {
+        auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
+            t = MatrixTranslate(transformComponent.position.x, transformComponent.position.y, transformComponent.position.z);
+
             return t;
         };
         
@@ -209,7 +214,12 @@ int main() {
     raylib::Model plane("meshes/PolyPlane.glb");
     Scene scene;
     auto e = scene.CreateEntity();
-    scene.AddComponent<Rendering>(e) = {&plane, false}; // PLane with no bounding box, ie false 
+    // Add a transform component to the entity
+    scene.AddComponent<Rendering>(e) = {&plane, false}; // Plane with no bounding box, ie false 
+    scene.AddComponent<transform>(e).position = raylib::Vector3 {1, 1, 1};
+   
+    
+    
 
 	raylib::Text text;
     float textSize = 25;
