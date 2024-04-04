@@ -136,18 +136,30 @@ struct Scene {
 
 struct physics {
 
-	static constexpr float acceleration = 5;
-	static constexpr float angularAcceleration = 15;
+	// static constexpr
+    float acceleration;
+	float angularAcceleration;
 
 	float targetSpeed;
 	raylib::Degree targetHeading;
-	float& speed;
-	raylib::Degree& heading;
+	float* speed;
+	raylib::Degree* heading;
 	float dt;
 
-	float maxSpeed = 50;
-	float minSpeed = 0;
+	float maxSpeed;
+	float minSpeed;
 
+
+    physics() : speed(nullptr), heading(nullptr) {
+        speed = new float(0.0f); // Initialize to some default value
+        heading = new raylib::Degree(0.0f); // Initialize to some default value
+    }
+
+    ~physics() {
+        delete speed;
+        delete heading;
+    }
+    // }physics() : speed(nullptr), heading(nullptr) {}
 };
 
 struct Rendering {
@@ -163,6 +175,8 @@ struct transformcomp {
 
 void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
 void DrawModel(raylib::Model& model, Transformer auto transformer);
+void PhysicsSystem(Scene& scene);
+void DrawSystem(Scene& scene);
 
 
 
@@ -178,9 +192,9 @@ void DrawSystem(Scene& scene) {
 
         auto[axis, angle] = scene.getComponent<transformcomp>(e).rotation.ToAxisAngle();
         rendering.model->transform = raylib::Transform(rendering.model->transform).Rotate(axis, angle);
-                std::cout << "axis.x" << transformComponent.rotation.ToEuler().x << std::endl;
-                std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
-                std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
+                // std::cout << "axis.x" << transformComponent.rotation.ToEuler().x << std::endl;
+                // std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
+                // std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
                 
         // Vector3 Eul = scene.getComponent<transformcomp>(e).rotation.ToEuler();
 
@@ -237,6 +251,15 @@ int main() {
     scene.AddComponent<transformcomp>(e).position = {(Vector3){0, 90, 1}};
     scene.AddComponent<transformcomp>(e).scale = {(Vector3){5,5,5}};
     scene.AddComponent<transformcomp>(e).rotation = {(Quaternion){0,90 * DEG2RAD,0 * DEG2RAD,1}};
+    scene.AddComponent<physics>(e).acceleration = 5;
+    scene.AddComponent<physics>(e).angularAcceleration = 15;
+    scene.AddComponent<physics>(e).dt = window.GetFrameTime();
+    // scene.AddComponent<physics>(e).heading = nullptr;
+    scene.AddComponent<physics>(e).targetHeading = 0; //.RadianValue();
+    // scene.AddComponent<physics>(e).speed = nullptr;
+    scene.AddComponent<physics>(e).targetSpeed = 5;
+    scene.AddComponent<physics>(e).minSpeed = 0;
+    scene.AddComponent<physics>(e).maxSpeed = 25;
     // scene.AddComponent<transformcomp>(e).rotation = raylib::Quaternion::FromAxisAngle({0, 0, 0}, 1);
     // raylib::Quaternion rotationQuat = raylib::Quaternion::FromAxisAngle(raylib::Vector3{0, 1, 0}, 0);
     // Create a quaternion for rotating around the Y-axis by 90 degrees
@@ -277,7 +300,7 @@ int main() {
                 
 				
 			}
-            // DrawPhysics(scene);
+            PhysicsSystem(scene);
             DrawSystem(scene);
 			camera.EndMode();
             
@@ -356,12 +379,10 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 // 		whole += (whole < 0) * 360;
 // 		return decimal + whole;
 // 	};
-
 // 	float target = Clamp(data.targetSpeed, data.minSpeed, data.maxSpeed);
 // 	if(data.speed < target) data.speed += data.acceleration * data.dt;
 // 	else if(data.speed > target) data.speed -= data.acceleration * data.dt;
 // 	data.speed = Clamp(data.speed, data.minSpeed, data.maxSpeed);
-
 // 	target = AngleClamp(data.targetHeading);
 // 	float difference = abs(target - data.heading);
 // 	if(target > data.heading) {
@@ -374,13 +395,11 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 // 	if(difference < .5) data.heading = target; // If the heading is really close to correct 
 // 	data.heading = AngleClamp(data.heading);
 // 	raylib::Radian angle = raylib::Degree(data.heading);
-
 // 	return {cos(angle) * data.speed, 0, -sin(angle) * data.speed};
 // }
 
 // Physics System
 // void PhysicsSystem(Scene& scene) {
-
 //     static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
 // 		float decimal = float(angle) - int(angle);
 // 		int whole = int(angle) % 360;
@@ -389,14 +408,14 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 // 	};
 //     // Iterate over all entities in the scene
 //     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+//         if (!scene.hasComponent<transformcomp>(e)) continue;
+//         if (!scene.hasComponent<physics>(e)) continue;
 //         // Check if the entity has transform and physics components
-//         if (!scene.hasComponent<transformcomp>(e) || !scene.hasComponent<physics>(e))
-//             continue;
-
+//         // if (!scene.hasComponent<transformcomp>(e) || !scene.hasComponent<physics>(e))
+//         //     continue;
 //         // Get references to the transform and physics components
 //         auto& transformComponent = scene.getComponent<transformcomp>(e);
 //         auto& physicsComponent = scene.getComponent<physics>(e);
-
 //         // Calculate velocity based on physics parameters
 //         float acceleration = physicsComponent.acceleration;
 //         float angularAcceleration = physicsComponent.angularAcceleration;
@@ -404,10 +423,11 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 //         raylib::Degree targetHeading = physicsComponent.targetHeading;
 //         float maxSpeed = physicsComponent.maxSpeed;
 //         float minSpeed = physicsComponent.minSpeed;
-//         float& speed = physicsComponent.speed;
-//         raylib::Degree& heading = physicsComponent.heading;
+//         float* speedPtr = physicsComponent.speed;
+//         raylib::Degree* headingPtr = physicsComponent.heading;
+//         float speed = *speedPtr;
+//         raylib::Degree heading = *headingPtr;
 //         float dt = physicsComponent.dt;
-
 //         // Calculate new speed and heading using physics calculations
 //         float target = Clamp(targetSpeed, minSpeed, maxSpeed);
 //         if (speed < target)
@@ -415,7 +435,6 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 //         else if (speed > target)
 //             speed -= acceleration * dt;
 //         speed = Clamp(speed, minSpeed, maxSpeed);
-
 //         targetHeading = AngleClamp(targetHeading);
 //         float difference = abs(targetHeading - heading);
 //         if (targetHeading > heading) {
@@ -435,9 +454,94 @@ bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, s
 //         heading = AngleClamp(heading);
 //         raylib::Radian angle = raylib::Degree(heading);
 //         raylib::Vector3 velocity = {cos(angle) * speed, 0, -sin(angle) * speed};
-
 //         // Update the entity's position based on velocity
 //         transformComponent.position += velocity * dt;
 //         transformComponent.rotation.y = heading;
 //     }
 // }
+
+void PhysicsSystem(Scene& scene) {
+    static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+        float decimal = float(angle) - int(angle);
+        int whole = int(angle) % 360;
+        whole += (whole < 0) * 360;
+        return decimal + whole;
+    };
+    
+    // Iterate over all entities in the scene
+    for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+        std::cout << "i have physics " << std::endl;
+        if (!scene.hasComponent<transformcomp>(e)) continue;
+        if (!scene.hasComponent<physics>(e)) continue;
+        std::cout << "i am in physics " << std::endl;
+        // Get references to the transform and physics components
+        auto& transformComponent = scene.getComponent<transformcomp>(e);
+        auto& physicsComponent = scene.getComponent<physics>(e);
+
+        float speedValue = 15.0f;
+    raylib::Degree headingValue(15.0f);
+
+    // Assigning values to speed and heading pointers
+    physicsComponent.speed = &speedValue;
+    physicsComponent.heading = &headingValue;
+
+        // Calculate velocity based on physics parameters
+        float acceleration = physicsComponent.acceleration;
+        float angularAcceleration = physicsComponent.angularAcceleration;
+        float targetSpeed = physicsComponent.targetSpeed;
+        raylib::Degree targetHeading = physicsComponent.targetHeading;
+        float maxSpeed = physicsComponent.maxSpeed;
+        float minSpeed = physicsComponent.minSpeed;
+        float* speedPtr = physicsComponent.speed;
+        raylib::Degree* headingPtr = physicsComponent.heading;
+
+        if (speedPtr == nullptr || headingPtr == nullptr) {
+        std::cerr << "Error: Invalid pointers!" << std::endl;
+        continue; // or handle the error appropriately
+}
+
+        // Dereference pointers to obtain speed and heading
+        float speed = *speedPtr;
+        raylib::Degree heading = *headingPtr;
+
+        float dt = physicsComponent.dt;
+
+        // Calculate new speed and heading using physics calculations
+        float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+        if (speed < target)
+            speed += acceleration * dt;
+        else if (speed > target)
+            speed -= acceleration * dt;
+        speed = Clamp(speed, minSpeed, maxSpeed);
+
+        targetHeading = AngleClamp(targetHeading);
+        float difference = abs(targetHeading - heading);
+        if (targetHeading > heading) {
+            if (difference < 180)
+                heading += angularAcceleration * dt;
+            else if (difference > 180)
+                heading -= angularAcceleration * dt;
+        } else if (targetHeading < heading) {
+            if (difference < 180)
+                heading -= angularAcceleration * dt;
+            else if (difference > 180)
+                heading += angularAcceleration * dt;
+        }
+        if (difference < .5)
+            heading = targetHeading;
+        
+        std::cout << "current speed: " << speed << std::endl;
+        heading = AngleClamp(heading);
+        raylib::Radian angle = raylib::Degree(heading);
+        raylib::Vector3 velocity = {cos(angle) * speed, 0, -sin(angle) * speed};
+
+        // Update the entity's position based on velocity
+        transformComponent.position += velocity * dt;
+        transformComponent.rotation.y = heading;
+
+        // Update the values of speed and heading in the physics component
+        *speedPtr = speed;
+        *headingPtr = heading;
+    }
+}
+
