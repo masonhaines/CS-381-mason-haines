@@ -1,7 +1,4 @@
-
-
-
-
+// Mason Haines as8
 #include <raylib-cpp.hpp>
 #include <cstddef>
 #include <cassert>
@@ -12,11 +9,17 @@
 #include "rlgl.h"
 #include "skybox.hpp"
 #include "raylib.h"
-// #include <ranges>
-// #include <memory>
+#include <ranges>
+#include <memory>
+#include <iostream>
+// #include "Counter.cpp"
+
+template<typename T>
+concept Transformer = requires( T t, raylib::Transform m) {
+    {t.operator()(m)}->std::convertible_to<raylib::Transform>;
+};
 
 using Entity = uint8_t;
-
 
 struct ComponentStorage {
     size_t elementSize = -1;
@@ -44,18 +47,22 @@ struct ComponentStorage {
         for (size_t i = 0; i < count - 1; i ++) 
             new(data.data() + originalEnd + i * elementSize) Tcomponent();
         return {
-            *new(data.data() + data.size() - elementSize) Tcomponent(), data.size() / elementSize
+            *new(data.data() + data.size() - elementSize) Tcomponent(), 
+            data.size() / elementSize
         };
-
     }
 
     template<typename Tcomponent> 
     Tcomponent& GetOrAllocate(Entity e) {
-        assert(sizeof(Tcomponent) == elementSize);
+
+        
+        assert(sizeof(Tcomponent) == elementSize); // Assumption that it should be true at this point. If it is not, edge case will fail during runtime.
         size_t size = data.size() / elementSize;
+
         if (size <= e) {
             Allocate<Tcomponent>(std::max<int64_t>(int64_t(e) - size, 1));
         }
+
         return Get<Tcomponent>(e);
     }
 };
@@ -76,7 +83,7 @@ struct Scene {
     ComponentStorage& GetStorage() {
         size_t id = getComponentID<Tcomponent>();
         if (storages.size() <= id) {
-            storages.insert(storages.cend(), std::max<int64_t>(id - storages.size(), 1));
+            storages.insert(storages.cend(), std::max<int64_t>(id - storages.size(), 1), {});
         }
         if (storages[id].elementSize == std::numeric_limits<size_t>::max()) 
             storages[id] = ComponentStorage(Tcomponent{});
@@ -127,54 +134,65 @@ struct Scene {
 
 };
 
+struct physics {
+
+	static constexpr float acceleration = 5;
+	static constexpr float angularAcceleration = 15;
+
+	float targetSpeed;
+	raylib::Degree targetHeading;
+	float& speed;
+	raylib::Degree& heading;
+	float dt;
+
+	float maxSpeed = 50;
+	float minSpeed = 0;
+
+};
+
 struct Rendering {
     raylib::Model* model;
     bool drawBoundingBox = false;
-    
 };
 
-struct transform {
+struct transformcomp {
     raylib::Vector3 position;
     raylib::Vector3 scale;
-    // raylib::Vector3 rotation;
+    raylib::Quaternion rotation;
 };
 
-template<typename T>
-concept Transformer = requires( T t, raylib::Transform m) {
-    {t.operator()(m)}->std::convertible_to<raylib::Transform>;
-};
+void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
+void DrawModel(raylib::Model& model, Transformer auto transformer);
 
-// Function to draw a bounded model with a specified transformation
-void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
-    raylib::Transform backupTransform = model.transform; // Save the model's transform
-    model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
-    model.Draw({});
-    model.GetTransformedBoundingBox().Draw();
-    model.transform = backupTransform; // Restore the original transform
-}
 
-// Function to draw a model with a specified transformation
-void DrawModel(raylib::Model& model, Transformer auto transformer) {
-    raylib::Transform backupTransform = model.transform; // Save the model's transform
-    model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
-    model.Draw({});
-    model.transform = backupTransform; // Restore the original transform
-}
 
 void DrawSystem(Scene& scene) {
 
-    raylib::Color color;
+    // raylib::Color color;
 
     for(Entity e = 0; e < scene.entityMasks.size(); e++) {
         if(!scene.hasComponent<Rendering>(e)) continue;
-        if(!scene.hasComponent<transform>(e)) continue;
+        if(!scene.hasComponent<transformcomp>(e)) continue;
         auto & rendering = scene.getComponent<Rendering>(e);
-        auto & transformComponent = scene.getComponent<transform>(e);
+        auto & transformComponent = scene.getComponent<transformcomp>(e);
 
-        auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
-            t = MatrixTranslate(transformComponent.position.x, transformComponent.position.y, transformComponent.position.z);
+        auto[axis, angle] = scene.getComponent<transformcomp>(e).rotation.ToAxisAngle();
+        rendering.model->transform = raylib::Transform(rendering.model->transform).Rotate(axis, angle);
+                std::cout << "axis.x" << transformComponent.rotation.ToEuler().x << std::endl;
+                std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
+                std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
+                
+        // Vector3 Eul = scene.getComponent<transformcomp>(e).rotation.ToEuler();
 
-            return t;
+        auto Transformer = [&transformComponent, &axis, &angle](raylib::Transform t) -> raylib::Transform {
+            // auto[axis, angle] = scene.getComponent<transformcomp>(e).rotation.ToAxisAngle();
+            // rendering.model->transform = raylib::Transform(rendering.model->transform).Rotate(axis, angle);
+
+            return t.
+            Translate(transformComponent.position).
+            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).
+            // RotateXYZ(axis);
+            RotateXYZ(transformComponent.rotation.x, transformComponent.rotation.y, transformComponent.rotation.z); // q1 is word xyz  q2 is incremetn 
         };
         
         if (rendering.drawBoundingBox) {
@@ -204,7 +222,7 @@ int main() {
 	cs381::SkyBox skybox("textures/skybox.png");
 
 	// Create ground
-	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 25);
+	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 125);
 	raylib::Model ground = ((raylib::Mesh*)&mesh)->LoadModelFrom();
 	raylib::Texture water("textures/water.jpg");
 	water.SetFilter(TEXTURE_FILTER_BILINEAR);
@@ -216,15 +234,25 @@ int main() {
     auto e = scene.CreateEntity();
     // Add a transform component to the entity
     scene.AddComponent<Rendering>(e) = {&plane, false}; // Plane with no bounding box, ie false 
-    scene.AddComponent<transform>(e).position = raylib::Vector3 {1, 1, 1};
-   
-    
+    scene.AddComponent<transformcomp>(e).position = {(Vector3){0, 90, 1}};
+    scene.AddComponent<transformcomp>(e).scale = {(Vector3){5,5,5}};
+    scene.AddComponent<transformcomp>(e).rotation = {(Quaternion){0,90 * DEG2RAD,0 * DEG2RAD,1}};
+    // scene.AddComponent<transformcomp>(e).rotation = raylib::Quaternion::FromAxisAngle({0, 0, 0}, 1);
+    // raylib::Quaternion rotationQuat = raylib::Quaternion::FromAxisAngle(raylib::Vector3{0, 1, 0}, 0);
+    // Create a quaternion for rotating around the Y-axis by 90 degrees
+    //   scene.AddComponent<transformcomp>(e).rotation = raylib::Quaternion::ToEuler({1,1,1});
+    //    scene.AddComponent<transformcomp>(e).rotation = 
+    // scene.AddComponent<transformcomp>(e).rotation = raylib::Quaternion::Normalize({1, 1, 1, 1});
+    // scene.AddComponent<transformcomp>(e).rotation.ToEuler() = {(Vector3){5,5,5}};
+    // scene.AddComponent<transformcomp>(e) = {raylib::Vector3{1, 90, 1}, 
+    // raylib::Vector3{1, 90, 1}, 
+    // raylib::Quaternion{1, 1, 1, 1}};
+
+
+
     
 
-	raylib::Text text;
-    float textSize = 25;
-    const char *speed = {"Speed: "};
-	const char *start = {"Press TAB begin simulation"};
+    size_t selectedPlane = 0;
 
 	SetTargetFPS(60);
 
@@ -246,10 +274,13 @@ int main() {
 				skybox.Draw();
 				ground.Draw({});
 
-                DrawSystem(scene);
+                
 				
 			}
+            // DrawPhysics(scene);
+            DrawSystem(scene);
 			camera.EndMode();
+            
 
 			int height = window.GetHeight();
         	int width = window.GetWidth();
@@ -261,3 +292,152 @@ int main() {
 
 	return 0;
 }
+
+// Function to draw a bounded model with a specified transformation
+void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
+    raylib::Transform backupTransform = model.transform; // Save the model's transform
+    model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
+    model.Draw({});
+    model.GetTransformedBoundingBox().Draw();
+    model.transform = backupTransform; // Restore the original transform
+}
+
+// Function to draw a model with a specified transformation
+void DrawModel(raylib::Model& model, Transformer auto transformer) {
+    raylib::Transform backupTransform = model.transform; // Save the model's transform
+    model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
+    model.Draw({});
+    model.transform = backupTransform; // Restore the original transform
+}
+
+// Input handling
+bool ProcessInput(raylib::Degree& planeTargetHeading, float& planeTargetSpeed, size_t& selectedPlane) {
+	static bool wPressedLastFrame = false, sPressedLastFrame = false;
+	static bool aPressedLastFrame = false, dPressedLastFrame = false;
+	static bool tabPressedLastFrame = false;
+
+	// If we hit escape... shutdown
+	if(IsKeyDown(KEY_ESCAPE))
+		return false;
+
+	// WASD updates plane velocity
+	if(IsKeyDown(KEY_W) && !wPressedLastFrame)
+		planeTargetSpeed += 1;
+	if(IsKeyDown(KEY_S) && !sPressedLastFrame)
+		planeTargetSpeed -= 1;
+	if(IsKeyDown(KEY_A) && !aPressedLastFrame)
+		planeTargetHeading += 5;
+	if(IsKeyDown(KEY_D) && !dPressedLastFrame)
+		planeTargetHeading -= 5;  
+
+	// Space sets velocity to 0!
+	if(IsKeyDown(KEY_SPACE))
+		planeTargetSpeed = 0;
+
+	// Tab selects the next plane
+	if(IsKeyDown(KEY_TAB) && !tabPressedLastFrame)
+		selectedPlane = (selectedPlane + 1) % 3;
+
+	// Save the state of the key for next frame
+	wPressedLastFrame = IsKeyDown(KEY_W);
+	sPressedLastFrame = IsKeyDown(KEY_S);
+	aPressedLastFrame = IsKeyDown(KEY_A);
+	dPressedLastFrame = IsKeyDown(KEY_D);
+
+	tabPressedLastFrame = IsKeyDown(KEY_TAB);
+
+	return true;
+}
+
+// raylib::Vector3 CaclulateVelocity(const CalculateVelocityParams& data) {
+// 	static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+// 		float decimal = float(angle) - int(angle);
+// 		int whole = int(angle) % 360;
+// 		whole += (whole < 0) * 360;
+// 		return decimal + whole;
+// 	};
+
+// 	float target = Clamp(data.targetSpeed, data.minSpeed, data.maxSpeed);
+// 	if(data.speed < target) data.speed += data.acceleration * data.dt;
+// 	else if(data.speed > target) data.speed -= data.acceleration * data.dt;
+// 	data.speed = Clamp(data.speed, data.minSpeed, data.maxSpeed);
+
+// 	target = AngleClamp(data.targetHeading);
+// 	float difference = abs(target - data.heading);
+// 	if(target > data.heading) {
+// 		if(difference < 180) data.heading += data.angularAcceleration * data.dt;
+// 		else if(difference > 180) data.heading -= data.angularAcceleration * data.dt;
+// 	} else if(target < data.heading) {
+// 		if(difference < 180) data.heading -= data.angularAcceleration * data.dt;
+// 		else if(difference > 180) data.heading += data.angularAcceleration * data.dt;
+// 	} 
+// 	if(difference < .5) data.heading = target; // If the heading is really close to correct 
+// 	data.heading = AngleClamp(data.heading);
+// 	raylib::Radian angle = raylib::Degree(data.heading);
+
+// 	return {cos(angle) * data.speed, 0, -sin(angle) * data.speed};
+// }
+
+// Physics System
+// void PhysicsSystem(Scene& scene) {
+
+//     static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+// 		float decimal = float(angle) - int(angle);
+// 		int whole = int(angle) % 360;
+// 		whole += (whole < 0) * 360;
+// 		return decimal + whole;
+// 	};
+//     // Iterate over all entities in the scene
+//     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+//         // Check if the entity has transform and physics components
+//         if (!scene.hasComponent<transformcomp>(e) || !scene.hasComponent<physics>(e))
+//             continue;
+
+//         // Get references to the transform and physics components
+//         auto& transformComponent = scene.getComponent<transformcomp>(e);
+//         auto& physicsComponent = scene.getComponent<physics>(e);
+
+//         // Calculate velocity based on physics parameters
+//         float acceleration = physicsComponent.acceleration;
+//         float angularAcceleration = physicsComponent.angularAcceleration;
+//         float targetSpeed = physicsComponent.targetSpeed;
+//         raylib::Degree targetHeading = physicsComponent.targetHeading;
+//         float maxSpeed = physicsComponent.maxSpeed;
+//         float minSpeed = physicsComponent.minSpeed;
+//         float& speed = physicsComponent.speed;
+//         raylib::Degree& heading = physicsComponent.heading;
+//         float dt = physicsComponent.dt;
+
+//         // Calculate new speed and heading using physics calculations
+//         float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+//         if (speed < target)
+//             speed += acceleration * dt;
+//         else if (speed > target)
+//             speed -= acceleration * dt;
+//         speed = Clamp(speed, minSpeed, maxSpeed);
+
+//         targetHeading = AngleClamp(targetHeading);
+//         float difference = abs(targetHeading - heading);
+//         if (targetHeading > heading) {
+//             if (difference < 180)
+//                 heading += angularAcceleration * dt;
+//             else if (difference > 180)
+//                 heading -= angularAcceleration * dt;
+//         } else if (targetHeading < heading) {
+//             if (difference < 180)
+//                 heading -= angularAcceleration * dt;
+//             else if (difference > 180)
+//                 heading += angularAcceleration * dt;
+//         }
+//         if (difference < .5)
+//             heading = targetHeading;
+
+//         heading = AngleClamp(heading);
+//         raylib::Radian angle = raylib::Degree(heading);
+//         raylib::Vector3 velocity = {cos(angle) * speed, 0, -sin(angle) * speed};
+
+//         // Update the entity's position based on velocity
+//         transformComponent.position += velocity * dt;
+//         transformComponent.rotation.y = heading;
+//     }
+// }
