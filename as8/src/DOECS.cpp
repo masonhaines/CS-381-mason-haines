@@ -470,27 +470,29 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		(*buffer.inputs)["forward"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
        
             
-            physicsComponent.targetSpeed += 5;// thus doing 
+            physicsComponent.targetSpeed += 1;// thus doing 
             
         });
         (*buffer.inputs)["backwards"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
             
            
-            physicsComponent.targetSpeed -= 5; // thus doing 
+            physicsComponent.targetSpeed -= 1; // thus doing 
             
         });
+		
         (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-            
+			
             physicsComponent.targetRotation.y -= 10 * DEG2RAD;
             
         });
         (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-             
+			
             physicsComponent.targetRotation.y += 10 * DEG2RAD;
             
         });
 		(*buffer.inputs)["up"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
             
+
             physicsComponent.targetRotation.x += 10 * DEG2RAD;
             
         });
@@ -509,19 +511,32 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 	
 }
 
-Quaternion Clamp(raylib::Quaternion& rotation, int x) {
+float angClamp(float& targetRot, float& Rotation, float angAcc, float dt) {
 
-	
+
 
 	static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-            int intPart = angle;
-            float floatPart = float(angle) - intPart;
-            intPart %= 360;
-            intPart += (intPart < 0) * 360;
-            return intPart + floatPart;
-        };
+		int intPart = angle;
+		float floatPart = float(angle) - intPart;
+		intPart %= 360;
+		intPart += (intPart < 0) * 360;
+		return intPart + floatPart;
+	};
 
-	return rotation;
+	float target = AngleClamp(targetRot);
+	int difference = abs(target - Rotation);
+	if(target > Rotation) {
+		if(difference < 180) Rotation += angAcc * dt;
+		else if(difference > 180) Rotation -= angAcc * dt;
+	} else if(target < Rotation) {
+		if(difference < 180) Rotation -= angAcc * dt;
+		else if(difference > 180) Rotation += angAcc * dt;
+	} 
+	if(difference < .005) Rotation = target; // If the Rotation is really close to correct 
+	Rotation = AngleClamp(Rotation);
+	float angle = raylib::Degree(Rotation); // convert heading
+
+	return angle;
 }
 
 
@@ -538,6 +553,7 @@ void PhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		
 
         // Update speed based on physics parameters
+		float angularAcceleration = physicsComponent.angularAcceleration;
         float acceleration = physicsComponent.acceleration;
         float targetSpeed = physicsComponent.targetSpeed;
         float maxSpeed = physicsComponent.maxSpeed;
@@ -553,10 +569,12 @@ void PhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
             speed -= acceleration * dt;
         speed = Clamp(speed, minSpeed, maxSpeed);
 
-		float target1 = AngleClamp(targetRotation.x);
-		float target2 = AngleClamp(targetRotation.x);
-		float target3 = AngleClamp(targetRotation.x);
-		float target4 = AngleClamp(targetRotation.x);
+		// rotation.x = angClamp(targetRotation.x, rotation.x, angularAcceleration, dt);
+		// rotation.y = angClamp(targetRotation.y, rotation.y, angularAcceleration, dt);
+		// rotation.z = angClamp(targetRotation.z, rotation.z, angularAcceleration, dt);
+		
+
+		
 
         // rotation = QuaternionSlerp(rotation, targetRotation, physicsComponent.angularAcceleration * dt); // from chat
 
