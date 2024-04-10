@@ -261,10 +261,7 @@ struct bufferedComponent {
 	raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
 
-	bool rotateRight = false; // Flag to track right rotation input state
-    bool rotateLeft = false;  // Flag to track left rotation input state
-    bool rotateUp = false;    // Flag to track up rotation input state
-    bool rotateDown = false;  // Flag to track down rotation input state
+	
 };
 
 void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
@@ -284,9 +281,6 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
         if(!scene.HasComponent<transformcomp>(e)) continue;
         auto & rendering = scene.GetComponent<Rendering>(e);
         auto & transformComponent = scene.GetComponent<transformcomp>(e);
-
-        auto[axis, angle] = scene.GetComponent<transformcomp>(e).rotation.ToAxisAngle();
-        rendering.model->transform = raylib::Transform(rendering.model->transform).Rotate(axis, angle);
                 // std::cout << "axis.x" << transformComponent.rotation.ToEuler().x << std::endl;
                 // std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
                 // std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
@@ -296,12 +290,14 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
         auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
             // auto[axis, angle] = scene.getComponent<transformcomp>(e).rotation.ToAxisAngle();
             // rendering.model->transform = raylib::Transform(rendering.model->transform).Rotate(axis, angle);
-
+			auto [axis, angle] = transformComponent.rotation.ToAxisAngle();
             return t.
             Translate(transformComponent.position).
-            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).
+            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).Rotate(axis, angle);
+			
             // RotateXYZ(axis);
-            RotateXYZ(transformComponent.rotation.x, transformComponent.rotation.y, transformComponent.rotation.z); // q1 is word xyz  q2 is incremetn 
+            // RotateXYZ(transformComponent.rotation.x, transformComponent.rotation.y, transformComponent.rotation.z); // q1 is word xyz  q2 is incremetn 
+		
         };
         
         if (rendering.drawBoundingBox) {
@@ -355,14 +351,14 @@ int main() {
 		scene.AddComponent<transformcomp>(e).scale = {(Vector3){2,2,2}};
 		scene.AddComponent<transformcomp>(e).rotation = QuaternionIdentity(); // Initialize with no rotation
 		scene.AddComponent<physics>(e).acceleration = 5;
-		scene.AddComponent<physics>(e).angularAcceleration = 15;
+		scene.AddComponent<physics>(e).angularAcceleration = 5;
 		
 		scene.AddComponent<physics>(e).rotation = QuaternionIdentity(); // Initialize with no rotation
 		scene.AddComponent<physics>(e).targetRotation = QuaternionIdentity(); // Initialize with no target rotation
 		scene.AddComponent<physics>(e).speed = 1;
 		scene.AddComponent<physics>(e).targetSpeed = 3;
 		scene.AddComponent<physics>(e).minSpeed = 0;
-		scene.AddComponent<physics>(e).maxSpeed = 25;
+		scene.AddComponent<physics>(e).maxSpeed = 15;
 
 		scene.AddComponent<bufferedComponent>(e).inputs = &inputs;
 		
@@ -374,14 +370,16 @@ int main() {
 
 
 	// Buffered input actions for setup in buffered input component
-	inputs["forward"] = raylib::Action::key(KEY_W).move();
-	inputs["backwards"] = raylib::Action::key(KEY_S).move();
-	inputs["right"] = raylib::Action::key(KEY_D).move();
-	inputs["left"] = raylib::Action::key(KEY_A).move();
-	inputs["down"] = raylib::Action::key(KEY_E).move();
-	inputs["up"] = raylib::Action::key(KEY_Q).move();
-	inputs["space"] = raylib::Action::key(KEY_SPACE).move();
-	inputs["change"] = raylib::Action::key(KEY_TAB).move();
+	inputs["forward"] = raylib::Action::key(KEY_W);
+	inputs["backwards"] = raylib::Action::key(KEY_S);
+	inputs["right"] = raylib::Action::key(KEY_D);
+	inputs["left"] = raylib::Action::key(KEY_A);
+	inputs["tiltleft"] = raylib::Action::key(KEY_F);
+	inputs["tiltright"] = raylib::Action::key(KEY_R);
+	inputs["tiltback"] = raylib::Action::key(KEY_E);
+	inputs["tiltforward"] = raylib::Action::key(KEY_Q);
+	inputs["space"] = raylib::Action::key(KEY_SPACE);
+	inputs["change"] = raylib::Action::key(KEY_TAB);
 
 	
 
@@ -449,6 +447,8 @@ void DrawModel(raylib::Model& model, Transformer auto transformer) {
 }
 
 // Input handling
+
+//call a function when a event happened, 
 void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 
 	bool inputting = false;
@@ -461,16 +461,17 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
 		auto& physicsComponent = scene.GetComponent<physics>(e); // Declare physicsComponent here
 
-		if(buffer.inputs){
-			inputting = true;
-		} 
+		// if(buffer.inputs){
+		// 	inputting = true;
+		// } 
 		// else inputting = false;
+		// scene.entityMasks.at(5);
 
 
 		(*buffer.inputs)["forward"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
        
             
-            physicsComponent.targetSpeed += 1;// thus doing 
+            physicsComponent.targetSpeed += 3;// thus doing 
             
         });
         (*buffer.inputs)["backwards"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
@@ -482,23 +483,34 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		
         (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
 			
-            physicsComponent.targetRotation.y -= 10 * DEG2RAD;
+            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(10));
+
             
         });
         (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
 			
-            physicsComponent.targetRotation.y += 10 * DEG2RAD;
+            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(10));
             
         });
-		(*buffer.inputs)["up"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
+		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
             
 
-            physicsComponent.targetRotation.x += 10 * DEG2RAD;
+            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));
             
         });
-		(*buffer.inputs)["down"].AddPressedCallback([&physicsComponent]()-> void { 
+		(*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent]()-> void { 
 
-			physicsComponent.targetRotation.x -= 10 * DEG2RAD;
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Left(), raylib::Degree(10));
+
+		});
+		(*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent]()-> void { 
+
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(10));
+
+		});
+		(*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent]()-> void { 
+
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(10));
 
 		});
         (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
@@ -513,8 +525,6 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 
 float angClamp(float& targetRot, float& Rotation, float angAcc, float dt) {
 
-
-
 	static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
 		int intPart = angle;
 		float floatPart = float(angle) - intPart;
@@ -523,21 +533,27 @@ float angClamp(float& targetRot, float& Rotation, float angAcc, float dt) {
 		return intPart + floatPart;
 	};
 
-	float target = AngleClamp(targetRot);
-	int difference = abs(target - Rotation);
-	if(target > Rotation) {
+	// float target = AngleClamp(targetRot);
+	int difference = abs(targetRot - Rotation);
+	if(targetRot > Rotation) {
 		if(difference < 180) Rotation += angAcc * dt;
 		else if(difference > 180) Rotation -= angAcc * dt;
-	} else if(target < Rotation) {
+	} else if(targetRot < Rotation) {
 		if(difference < 180) Rotation -= angAcc * dt;
 		else if(difference > 180) Rotation += angAcc * dt;
 	} 
-	if(difference < .005) Rotation = target; // If the Rotation is really close to correct 
-	Rotation = AngleClamp(Rotation);
-	float angle = raylib::Degree(Rotation); // convert heading
+	if(difference < .005) Rotation = targetRot; // If the Rotation is really close to correct 
+	// Rotation = AngleClamp(Rotation);
+	// float angle = raylib::Degree(Rotation); // convert heading
 
-	return angle;
+	return Rotation;
 }
+
+// rotate a vector and we can slerp and two axis angle 
+
+// slerping is interpolating two quats.
+
+//{sin()x, sin()y, sin()z, cos()}
 
 
 void PhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
@@ -572,23 +588,21 @@ void PhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		// rotation.x = angClamp(targetRotation.x, rotation.x, angularAcceleration, dt);
 		// rotation.y = angClamp(targetRotation.y, rotation.y, angularAcceleration, dt);
 		// rotation.z = angClamp(targetRotation.z, rotation.z, angularAcceleration, dt);
+		// rotation.w = angClamp(targetRotation.w, rotation.w, angularAcceleration, dt);
 		
 
+        rotation = QuaternionSlerp(rotation, targetRotation, physicsComponent.angularAcceleration * dt); 
 		
-
-        // rotation = QuaternionSlerp(rotation, targetRotation, physicsComponent.angularAcceleration * dt); // from chat
+		
 
         // Calculate velocity based on updated speed and rotation
-        raylib::Vector3 velocity = raylib::Vector3::Left().RotateByQuaternion(targetRotation) * speed;
+        raylib::Vector3 velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
 
-		// raylib::Vector3 velocity;
-        // velocity.x = speed * cos(rotation.x);
-        // velocity.y = 0;
-        // velocity.z = -speed * sin(rotation.y);
+		
 
         // Update position based on velocity
         transformComponent.position += velocity * dt;
-		transformComponent.rotation = targetRotation ;
+		transformComponent.rotation = rotation ;
 
         // Output for debugging
         std::cout << dt << " <---  dt from the physics." << std::endl;
