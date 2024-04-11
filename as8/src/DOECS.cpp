@@ -279,8 +279,10 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
     for(Entity e = 0; e < scene.entityMasks.size(); e++) {
         if(!scene.HasComponent<Rendering>(e)) continue;
         if(!scene.HasComponent<transformcomp>(e)) continue;
+		if(!scene.HasComponent<bufferedComponent>(e)) continue;
         auto & rendering = scene.GetComponent<Rendering>(e);
         auto & transformComponent = scene.GetComponent<transformcomp>(e);
+		auto & buffer = scene.GetComponent<bufferedComponent>(e);
                 // std::cout << "axis.x" << transformComponent.rotation.ToEuler().x << std::endl;
                 // std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
                 // std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
@@ -300,7 +302,7 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
 		
         };
         
-        if (rendering.drawBoundingBox) {
+        if (buffer.selected) {
             DrawBoundedModel(*rendering.model, Transformer);
         } else {
             DrawModel(*rendering.model, Transformer);
@@ -338,7 +340,8 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	int numberOfPlanes = 1;
+	int numberOfPlanes = 2;
+	int counter = -1;
 
     raylib::Model plane("meshes/PolyPlane.glb");
     Scene scene;
@@ -351,35 +354,46 @@ int main() {
 		scene.AddComponent<transformcomp>(e).scale = {(Vector3){2,2,2}};
 		scene.AddComponent<transformcomp>(e).rotation = QuaternionIdentity(); // Initialize with no rotation
 		scene.AddComponent<physics>(e).acceleration = 5;
-		scene.AddComponent<physics>(e).angularAcceleration = 5;
+		scene.AddComponent<physics>(e).angularAcceleration = 12;
 		
 		scene.AddComponent<physics>(e).rotation = QuaternionIdentity(); // Initialize with no rotation
 		scene.AddComponent<physics>(e).targetRotation = QuaternionIdentity(); // Initialize with no target rotation
-		scene.AddComponent<physics>(e).speed = 1;
-		scene.AddComponent<physics>(e).targetSpeed = 3;
+		scene.AddComponent<physics>(e).speed = 5;
+		scene.AddComponent<physics>(e).targetSpeed = 5;
 		scene.AddComponent<physics>(e).minSpeed = 0;
-		scene.AddComponent<physics>(e).maxSpeed = 15;
+		scene.AddComponent<physics>(e).maxSpeed = 50;
 
 		scene.AddComponent<bufferedComponent>(e).inputs = &inputs;
+		scene.AddComponent<bufferedComponent>(e).selected = true;
 		
 	}
-
-	
-	int counter = -1;
     
 
 
 	// Buffered input actions for setup in buffered input component
-	inputs["forward"] = raylib::Action::key(KEY_W);
-	inputs["backwards"] = raylib::Action::key(KEY_S);
-	inputs["right"] = raylib::Action::key(KEY_D);
-	inputs["left"] = raylib::Action::key(KEY_A);
-	inputs["tiltleft"] = raylib::Action::key(KEY_F);
-	inputs["tiltright"] = raylib::Action::key(KEY_R);
-	inputs["tiltback"] = raylib::Action::key(KEY_E);
-	inputs["tiltforward"] = raylib::Action::key(KEY_Q);
-	inputs["space"] = raylib::Action::key(KEY_SPACE);
-	inputs["change"] = raylib::Action::key(KEY_TAB);
+	inputs["forward"] = raylib::Action::key(KEY_W).move();
+	inputs["backwards"] = raylib::Action::key(KEY_S).move();
+	inputs["right"] = raylib::Action::key(KEY_D).move();
+	inputs["left"] = raylib::Action::key(KEY_A).move();
+	inputs["tiltleft"] = raylib::Action::key(KEY_F).move();
+	inputs["tiltright"] = raylib::Action::key(KEY_R).move();
+	inputs["tiltback"] = raylib::Action::key(KEY_E).move();
+	inputs["tiltforward"] = raylib::Action::key(KEY_Q).move();
+	inputs["space"] = raylib::Action::key(KEY_SPACE).move();
+	inputs["change"] = raylib::Action::key(KEY_TAB).move();
+
+		inputs["change"] = raylib::Action::key(KEY_TAB).SetPressedCallback([&scene, &counter](){
+			counter = (counter + 1) % scene.entityMasks.size();
+			for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+				// cycle through entities vector 
+				// auto ref = entities[i].GetComponent<bufferedComponent>(); // get optional reference to transform component 
+				// if (!ref) return; // does it exist 
+				// auto& INPUT = ref->get(); // get values stored in reference if it exists
+				if(!scene.HasComponent<bufferedComponent>(e)) continue;
+				auto& bufInput = scene.GetComponent<bufferedComponent>(e);
+				bufInput.selected = counter == e;
+			}
+		}).move();
 
 	
 
@@ -452,7 +466,7 @@ void DrawModel(raylib::Model& model, Transformer auto transformer) {
 void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 
 	bool inputting = false;
-	float angle = 0;
+	int counter;
 
 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
 
@@ -461,66 +475,46 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
 		auto& physicsComponent = scene.GetComponent<physics>(e); // Declare physicsComponent here
 
-		// if(buffer.inputs){
-		// 	inputting = true;
-		// } 
-		// else inputting = false;
-		// scene.entityMasks.at(5);
-
-
-		(*buffer.inputs)["forward"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-       
-            
-            physicsComponent.targetSpeed += 3;// thus doing 
-            
+		(*buffer.inputs)["forward"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action   
+			if (buffer.selected)
+            physicsComponent.targetSpeed += 3;// thus doing   
         });
-        (*buffer.inputs)["backwards"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-            
-           
-            physicsComponent.targetSpeed -= 1; // thus doing 
-            
+        (*buffer.inputs)["backwards"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action           
+            if (buffer.selected)
+			physicsComponent.targetSpeed -= 1; // thus doing 
         });
-		
-        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-			
-            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(10));
-
-            
+        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+            if (buffer.selected)
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(10));  
         });
-        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-			
-            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(10));
-            
+        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+            if (buffer.selected)
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(10)); 
         });
-		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-            
-
-            physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));
-            
+		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+            if (buffer.selected)
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));  
         });
-		(*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent]()-> void { 
-
+		(*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
+			if (buffer.selected)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Left(), raylib::Degree(10));
-
 		});
-		(*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent]()-> void { 
-
+		(*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
+			if (buffer.selected)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(10));
-
 		});
-		(*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent]()-> void { 
-
+		(*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
+			if (buffer.selected)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(10));
-
 		});
-        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
-             
-            physicsComponent.targetSpeed = 0;
-            
+        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+            if (buffer.selected)
+			physicsComponent.targetSpeed = 0;
         });
-
+		// (*buffer.inputs)["tab"].AddPressedCallback([&physicsComponent]()-> void { //lambda function that is creating call back for action 
+        //     selected = (selected++) % scene.entityMasks.size();
+        // });
 	}
-	
 }
 
 float angClamp(float& targetRot, float& Rotation, float angAcc, float dt) {
