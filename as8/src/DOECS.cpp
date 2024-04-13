@@ -263,7 +263,6 @@ struct TwoDphysics {
 struct Rendering {
     raylib::Model* model;
     bool drawBoundingBox = false;
-	bool twoD = false;
 };
 
 struct transformcomp {
@@ -281,7 +280,7 @@ struct bufferedComponent {
 
 void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
 void DrawModel(raylib::Model& model, Transformer auto transformer);
-void ThreeDVelocitySystem(Scene<ComponentStorage>& scene, float dt);
+void VelocitySystem(Scene<ComponentStorage>& scene, float dt);
 void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
 void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
 void DrawSystem(Scene<ComponentStorage>& scene);
@@ -322,8 +321,8 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
 
 int main() {
 	// Create window
-	const int screenWidth = 900 * 2;
-	const int screenHeight = 450 * 2;
+	const int screenWidth = 400 * 2; // 900
+	const int screenHeight = 450 * 2; // 450
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 8");
 
 	raylib::BufferedInput inputs; // Manager for actions 
@@ -381,34 +380,33 @@ int main() {
 	scene.AddComponent<Rendering>(b1) = {
 	&plane, 
 	true}; // Plane with no bounding box, ie false 
+
 	scene.AddComponent<transformcomp>(b1) = {
-	(Vector3){100.0f - 200, 90, 0}, 
+	(Vector3){.0, 50, 0}, 
 	(Vector3){2,2,2}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
 
-	// scene.AddComponent<transformcomp>(b1).scale = {(Vector3){2,2,2}};
-	// scene.AddComponent<transformcomp>(b1).rotation = QuaternionIdentity(); // Initialize with no rotation
-	scene.AddComponent<TwoDphysics>(b1) = {
-	5, 12, 
-	5, 5, 
-	0, 0, 
-	0, 50};
+	scene.AddComponent<physics>(b1) = {
+	5, 
+	QuaternionIdentity(), QuaternionIdentity()};
 
-	// scene.AddComponent<TwoDphysics>(b1).angularAcceleration = 12;
-	// scene.AddComponent<TwoDphysics>(b1).heading = 0; // Initialize with no rotation
-	// scene.AddComponent<TwoDphysics>(b1).targetHeading = 0; // Initialize with no target rotation
-	// scene.AddComponent<TwoDphysics>(b1).speed = 5;
-	// scene.AddComponent<TwoDphysics>(b1).targetSpeed = 5;
-	// scene.AddComponent<TwoDphysics>(b1).minSpeed = 0;
-	// scene.AddComponent<TwoDphysics>(b1).maxSpeed = 50;
+	scene.AddComponent<veloKinematics>(b1) = {
+	5, 
+	(Vector3){0, 0, 0}, 
+	5, 
+	5, 
+	50, 
+	0};
+	
+	scene.AddComponent<bufferedComponent>(b1) = {
+	&inputs, 
+	false};
+
 
 	// Rendering rem;
 	// // rem.//
 	// scene.AddComponent<Rendering>(...)=rem;
 	// rem.drawBoundingBox = true;
-
-	scene.AddComponent<bufferedComponent>(b1).inputs = &inputs;
-	scene.AddComponent<bufferedComponent>(b1).selected = false;
     
 	// Buffered input actions for setup in buffered input component
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -434,7 +432,7 @@ int main() {
 	SetTargetFPS(60);
 
     ProcessInputSystem(scene);
-	BoatProcessInputSystem(scene);
+	// BoatProcessInputSystem(scene);
     
 
 	// Main loop
@@ -456,12 +454,16 @@ int main() {
 				
 				// Render skybox and ground
 				skybox.Draw();
-				ground.Draw({});
+
+				// ground.Draw({});
 
 			}
-			ThreeDVelocitySystem(scene, dt);
-            TwoDPhysicsSystem(scene, dt);
+			VelocitySystem(scene, dt);
+
 			ThreeDPhysicsSystem(scene, dt);
+			
+            // TwoDPhysicsSystem(scene, dt);
+			
             DrawSystem(scene);
 			camera.EndMode();
             
@@ -642,27 +644,27 @@ float angClamp(float& targetRot, float& Rotation, float angAcc, float dt) {
 
 //{sin()x, sin()y, sin()z, cos()}
 
-void ThreeDVelocitySystem(Scene<ComponentStorage>& scene, float dt) {
+void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
 
 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 		if (!scene.HasComponent<veloKinematics>(e)) continue;
 		if (!scene.HasComponent<transformcomp>(e)) continue;
 		
-		auto& velcomp = scene.GetComponent<veloKinematics>(e);
+		auto& kinematics = scene.GetComponent<veloKinematics>(e);
 		auto& transformComponent = scene.GetComponent<transformcomp>(e);
 
 		// raylib::Quaternion& rotation = physicsComponent.rotation;
         // raylib::Quaternion& targetRotation = physicsComponent.targetRotation;
 		// float angularAcceleration = physicsComponent.angularAcceleration;
-		raylib::Vector3 velo = velcomp.velocity;
-		float targetSpeed = velcomp.targetSpeed;
-        float maxSpeed = velcomp.maxSpeed;
-        float minSpeed = velcomp.minSpeed;
-        float& speed = velcomp.speed;
-		float acceleration = velcomp.acceleration;
+		raylib::Vector3 velo = kinematics.velocity;
+		float targetSpeed = kinematics.targetSpeed;
+        float maxSpeed = kinematics.maxSpeed;
+        float minSpeed = kinematics.minSpeed;
+        float& speed = kinematics.speed;
+		float acceleration = kinematics.acceleration;
 
 
-		 float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+		float target = Clamp(targetSpeed, minSpeed, maxSpeed);
         if (speed < target)
             speed += acceleration * dt;
         else if (speed > target)
@@ -670,14 +672,9 @@ void ThreeDVelocitySystem(Scene<ComponentStorage>& scene, float dt) {
         speed = Clamp(speed, minSpeed, maxSpeed);
 		// float& speed = physicsComponent.speed;
 
-		
-
 		// Update position based on velocity
-		transformComponent.position = velo * dt;
-		// transformComponent.rotation
-		
-		
-		
+		transformComponent.position += velo * dt;
+	
 	}
 }
 
@@ -686,106 +683,97 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
         if (!scene.HasComponent<transformcomp>(e)) continue;
         if (!scene.HasComponent<physics>(e)) continue;
-		if (!scene.HasComponent<bufferedComponent>(e)) continue;
 		if (!scene.HasComponent<veloKinematics>(e)) continue;
 
 
         auto& transformComponent = scene.GetComponent<transformcomp>(e);
         auto& physicsComponent = scene.GetComponent<physics>(e);
-		auto& buffer = scene.GetComponent<bufferedComponent>(e); 
-		auto& velcomp = scene.GetComponent<veloKinematics>(e); 
+		auto& kinematics = scene.GetComponent<veloKinematics>(e); 
 
         // Update speed based on physics parameters
-		// float angularAcceleration = physicsComponent.angularAcceleration;
-        
-        
+		float angularAcceleration = physicsComponent.angularAcceleration;
 		raylib::Quaternion& rotation = physicsComponent.rotation;
         raylib::Quaternion& targetRotation = physicsComponent.targetRotation;
 
-		float& speed = velcomp.speed;
+		float& speed = kinematics.speed;
 
-       rotation = QuaternionSlerp(rotation, targetRotation, physicsComponent.angularAcceleration * dt); 
+       	rotation = QuaternionSlerp(rotation, targetRotation, angularAcceleration * dt); 
 		
 		// Calculate velocity based on updated speed and rotation
-		raylib::Vector3 velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
+		kinematics.velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
 
+		transformComponent.rotation = rotation;
 		
-		
-        // // Output for debugging
-        // std::cout << dt << " <---  dt from the physics." << std::endl;
-        // std::cout << rotation.x << " <---  x rotation from the physics." << std::endl;
-        // std::cout << rotation.y << " <---  y rotation from the physics." << std::endl;
-        // std::cout << rotation.z << " <---  z rotation from the physics." << std::endl;
-        // std::cout << speed << " <---  speed from the physics." << std::endl;
+        // Output for debugging
+        std::cout << dt << " <---  dt from the physics." << std::endl;
+        std::cout << rotation.x << " <---  x rotation from the physics." << std::endl;
+        std::cout << rotation.y << " <---  y rotation from the physics." << std::endl;
+        std::cout << rotation.z << " <---  z rotation from the physics." << std::endl;
+        std::cout << speed << " <---  speed from the physics." << std::endl;
     }
 }
 
-void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
+// void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
-	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+// 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 
-		static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-			int intPart = angle;
-			float floatPart = float(angle) - intPart;
-			intPart %= 360;
-			intPart += (intPart < 0) * 360;
-			return intPart + floatPart;
-		};
+// 		static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+// 			int intPart = angle;
+// 			float floatPart = float(angle) - intPart;
+// 			intPart %= 360;
+// 			intPart += (intPart < 0) * 360;
+// 			return intPart + floatPart;
+// 		};
 
-        if (!scene.HasComponent<transformcomp>(e)) continue;
-        if (!scene.HasComponent<TwoDphysics>(e)) continue;
-		if (!scene.HasComponent<bufferedComponent>(e)) continue;
+//         if (!scene.HasComponent<transformcomp>(e)) continue;
+//         if (!scene.HasComponent<TwoDphysics>(e)) continue;
+// 		if (!scene.HasComponent<bufferedComponent>(e)) continue;
 
-        auto& transformComponent = scene.GetComponent<transformcomp>(e);
-        auto& TwoDphysicsComponent = scene.GetComponent<TwoDphysics>(e);
-		auto& buffer = scene.GetComponent<bufferedComponent>(e); 
+//         auto& transformComponent = scene.GetComponent<transformcomp>(e);
+//         auto& TwoDphysicsComponent = scene.GetComponent<TwoDphysics>(e);
+// 		auto& buffer = scene.GetComponent<bufferedComponent>(e); 
 
-        // Update speed based on TwoDphysics parameters
-		float angularAcceleration = TwoDphysicsComponent.angularAcceleration;
-        float acceleration = TwoDphysicsComponent.acceleration;
-        // float targetSpeed = TwoDphysicsComponent.targetSpeed;
-        // float maxSpeed = TwoDphysicsComponent.maxSpeed;
-        // float minSpeed = TwoDphysicsComponent.minSpeed;
-        // float& speed = TwoDphysicsComponent.speed;
-		float& heading = TwoDphysicsComponent.heading;
-		float& targetHeading = TwoDphysicsComponent.targetHeading;
-		// raylib::Quaternion& rotation = TwoDphysicsComponent.rotation;
-        // raylib::Quaternion& targetRotation = TwoDphysicsComponent.targetRotation;
-
-        float target = Clamp(targetSpeed, minSpeed, maxSpeed);
-        if (speed < target)
-            speed += acceleration * dt;
-        else if (speed > target)
-            speed -= acceleration * dt;
-        speed = Clamp(speed, minSpeed, maxSpeed);
+//         // Update speed based on TwoDphysics parameters
+// 		float angularAcceleration = TwoDphysicsComponent.angularAcceleration;
+//         // float acceleration = TwoDphysicsComponent.acceleration;
+//         // float targetSpeed = TwoDphysicsComponent.targetSpeed;
+//         // float maxSpeed = TwoDphysicsComponent.maxSpeed;
+//         // float minSpeed = TwoDphysicsComponent.minSpeed;
+//         // float& speed = TwoDphysicsComponent.speed;
+// 		float& heading = TwoDphysicsComponent.heading;
+// 		float& targetHeading = TwoDphysicsComponent.targetHeading;
+// 		// raylib::Quaternion& rotation = TwoDphysicsComponent.rotation;
+//         // raylib::Quaternion& targetRotation = TwoDphysicsComponent.targetRotation;
 		
-        targetHeading = AngleClamp(targetHeading);
-        float difference = abs(targetHeading - heading);
-        if (targetHeading > heading) {
-            if (difference < 180)
-                heading += angularAcceleration * dt;
-            else if (difference > 180)
-                heading -= angularAcceleration * dt;
-        } else if (targetHeading < heading) {
-            if (difference < 180)
-                heading -= angularAcceleration * dt;
-            else if (difference > 180)
-                heading += angularAcceleration * dt;
-        }
-        if (difference < .5)
-            heading = targetHeading;
+//         targetHeading = AngleClamp(targetHeading);
+//         float difference = abs(targetHeading - heading);
+//         if (targetHeading > heading) {
+//             if (difference < 180)
+//                 heading += angularAcceleration * dt;
+//             else if (difference > 180)
+//                 heading -= angularAcceleration * dt;
+//         } else if (targetHeading < heading) {
+//             if (difference < 180)
+//                 heading -= angularAcceleration * dt;
+//             else if (difference > 180)
+//                 heading += angularAcceleration * dt;
+//         }
+//         if (difference < .5)
+//             heading = targetHeading;
 
-        // Calculate velocity based on updated speed and heading
-        heading = AngleClamp(heading);
-        float angle = raylib::Degree(heading); // convert heading
+//         // Calculate velocity based on updated speed and heading
+//         heading = AngleClamp(heading);
+//         float angle = raylib::Degree(heading); // convert heading
 
-        // Initial velocity 
-		raylib::Vector3 velocity;
-        velocity.x = speed * cos(angle);
-        velocity.y = 0;
-        velocity.z = -speed * sin(angle);
-	}
-}
+//         // // Initial velocity 
+// 		// raylib::Vector3 velocity;
+//         // velocity.x = speed * cos(angle);
+//         // velocity.y = 0;
+//         // velocity.z = -speed * sin(angle);
+
+// 		transformComponent.rotation = heading;
+// 	}
+// }
 
 
 
