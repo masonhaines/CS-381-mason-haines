@@ -386,6 +386,8 @@ int main() {
 		// false};
 	// }
 	
+
+	////////////////////////////////////////////////////////
 	auto b1 = scene.CreateEntity();
 	
 
@@ -399,7 +401,7 @@ int main() {
 	QuaternionIdentity()}; // Adjust position based on 'i'
 
 	scene.AddComponent<TwoDphysics>(b1) = {
-	35, 
+	3, 
 	0.0f, 0.0f};
 
 	// scene.AddComponent<physics>(b1) = {                                          //3
@@ -417,6 +419,8 @@ int main() {
 	scene.AddComponent<bufferedComponent>(b1) = {
 	&inputs, 
 	false};
+
+	///////////////////////////////////////try to all component then get all the different attributes for different entities created
 
 
 	// Rendering rem;
@@ -515,8 +519,6 @@ void DrawModel(raylib::Model& model, Transformer auto transformer) {
 
 void BoatProcessInputSystem(Scene<ComponentStorage>& scene) {
 
-	// bool inputting = false;
-
 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
 
 		if(!scene.HasComponent<bufferedComponent>(e)) continue;
@@ -538,15 +540,17 @@ void BoatProcessInputSystem(Scene<ComponentStorage>& scene) {
             if (buffer.selected)
 			kinematics.targetSpeed -= 1; // thus doing 
         });
-        (*buffer.inputs)["right"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
-            if (buffer.selected)
-			TwoDPhysicsComponent.targetHeading -= 10 * DEG2RAD;
-			// std::cout << "I DO NOT HAVE 2 D PHYSICS" << std::endl;
+        (*buffer.inputs)["right"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+            if (buffer.selected) {
+                TwoDPhysicsComponent.targetHeading -= 10 * DEG2RAD;
+                std::cout << "Right key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+            }
         });
-        (*buffer.inputs)["left"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
-            if (buffer.selected)
-			TwoDPhysicsComponent.targetHeading += 10 * DEG2RAD;
-			// std::cout << "I DO NOT HAVE 2 D PHYSICS" << std::endl;
+        (*buffer.inputs)["left"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+            if (buffer.selected) {
+                TwoDPhysicsComponent.targetHeading += 10 * DEG2RAD;
+                std::cout << "Left key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+            }
         });
         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action 
             if (buffer.selected)
@@ -710,6 +714,8 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
+	
+
 	static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
 			int intPart = angle;
 			float floatPart = float(angle) - intPart;
@@ -752,10 +758,15 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
             else if (difference > 180 * DEG2RAD)
                 heading += angularAcceleration * dt;
         }
+
+		std::cout << "<-----------Difference: " << difference << std::endl;
+		std::cout << "<-----Updated Heading: " << heading << std::endl;
         if (difference < .5) heading = targetHeading;
 
 		std::cout << heading << " <---  heading ." << std::endl;
 		std::cout << targetHeading << " <---  targetHeading ." << std::endl;
+		std::cout << angularAcceleration << " <---  ang acc ." << std::endl;
+	
 		// std::cout << speed << " <---  speed from the physics." << std::endl;
         // Calculate velocity based on updated speed and heading
         // heading = AngleClamp(heading);
@@ -770,10 +781,10 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 		transformComponent.rotation = rotation;
 
-		std::cout << transformComponent.rotation.x << " <---  x rotation from the physics." << std::endl;
-        std::cout << transformComponent.rotation.y << " <---  y rotation from the physics." << std::endl;
-        std::cout << transformComponent.rotation.z << " <---  z rotation from the physics." << std::endl;
-		std::cout << transformComponent.rotation.w << " <---  w rotation from the physics." << std::endl;
+		// std::cout << transformComponent.rotation.x << " <---  x rotation from the physics." << std::endl;
+        // std::cout << transformComponent.rotation.y << " <---  y rotation from the physics." << std::endl;
+        // std::cout << transformComponent.rotation.z << " <---  z rotation from the physics." << std::endl;
+		// std::cout << transformComponent.rotation.w << " <---  w rotation from the physics." << std::endl;
 	}
 }
 
