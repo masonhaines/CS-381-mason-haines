@@ -58,7 +58,7 @@ extern size_t globalComponentCounter;
 			assert(sizeof(Tcomponent) == elementSize);
 			// std::cout << globalComponentCounter << "global counter for components" << std::endl;
 			// assert(e < (data.size() / elementSize));
-			uint8_t value = e;
+
 			std::cout << "assertion error value : e is " << static_cast<unsigned int>(e) << " data size divided by element size " << data.size() / elementSize << std::endl;
 			return *(Tcomponent*)(data.data() + e * elementSize);
 		}
@@ -447,8 +447,11 @@ int main() {
 	inputs["space"] = raylib::Action::key(KEY_SPACE).move();
 	inputs["change"] = raylib::Action::key(KEY_TAB).move();
 
-	inputs["change"] = raylib::Action::key(KEY_TAB).SetPressedCallback([&scene, &counter](){
+	bool inputTabbed = false;
+
+	inputs["change"] = raylib::Action::key(KEY_TAB).SetPressedCallback([&scene, &counter, &inputTabbed](){
 		counter = (counter + 1) % scene.entityMasks.size();
+		inputTabbed = true;
 		for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 			if(!scene.HasComponent<bufferedComponent>(e)) continue; // get optional reference to transform component
 			auto& bufInput = scene.GetComponent<bufferedComponent>(e); // get values stored in reference if it exists
@@ -460,6 +463,8 @@ int main() {
 
     ProcessInputSystem(scene);
 	BoatProcessInputSystem(scene);
+
+	bool changeCamera = false;
     
 
 	// Main loop
@@ -476,8 +481,45 @@ int main() {
 			// Clear screen
 			window.ClearBackground(BLACK);
 
+			if (IsKeyReleased(KEY_C)) { // press C to chnage camera veiw
+                if (changeCamera == false) changeCamera = true;
+                else changeCamera = false;
+            }
+
 			camera.BeginMode();
 			{	
+
+				if (counter == 10) camera.fovy = 65.0; // Change feild of veiw for largest ship
+				if (changeCamera && inputTabbed) { // Target is now position of current selected model
+
+					for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+						if(!scene.HasComponent<bufferedComponent>(e)) continue; // get optional reference to transform component
+						auto& bufInput = scene.GetComponent<bufferedComponent>(e); // get values stored in reference if it exists
+						bufInput.selected = counter == e;
+					
+						camera.target = (Vector3){
+							scene.GetComponent<transformcomp>(counter).position.x, 
+							scene.GetComponent<transformcomp>(counter).position.y, 
+							scene.GetComponent<transformcomp>(counter).position.z
+						};
+						camera.position = (Vector3){ // Camera position
+							scene.GetComponent<transformcomp>(counter).position.x - 200, 
+							scene.GetComponent<transformcomp>(counter).position.y + 105, 
+							scene.GetComponent<transformcomp>(counter).position.z 
+						};  
+						camera.up = raylib::Vector3::Up(); // Up direction         
+						if (counter == 9) camera.fovy = 60.0;
+						else camera.fovy = 35.0f; // Camera field-of-view Y
+						camera.projection = CAMERA_PERSPECTIVE;
+
+				}
+				} else { // revert to old camera settings 
+					camera.target = raylib::Vector3(0, 0, 300), // Target
+					camera.position = raylib::Vector3(0, 120, -500), // Position
+					camera.up = raylib::Vector3::Up(), 
+					camera.fovy = 50.0f; // Camera field-of-view Y
+					camera.projection = CAMERA_PERSPECTIVE;
+				}
 				
 				// Render skybox and ground
 				// skybox.Draw();
@@ -784,7 +826,7 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		// From Chatgpt - "how do i add  ninety degrees to the heading for the following two lines of code?"
 		raylib::Quaternion rotationY = raylib::Quaternion::FromAxisAngle({0, 1, 0}, PI / 2.0f);
 		
-		
+
 		raylib::Quaternion newRotation = rotationY * rotation;
 		
 
