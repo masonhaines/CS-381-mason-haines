@@ -57,7 +57,9 @@ extern size_t globalComponentCounter;
 		Tcomponent& Get(Entity e) {
 			assert(sizeof(Tcomponent) == elementSize);
 			// std::cout << globalComponentCounter << "global counter for components" << std::endl;
-			assert(e < (data.size() / elementSize));
+			// assert(e < (data.size() / elementSize));
+			uint8_t value = e;
+			std::cout << "assertion error value : e is " << static_cast<unsigned int>(e) << " data size divided by element size " << data.size() / elementSize << std::endl;
 			return *(Tcomponent*)(data.data() + e * elementSize);
 		}
 
@@ -322,7 +324,7 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
 
 int main() {
 	// Create window
-	const int screenWidth = 400 * 2; // 900
+	const int screenWidth = 900 * 2; // 900
 	const int screenHeight = 450 * 2; // 450
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 8");
 
@@ -350,41 +352,43 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	int numberOfPlanes = 1;
+	int numberOfPlanes = 5;
 	int counter = -1;
 
     raylib::Model plane("meshes/PolyPlane.glb");
+	raylib::Model boat1("meshes/SmitHouston_Tug.glb");
     Scene scene;
+	
  
     // Add a transform component to the entity
-//    for (int i = 0; i < numberOfPlanes; ++i) {
-		// auto e = scene.CreateEntity();
+   for (int i = 0; i < numberOfPlanes; ++i) {
+		auto e = scene.CreateEntity();
 
-		// scene.AddComponent<Rendering>(e) = {                                          //1
-		// &plane, 
-		// false}; // Plane with no bounding box, ie false 
+		scene.AddComponent<Rendering>(e) = {                                          //1
+		&plane, 
+		false}; // Plane with no bounding box, ie false 
 
-		// scene.AddComponent<transformcomp>(e) = {                                          //2
-		// (Vector3){1 * 100.0f - 200, 90, 0}, 
-		// (Vector3){2,2,2}, 
-		// QuaternionIdentity()}; // Adjust position based on 'i'
+		scene.AddComponent<transformcomp>(e) = {                                          //2
+		(Vector3){i * 100.0f - 200, 90, 0}, 
+		(Vector3){2,2,2}, 
+		QuaternionIdentity()}; // Adjust position based on 'i'
 
-		// scene.AddComponent<physics>(e) = {                                          //3
-		// 8, 
-		// QuaternionIdentity(), QuaternionIdentity()};
+		scene.AddComponent<physics>(e) = {                                          //3
+		8, 
+		QuaternionIdentity(), QuaternionIdentity()};
 
-		// scene.AddComponent<veloKinematics>(e) = {                                          //4
-		// 5, 
-		// (Vector3){0, 0, 0}, 
-		// 5, 
-		// 5, 
-		// 50, 
-		// 0};
+		scene.AddComponent<veloKinematics>(e) = {                                          //4
+		5, 
+		(Vector3){0, 0, 0}, 
+		5, 
+		5, 
+		50, 
+		0};
 		
-		// scene.AddComponent<bufferedComponent>(e) = {                                          //5
-		// &inputs, 
-		// false};
-	// }
+		scene.AddComponent<bufferedComponent>(e) = {                                          //5
+		&inputs, 
+		false};
+	}
 	
 
 	////////////////////////////////////////////////////////
@@ -392,7 +396,7 @@ int main() {
 	
 
 	scene.AddComponent<Rendering>(b1) = {
-	&plane, 
+	&boat1, 
 	false}; // Plane with no bounding box, ie false 
 
 	scene.AddComponent<transformcomp>(b1) = {
@@ -401,12 +405,12 @@ int main() {
 	QuaternionIdentity()}; // Adjust position based on 'i'
 
 	scene.AddComponent<TwoDphysics>(b1) = {
-	3, 
+	8, 
 	0.0f, 0.0f};
 
 	// scene.AddComponent<physics>(b1) = {                                          //3
-	// 	8, 
-	// 	QuaternionIdentity(), QuaternionIdentity()};
+	// 8, 
+	// QuaternionIdentity(), QuaternionIdentity()};
 
 	scene.AddComponent<veloKinematics>(b1) = {
 	5, 
@@ -420,7 +424,10 @@ int main() {
 	&inputs, 
 	false};
 
-	///////////////////////////////////////try to all component then get all the different attributes for different entities created
+
+	
+
+	///////////////////////////////////////
 
 
 	// Rendering rem;
@@ -475,7 +482,7 @@ int main() {
 				// Render skybox and ground
 				// skybox.Draw();
 
-				// ground.Draw({});
+				ground.Draw({});
 
 			}
 			VelocitySystem(scene, dt);
@@ -761,7 +768,7 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 		std::cout << "<-----------Difference: " << difference << std::endl;
 		std::cout << "<-----Updated Heading: " << heading << std::endl;
-        if (difference < .5) heading = targetHeading;
+        if (difference < .05) heading = targetHeading;
 
 		std::cout << heading << " <---  heading ." << std::endl;
 		std::cout << targetHeading << " <---  targetHeading ." << std::endl;
@@ -770,16 +777,22 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		// std::cout << speed << " <---  speed from the physics." << std::endl;
         // Calculate velocity based on updated speed and heading
         // heading = AngleClamp(heading);
-        raylib::Radian angle = raylib::Degree(heading); // convert heading
+        // raylib::Radian angle = raylib::Degree(heading); // convert heading
+		
 
 		raylib::Quaternion rotation = raylib::Quaternion::FromAxisAngle({0, 1, 0}, heading);
+		// From Chatgpt - "how do i add  ninety degrees to the heading for the following two lines of code?"
+		raylib::Quaternion rotationY = raylib::Quaternion::FromAxisAngle({0, 1, 0}, PI / 2.0f);
+		
+		
+		raylib::Quaternion newRotation = rotationY * rotation;
 		
 
 		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
 
+		
 
-
-		transformComponent.rotation = rotation;
+		transformComponent.rotation = newRotation;
 
 		// std::cout << transformComponent.rotation.x << " <---  x rotation from the physics." << std::endl;
         // std::cout << transformComponent.rotation.y << " <---  y rotation from the physics." << std::endl;
