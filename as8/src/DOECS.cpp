@@ -369,15 +369,15 @@ int main() {
 
 		scene.AddComponent<Rendering>(e) = {                                          //1
 		&plane, 
-		false, BLUE}; // Plane with no bounding box, ie false 
+		false, DARKGRAY}; // Plane with no bounding box, ie false 
 
 		scene.AddComponent<transformcomp>(e) = {                                          //2
 		(Vector3){i * 100.0f - 200, 90, 0}, 
-		(Vector3){2,2,2}, 
+		(Vector3){1,1,1}, 
 		QuaternionIdentity()}; // Adjust position based on 'i'
 
 		scene.AddComponent<physics>(e) = {                                          //3
-		8, 
+		5, 
 		QuaternionIdentity(), QuaternionIdentity()};
 
 		scene.AddComponent<veloKinematics>(e) = {                                          //4
@@ -395,26 +395,18 @@ int main() {
 	
 
 	////////////////////////////////////////////////////////
-	auto b1 = scene.CreateEntity();
-	
 
+	auto b1 = scene.CreateEntity();
 	scene.AddComponent<Rendering>(b1) = {
 	&boat1, 
-	false, PINK}; // Plane with no bounding box, ie false 
-
+	false, GRAY}; // Plane with no bounding box, ie false 
 	scene.AddComponent<transformcomp>(b1) = {
-	(Vector3){.0, 50, 0}, 
-	(Vector3){2,2,2}, 
+	(Vector3){-100, 0, -50}, 
+	(Vector3){1,.5,1}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
-
 	scene.AddComponent<TwoDphysics>(b1) = {
-	8, 
+	.08, 
 	0.0f, 0.0f};
-
-	// scene.AddComponent<physics>(b1) = {                                          //3
-	// 8, 
-	// QuaternionIdentity(), QuaternionIdentity()};
-
 	scene.AddComponent<veloKinematics>(b1) = {
 	5, 
 	(Vector3){0, 0, 0}, 
@@ -422,8 +414,95 @@ int main() {
 	5, 
 	50, 
 	0};
-	
 	scene.AddComponent<bufferedComponent>(b1) = {
+	&inputs, 
+	false};
+
+	auto b2 = scene.CreateEntity();
+	scene.AddComponent<Rendering>(b2) = {
+	&boat1, 
+	false, ORANGE}; // Plane with no bounding box, ie false 
+	scene.AddComponent<transformcomp>(b2) = {
+	(Vector3){-200, 0, 0}, 
+	(Vector3){1,1,5}, 
+	QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<TwoDphysics>(b2) = {
+	.08, 
+	0.0f, 0.0f};
+	scene.AddComponent<veloKinematics>(b2) = {
+	5, 
+	(Vector3){0, 0, 0}, 
+	5, 
+	5, 
+	50, 
+	0};
+	scene.AddComponent<bufferedComponent>(b2) = {
+	&inputs, 
+	false};
+
+	auto b3 = scene.CreateEntity();
+	scene.AddComponent<Rendering>(b3) = {
+	&boat1, 
+	false, PINK}; // Plane with no bounding box, ie false 
+	scene.AddComponent<transformcomp>(b3) = {
+	(Vector3){-300, 0, 200}, 
+	(Vector3){2,4,2}, 
+	QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<TwoDphysics>(b3) = {
+	.08, 
+	0.0f, 0.0f};
+	scene.AddComponent<veloKinematics>(b3) = {
+	5, 
+	(Vector3){0, 0, 0}, 
+	5, 
+	5, 
+	50, 
+	0};
+	scene.AddComponent<bufferedComponent>(b3) = {
+	&inputs, 
+	false};
+
+	auto b4 = scene.CreateEntity();
+	scene.AddComponent<Rendering>(b4) = {
+	&boat1, 
+	false, BLUE}; // Plane with no bounding box, ie false 
+	scene.AddComponent<transformcomp>(b4) = {
+	(Vector3){100, 0, 100}, 
+	(Vector3){2,1,7}, 
+	QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<TwoDphysics>(b4) = {
+	.08, 
+	0.0f, 0.0f};
+	scene.AddComponent<veloKinematics>(b4) = {
+	5, 
+	(Vector3){0, 0, 0}, 
+	5, 
+	5, 
+	50, 
+	0};
+	scene.AddComponent<bufferedComponent>(b4) = {
+	&inputs, 
+	false};
+
+	auto b5 = scene.CreateEntity();
+	scene.AddComponent<Rendering>(b5) = {
+	&boat1, 
+	false, GREEN}; // Plane with no bounding box, ie false 
+	scene.AddComponent<transformcomp>(b5) = {
+	(Vector3){200, 0, 0}, 
+	(Vector3){.5,.25,.5}, 
+	QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<TwoDphysics>(b5) = {
+	.08, 
+	0.0f, 0.0f};
+	scene.AddComponent<veloKinematics>(b5) = {
+	5, 
+	(Vector3){0, 0, 0}, 
+	5, 
+	5, 
+	50, 
+	0};
+	scene.AddComponent<bufferedComponent>(b5) = {
 	&inputs, 
 	false};
 
@@ -636,11 +715,11 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
         });
         (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
             if (buffer.selected)
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(10));  
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(15));  
         });
         (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
             if (buffer.selected)
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(10)); 
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(15)); 
         });
 		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
             if (buffer.selected)
@@ -652,11 +731,11 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		});
 		(*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
 			if (buffer.selected)
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(10));
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(12));
 		});
 		(*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
 			if (buffer.selected)
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(10));
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(12));
 		});
         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action 
             if (buffer.selected)
@@ -766,19 +845,7 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
-	
-
-	static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-			int intPart = angle;
-			float floatPart = float(angle) - intPart;
-			intPart %= 360;
-			intPart += (intPart < 0) * 360;
-			return intPart + floatPart;
-		};
-
 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
-
-		
 
         if (!scene.HasComponent<transformcomp>(e)) continue;
         if (!scene.HasComponent<TwoDphysics>(e)) continue;
@@ -786,19 +853,23 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
         auto& transformComponent = scene.GetComponent<transformcomp>(e);
         auto& TwoDphysicsComponent = scene.GetComponent<TwoDphysics>(e);
-		auto& kinematics = scene.GetComponent<veloKinematics>(e); 
+		auto& kinematics = scene.GetComponent<veloKinematics>(e);
 
+		// static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
+		// 	int intPart = angle;
+		// 	float floatPart = float(angle) - intPart;
+		// 	intPart %= 360;
+		// 	intPart += (intPart < 0) * 360;
+		// 	return intPart + floatPart;
+		// }; 
 
 		raylib::Vector3& velocity = kinematics.velocity;
 		float& speed = kinematics.speed;
-        // Update speed based on TwoDphysics parameters
-
 		float angularAcceleration = TwoDphysicsComponent.angularAcceleration;
 		float& heading = TwoDphysicsComponent.heading;
 		float& targetHeading = TwoDphysicsComponent.targetHeading;
-		
-        // targetHeading = AngleClamp(targetHeading);
         float difference = abs(targetHeading - heading);
+
         if (targetHeading > heading) {
             if (difference < 180 * DEG2RAD)
                 heading += angularAcceleration * dt;
@@ -813,29 +884,19 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 		std::cout << "<-----------Difference: " << difference << std::endl;
 		std::cout << "<-----Updated Heading: " << heading << std::endl;
-        if (difference < .05) heading = targetHeading;
+        if (difference < .005) heading = targetHeading;
 
 		std::cout << heading << " <---  heading ." << std::endl;
 		std::cout << targetHeading << " <---  targetHeading ." << std::endl;
 		std::cout << angularAcceleration << " <---  ang acc ." << std::endl;
-	
-		// std::cout << speed << " <---  speed from the physics." << std::endl;
-        // Calculate velocity based on updated speed and heading
-        // heading = AngleClamp(heading);
-        // raylib::Radian angle = raylib::Degree(heading); // convert heading
-		
 
 		raylib::Quaternion rotation = raylib::Quaternion::FromAxisAngle({0, 1, 0}, heading);
 		// From Chatgpt - "how do i add  ninety degrees to the heading for the following two lines of code?"
-		raylib::Quaternion rotationY = raylib::Quaternion::FromAxisAngle({0, 1, 0}, PI / 2.0f);
-		
+		raylib::Quaternion offsetY = raylib::Quaternion::FromAxisAngle({0, 1, 0}, PI / 2.0f);
 
-		raylib::Quaternion newRotation = rotationY * rotation;
-		
-
+		raylib::Quaternion newRotation = offsetY * rotation;
+	
 		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
-
-		
 
 		transformComponent.rotation = newRotation;
 
@@ -845,170 +906,3 @@ void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		// std::cout << transformComponent.rotation.w << " <---  w rotation from the physics." << std::endl;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// need a 2d physics struct with vvector 3 and that needs is own input and its own system
-
-
-
-
-
-
-
-// void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
-    
-    
-//     // Iterate over all entities in the scene
-//     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
-
-//         static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-//             float decimal = float(angle) - int(angle);
-//             int whole = int(angle) % 360;
-//             whole += (whole < 0) * 360;
-//             return decimal + whole;
-//         };
-
-//         std::cout << "i have physics " << std::endl;
-//         if (!scene.HasComponent<transformcomp>(e)) continue;
-//         if (!scene.HasComponent<physics>(e)) continue;
-//         std::cout << "i am in physics " << std::endl;
-//         // Get references to the transform and physics components
-//         auto& transformComponent = scene.GetComponent<transformcomp>(e);
-//         auto& physicsComponent = scene.GetComponent<physics>(e); // Declare physicsComponent here
-
-//         // Calculate velocity based on physics parameters
-//         float acceleration = physicsComponent.acceleration;
-//         float angularAcceleration = physicsComponent.angularAcceleration;
-//         float targetSpeed = physicsComponent.targetSpeed;
-//         raylib::Degree targetHeading = physicsComponent.targetHeading;
-//         float maxSpeed = physicsComponent.maxSpeed;
-//         float minSpeed = physicsComponent.minSpeed;
-//         float& speed = physicsComponent.speed;
-//         raylib::Degree& heading = physicsComponent.heading;
-//         // float dt = physicsComponent.dt;
-
-        
-//         float target = Clamp(targetSpeed, minSpeed, maxSpeed);
-//         if (speed < target)
-//             speed += acceleration * dt;
-//         else if (speed > target)
-//             speed -= acceleration * dt;
-//         speed = Clamp(speed, minSpeed, maxSpeed);
-
-//         targetHeading = AngleClamp(targetHeading);
-//         float difference = abs(targetHeading - heading);
-//         if (targetHeading > heading) {
-//             if (difference < 180)
-//                 heading += angularAcceleration * dt;
-//             else if (difference > 180)
-//                 heading -= angularAcceleration * dt;
-//         } else if (targetHeading < heading) {
-//             if (difference < 180)
-//                 heading -= angularAcceleration * dt;
-//             else if (difference > 180)
-//                 heading += angularAcceleration * dt;
-//         }
-//         if (difference < .5)
-//             heading = targetHeading;
-
-//         // Calculate velocity based on updated speed and heading
-//         heading = AngleClamp(heading);
-//         float angle = raylib::Degree(heading); // convert heading
-		
-//         raylib::Vector3 velocity;
-//         velocity.x = speed * cos(angle * DEG2RAD * 2);
-//         velocity.y = 0;
-//         velocity.z = -speed * sin(angle * DEG2RAD * 2);
-
-
-//         std::cout << dt << " <---  dt from the physics." << std::endl;
-//         std::cout << angle << " <---  angle from the physics." << std::endl;
-//         std::cout << speed << " <---  speed from the physics." << std::endl;
-//         std::cout << heading << " <---  heading from the physics." << std::endl;
-
-//         // Update position based on velocity
-//         transformComponent.position.x += velocity.x * dt;
-//         transformComponent.position.y += velocity.y * dt;
-//         transformComponent.position.z += velocity.z * dt;
-
-//         transformComponent.rotation.y = heading;
-// 		transformComponent.rotation.w = 1;
-
-//     }
-// }
-
-
-// Physics System
-// void TwoDPhysicsSystem(Scene& scene) {
-//     static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
-// 		float decimal = float(angle) - int(angle);
-// 		int whole = int(angle) % 360;
-// 		whole += (whole < 0) * 360;
-// 		return decimal + whole;
-// 	};
-//     // Iterate over all entities in the scene
-//     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
-//         if (!scene.hasComponent<transformcomp>(e)) continue;
-//         if (!scene.hasComponent<physics>(e)) continue;
-//         // Check if the entity has transform and physics components
-//         // if (!scene.hasComponent<transformcomp>(e) || !scene.hasComponent<physics>(e))
-//         //     continue;
-//         // Get references to the transform and physics components
-//         auto& transformComponent = scene.getComponent<transformcomp>(e);
-//         auto& physicsComponent = scene.getComponent<physics>(e);
-//         // Calculate velocity based on physics parameters
-//         float acceleration = physicsComponent.acceleration;
-//         float angularAcceleration = physicsComponent.angularAcceleration;
-//         float targetSpeed = physicsComponent.targetSpeed;
-//         raylib::Degree targetHeading = physicsComponent.targetHeading;
-//         float maxSpeed = physicsComponent.maxSpeed;
-//         float minSpeed = physicsComponent.minSpeed;
-//         float* speedPtr = physicsComponent.speed;
-//         raylib::Degree* headingPtr = physicsComponent.heading;
-//         float speed = *speedPtr;
-//         raylib::Degree heading = *headingPtr;
-//         float dt = physicsComponent.dt;
-//         // Calculate new speed and heading using physics calculations
-//         float target = Clamp(targetSpeed, minSpeed, maxSpeed);
-//         if (speed < target)
-//             speed += acceleration * dt;
-//         else if (speed > target)
-//             speed -= acceleration * dt;
-//         speed = Clamp(speed, minSpeed, maxSpeed);
-//         targetHeading = AngleClamp(targetHeading);
-//         float difference = abs(targetHeading - heading);
-//         if (targetHeading > heading) {
-//             if (difference < 180)
-//                 heading += angularAcceleration * dt;
-//             else if (difference > 180)
-//                 heading -= angularAcceleration * dt;
-//         } else if (targetHeading < heading) {
-//             if (difference < 180)
-//                 heading -= angularAcceleration * dt;
-//             else if (difference > 180)
-//                 heading += angularAcceleration * dt;
-//         }
-//         if (difference < .5)
-//             heading = targetHeading;
-
-//         heading = AngleClamp(heading);
-//         raylib::Radian angle = raylib::Degree(heading);
-//         raylib::Vector3 velocity = {cos(angle) * speed, 0, -sin(angle) * speed};
-//         // Update the entity's position based on velocity
-//         transformComponent.position += velocity * dt;
-//         transformComponent.rotation.y = heading;
-//     }
-// }
