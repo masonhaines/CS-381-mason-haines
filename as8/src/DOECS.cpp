@@ -266,6 +266,8 @@ struct TwoDphysics {
 struct Rendering {
     raylib::Model* model;
     bool drawBoundingBox = false;
+
+	raylib::Color color;
 };
 
 struct transformcomp {
@@ -277,12 +279,11 @@ struct transformcomp {
 struct bufferedComponent {
 	raylib::BufferedInput* inputs; // Manager for actions 
     bool selected = false;
-
 	
 };
 
-void DrawBoundedModel(raylib::Model& model, Transformer auto transformer);
-void DrawModel(raylib::Model& model, Transformer auto transformer);
+void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer);
+void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer);
 void VelocitySystem(Scene<ComponentStorage>& scene, float dt);
 void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
 void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
@@ -307,6 +308,8 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
                 // std::cout << "axis.y" << transformComponent.rotation.ToEuler().y << std::endl;
                 // std::cout << "axis.z" << transformComponent.rotation.ToEuler().z << std::endl;
 
+		raylib::Color color = rendering.color;
+
         auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
 			auto [axis, angle] = transformComponent.rotation.ToAxisAngle();
             return t.
@@ -315,9 +318,9 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
         };
         
         if (buffer.selected) {
-            DrawBoundedModel(*rendering.model, Transformer);
+            DrawBoundedModel(*rendering.model, color, Transformer);
         } else {
-            DrawModel(*rendering.model, Transformer);
+            DrawModel(*rendering.model, color, Transformer);
         }
     }
 }
@@ -366,7 +369,7 @@ int main() {
 
 		scene.AddComponent<Rendering>(e) = {                                          //1
 		&plane, 
-		false}; // Plane with no bounding box, ie false 
+		false, BLUE}; // Plane with no bounding box, ie false 
 
 		scene.AddComponent<transformcomp>(e) = {                                          //2
 		(Vector3){i * 100.0f - 200, 90, 0}, 
@@ -397,7 +400,7 @@ int main() {
 
 	scene.AddComponent<Rendering>(b1) = {
 	&boat1, 
-	false}; // Plane with no bounding box, ie false 
+	false, PINK}; // Plane with no bounding box, ie false 
 
 	scene.AddComponent<transformcomp>(b1) = {
 	(Vector3){.0, 50, 0}, 
@@ -549,19 +552,19 @@ int main() {
 }
 
 // Function to draw a bounded model with a specified transformation
-void DrawBoundedModel(raylib::Model& model, Transformer auto transformer) {
+void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
     raylib::Transform backupTransform = model.transform; // Save the model's transform
     model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
-    model.Draw({});
-    model.GetTransformedBoundingBox().Draw();
+    model.Draw({}, 1.0f, color);
+    model.GetTransformedBoundingBox().Draw(raylib::Color(ORANGE));
     model.transform = backupTransform; // Restore the original transform
 }
 
 // Function to draw a model with a specified transformation
-void DrawModel(raylib::Model& model, Transformer auto transformer) {
+void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
     raylib::Transform backupTransform = model.transform; // Save the model's transform
     model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
-    model.Draw({});
+    model.Draw({}, 1.0f, color);
     model.transform = backupTransform; // Restore the original transform
 }
 
