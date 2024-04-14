@@ -363,7 +363,7 @@ int main() {
     Scene scene;
 	
  
-    // Add a transform component to the entity
+    // PLANES
    for (int i = 0; i < numberOfPlanes; ++i) {
 		auto e = scene.CreateEntity();
 
@@ -408,7 +408,7 @@ int main() {
 	.08, 
 	0.0f, 0.0f};
 	scene.AddComponent<veloKinematics>(b1) = {
-	5, 
+	6, 
 	(Vector3){0, 0, 0}, 
 	5, 
 	5, 
@@ -418,93 +418,93 @@ int main() {
 	&inputs, 
 	false};
 
-	auto b2 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b2) = {
-	&boat1, 
-	false, ORANGE}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b2) = {
-	(Vector3){-200, 0, 0}, 
-	(Vector3){1,1,5}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<TwoDphysics>(b2) = {
-	.08, 
-	0.0f, 0.0f};
-	scene.AddComponent<veloKinematics>(b2) = {
-	5, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	50, 
-	0};
-	scene.AddComponent<bufferedComponent>(b2) = {
-	&inputs, 
-	false};
+	// auto b2 = scene.CreateEntity();
+	// scene.AddComponent<Rendering>(b2) = {
+	// &boat1, 
+	// false, ORANGE}; // Plane with no bounding box, ie false 
+	// scene.AddComponent<transformcomp>(b2) = {
+	// (Vector3){-200, 0, 0}, 
+	// (Vector3){1,1,5}, 
+	// QuaternionIdentity()}; // Adjust position based on 'i'
+	// scene.AddComponent<TwoDphysics>(b2) = {
+	// .06, 
+	// 0.0f, 0.0f};
+	// scene.AddComponent<veloKinematics>(b2) = {
+	// 1.5, 
+	// (Vector3){0, 0, 0}, 
+	// 5, 
+	// 5, 
+	// 40, 
+	// 0};
+	// scene.AddComponent<bufferedComponent>(b2) = {
+	// &inputs, 
+	// false};
 
-	auto b3 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b3) = {
-	&boat1, 
-	false, PINK}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b3) = {
-	(Vector3){-300, 0, 200}, 
-	(Vector3){2,4,2}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<TwoDphysics>(b3) = {
-	.08, 
-	0.0f, 0.0f};
-	scene.AddComponent<veloKinematics>(b3) = {
-	5, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	50, 
-	0};
-	scene.AddComponent<bufferedComponent>(b3) = {
-	&inputs, 
-	false};
+	// auto b3 = scene.CreateEntity();
+	// scene.AddComponent<Rendering>(b3) = {
+	// &boat1, 
+	// false, PINK}; // Plane with no bounding box, ie false 
+	// scene.AddComponent<transformcomp>(b3) = {
+	// (Vector3){-300, 0, 200}, 
+	// (Vector3){2,4,2}, 
+	// QuaternionIdentity()}; // Adjust position based on 'i'
+	// scene.AddComponent<TwoDphysics>(b3) = {
+	// .03, 
+	// 0.0f, 0.0f};
+	// scene.AddComponent<veloKinematics>(b3) = {
+	// 2, 
+	// (Vector3){0, 0, 0}, 
+	// 5, 
+	// 5, 
+	// 30, 
+	// 0};
+	// scene.AddComponent<bufferedComponent>(b3) = {
+	// &inputs, 
+	// false};
 
-	auto b4 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b4) = {
-	&boat1, 
-	false, BLUE}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b4) = {
-	(Vector3){100, 0, 100}, 
-	(Vector3){2,1,7}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<TwoDphysics>(b4) = {
-	.08, 
-	0.0f, 0.0f};
-	scene.AddComponent<veloKinematics>(b4) = {
-	5, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	50, 
-	0};
-	scene.AddComponent<bufferedComponent>(b4) = {
-	&inputs, 
-	false};
+	// auto b4 = scene.CreateEntity();
+	// scene.AddComponent<Rendering>(b4) = {
+	// &boat1, 
+	// false, BLUE}; // Plane with no bounding box, ie false 
+	// scene.AddComponent<transformcomp>(b4) = {
+	// (Vector3){100, 0, 100}, 
+	// (Vector3){2,1,7}, 
+	// QuaternionIdentity()}; // Adjust position based on 'i'
+	// scene.AddComponent<TwoDphysics>(b4) = {
+	// .02, 
+	// 0.0f, 0.0f};
+	// scene.AddComponent<veloKinematics>(b4) = {
+	// 1, 
+	// (Vector3){0, 0, 0}, 
+	// 5, 
+	// 5, 
+	// 20, 
+	// 0};
+	// scene.AddComponent<bufferedComponent>(b4) = {
+	// &inputs, 
+	// false};
 
-	auto b5 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b5) = {
-	&boat1, 
-	false, GREEN}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b5) = {
-	(Vector3){200, 0, 0}, 
-	(Vector3){.5,.25,.5}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<TwoDphysics>(b5) = {
-	.08, 
-	0.0f, 0.0f};
-	scene.AddComponent<veloKinematics>(b5) = {
-	5, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	50, 
-	0};
-	scene.AddComponent<bufferedComponent>(b5) = {
-	&inputs, 
-	false};
+	// auto b5 = scene.CreateEntity();
+	// scene.AddComponent<Rendering>(b5) = {
+	// &boat1, 
+	// false, GREEN}; // Plane with no bounding box, ie false 
+	// scene.AddComponent<transformcomp>(b5) = {
+	// (Vector3){200, 0, 0}, 
+	// (Vector3){.5,.25,.5}, 
+	// QuaternionIdentity()}; // Adjust position based on 'i'
+	// scene.AddComponent<TwoDphysics>(b5) = {
+	// 3, 
+	// 0.0f, 0.0f};
+	// scene.AddComponent<veloKinematics>(b5) = {
+	// 5, 
+	// (Vector3){0, 0, 0}, 
+	// 5, 
+	// 5, 
+	// 80, 
+	// 0};
+	// scene.AddComponent<bufferedComponent>(b5) = {
+	// &inputs, 
+	// false};
 
 
 	
