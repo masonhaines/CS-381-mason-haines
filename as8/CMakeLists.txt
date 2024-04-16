@@ -22,7 +22,7 @@ target_link_libraries(as8 PUBLIC raylib raylib_cpp raylib::buffered)
 set_property(TARGET as8 PROPERTY CXX_STANDARD 20)
 
 configure_file(textures/skybox.png textures/skybox.png COPYONLY)
-configure_file(textures/space.png textures/space.png COPYONLY)
+configure_file(textures/wakerwater.jpg textures/wakerwater.jpg COPYONLY)
 configure_file(textures/water.jpg textures/water.jpg COPYONLY)
 configure_file(meshes/PolyPlane.glb meshes/PolyPlane.glb COPYONLY)
 configure_file(meshes/SmitHouston_Tug.glb meshes/SmitHouston_Tug.glb COPYONLY)

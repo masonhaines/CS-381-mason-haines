@@ -4,232 +4,218 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
-// #include <string>
 #include <vector>
 #include "rlgl.h"
 #include "skybox.hpp"
 #include "raylib.h"
-#include <ranges>
-#include <memory>
 #include <iostream>
 #include <BufferedInput.hpp>
-// #include "Counter.cpp"
+#include <vector>
+#include <iostream>
+#include <cassert>
 
 template<typename T>
 concept Transformer = requires( T t, raylib::Transform m) {
     {t.operator()(m)}->std::convertible_to<raylib::Transform>;
 };
 
-// using Entity = uint32_t;
-
-// #include <memory>
-// #include <concepts>
-#include <vector>
-// #include <deque>
-#include <iostream>
-// #include <ranges>
-#include <bitset>
-// #include <span>
-#include <variant>
-#include <cassert>
-
 extern size_t globalComponentCounter;
-// namespace cs381 {
-	template<typename T>
-	size_t GetComponentID(T reference = {}) {
-		static size_t id = globalComponentCounter++;
-		return id;
+
+template<typename T>
+size_t GetComponentID(T reference = {}) {
+	static size_t id = globalComponentCounter++;
+	return id;
+}
+
+using Entity = uint8_t; 
+
+struct ComponentStorage {
+	size_t elementSize = -1;
+	std::vector<std::byte> data;
+
+	ComponentStorage() : elementSize(-1), data(1, std::byte{0}) {}
+	ComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(5 * elementSize); }
+	
+	template<typename Tcomponent>
+	ComponentStorage(Tcomponent reference = {}) : ComponentStorage(sizeof(Tcomponent)) {}
+
+	template<typename Tcomponent>
+	Tcomponent& Get(Entity e) {
+		assert(sizeof(Tcomponent) == elementSize);
+		// std::cout << globalComponentCounter << "global counter for components" << std::endl;
+		assert(e < (data.size() / elementSize));
+
+		// std::cout << "assertion error value : e is " << static_cast<unsigned int>(e) << " data size divided by element size " << data.size() / elementSize << std::endl;
+		return *(Tcomponent*)(data.data() + e * elementSize);
 	}
 
-	using Entity = uint8_t; 
-
-	struct ComponentStorage {
-		size_t elementSize = -1;
-		std::vector<std::byte> data;
-
-		ComponentStorage() : elementSize(-1), data(1, std::byte{0}) {}
-		ComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(5 * elementSize); }
-		
-		template<typename Tcomponent>
-		ComponentStorage(Tcomponent reference = {}) : ComponentStorage(sizeof(Tcomponent)) {}
-
-		template<typename Tcomponent>
-		Tcomponent& Get(Entity e) {
-			assert(sizeof(Tcomponent) == elementSize);
-			// std::cout << globalComponentCounter << "global counter for components" << std::endl;
-			assert(e < (data.size() / elementSize));
-
-			// std::cout << "assertion error value : e is " << static_cast<unsigned int>(e) << " data size divided by element size " << data.size() / elementSize << std::endl;
-			return *(Tcomponent*)(data.data() + e * elementSize);
-		}
-
-		template<typename Tcomponent>
-		std::pair<Tcomponent&, size_t> Allocate(size_t count = 1) {
-			assert(sizeof(Tcomponent) == elementSize);
-			assert(count < 100);
-			auto originalEnd = data.size();
-			data.insert(data.end(), elementSize * count, std::byte{0});
-			for(size_t i = 0; i < count - 1; i++) // Skip the last one
-				new(data.data() + originalEnd + i * elementSize) Tcomponent();
-			return {
-				*new(data.data() + data.size() - elementSize) Tcomponent(),
-				data.size() / elementSize
-			};
-		}
-
-		template<typename Tcomponent>
-		Tcomponent& GetOrAllocate(Entity e) {
-			assert(sizeof(Tcomponent) == elementSize);
-			size_t size = data.size() / elementSize;
-			if (size <= e)
-				Allocate<Tcomponent>(std::max<int64_t>(int64_t(e) - size, 1));
-			return Get<Tcomponent>(e);
-		}
-	};
-
-
-	template<typename Storage = ComponentStorage>
-	struct Scene {
-		std::vector<std::vector<bool>> entityMasks;
-		std::vector<Storage> storages = {Storage()};
-
-		template<typename Tcomponent>
-		Storage& GetStorage() {
-			size_t id = GetComponentID<Tcomponent>();
-			if(storages.size() <= id)
-				storages.insert(storages.cend(), std::max<int64_t>(id - storages.size(), 1), Storage());
-			if (storages[id].elementSize == std::numeric_limits<size_t>::max())
-				storages[id] = Storage(Tcomponent{});
-			return storages[id];
-		}
-
-		Entity CreateEntity() {
-			Entity e = entityMasks.size();
-			entityMasks.emplace_back(std::vector<bool>{false});
-			return e;
-		}
-
-		template<typename Tcomponent>
-		Tcomponent& AddComponent(Entity e) {
-			size_t id = GetComponentID<Tcomponent>();
-			auto& eMask = entityMasks[e];
-			if(eMask.size() <= id)
-				eMask.resize(id + 1, false);
-			eMask[id] = true;
-			return GetStorage<Tcomponent>().template GetOrAllocate<Tcomponent>(e);
-		}
-
-		template<typename Tcomponent>
-		void RemoveComponent(Entity e) {
-			size_t id = GetComponentID<Tcomponent>();
-			auto& eMask = entityMasks[e];
-			if(eMask.size() > id)
-				eMask[id] = false;
-		}
-
-		template<typename Tcomponent>
-		Tcomponent& GetComponent(Entity e) {
-			size_t id = GetComponentID<Tcomponent>();
-			assert(entityMasks[e][id]);
-			return GetStorage<Tcomponent>().template Get<Tcomponent>(e);
-		}
-
-		template<typename Tcomponent>
-		bool HasComponent(Entity e) {
-			size_t id = GetComponentID<Tcomponent>();
-			return entityMasks.size() > e && entityMasks[e].size() > id && entityMasks[e][id];
-		}
-	};
-
-	// Niceties!
-
-	struct SkiplistComponentStorage {
-		size_t elementSize = -1;
-		std::vector<size_t> indecies;
-		std::vector<std::byte> data;
-
-		SkiplistComponentStorage() : elementSize(-1), indecies(1, -1), data(1, std::byte{0}) {}
-		SkiplistComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(5 * elementSize); }
-		
-		template<typename Tcomponent>
-		SkiplistComponentStorage(Tcomponent reference = {}) : SkiplistComponentStorage(sizeof(Tcomponent)) {}
-
-		template<typename Tcomponent>
-		Tcomponent& Get(Entity e) {
-			assert(sizeof(Tcomponent) == elementSize);
-			assert(e < indecies.size());
-			assert(indecies[e] != std::numeric_limits<size_t>::max());
-			return *(Tcomponent*)(data.data() + indecies[e]);
-		}
-
-		template<typename Tcomponent>
-		std::pair<Tcomponent&, size_t> Allocate() {
-			assert(sizeof(Tcomponent) == elementSize);
-			data.insert(data.end(), elementSize, std::byte{0});
-			return {
-				*new(data.data() + data.size() - elementSize) Tcomponent(),
-				(data.size() - 1) / elementSize
-			};
-		}
-
-		template<typename Tcomponent>
-		Tcomponent& Allocate(Entity e) {
-			auto [ret, i] = Allocate<Tcomponent>();
-			indecies[e] = i * elementSize;
-			return ret;
-		}
-
-		template<typename Tcomponent>
-		Tcomponent& GetOrAllocate(Entity e) {
-			assert(sizeof(Tcomponent) == elementSize);
-			if (indecies.size() <= e)
-				indecies.insert(indecies.end(), std::max<int64_t>(int64_t(e) - indecies.size(), 1), -1);
-			if (indecies[e] == std::numeric_limits<size_t>::max())
-				return Allocate<Tcomponent>(e);
-			return Get<Tcomponent>(e);
-		}
-	};
-
-
-	using post_increment_t = int;
-
-	template<typename... Tcomponents>
-	struct SceneView {
-		Scene<SkiplistComponentStorage>& scene;
-
-		struct Sentinel {};
-		struct Iterator {
-			Scene<SkiplistComponentStorage>* scene = nullptr;
-			Entity e;
-
-			bool valid() { return (scene->HasComponent<Tcomponents>(e) && ...); }
-
-			bool operator==(Sentinel) { return scene == nullptr || e >= scene->entityMasks.size(); }
-
-			Iterator& operator++(post_increment_t) { 
-				do {
-					e++;
-				} while(!valid() && e < scene->entityMasks.size());
-				return *this;
-			}
-			Iterator operator++() {
-				Iterator old;
-				operator++(0);
-				return old;
-			}
-
-			// Entity operator*() { return e; }
-			std::tuple<std::add_lvalue_reference_t<Tcomponents>...> operator*() { return { scene->GetComponent<Tcomponents>(e)... }; }
+	template<typename Tcomponent>
+	std::pair<Tcomponent&, size_t> Allocate(size_t count = 1) {
+		assert(sizeof(Tcomponent) == elementSize);
+		assert(count < 100);
+		auto originalEnd = data.size();
+		data.insert(data.end(), elementSize * count, std::byte{0});
+		for(size_t i = 0; i < count - 1; i++) // Skip the last one
+			new(data.data() + originalEnd + i * elementSize) Tcomponent();
+		return {
+			*new(data.data() + data.size() - elementSize) Tcomponent(),
+			data.size() / elementSize
 		};
+	}
 
-		Iterator begin() { 
-			Iterator out{&scene, 0}; 
-			if(!out.valid()) ++out;
-			return out;
+	template<typename Tcomponent>
+	Tcomponent& GetOrAllocate(Entity e) {
+		assert(sizeof(Tcomponent) == elementSize);
+		size_t size = data.size() / elementSize;
+		if (size <= e)
+			Allocate<Tcomponent>(std::max<int64_t>(int64_t(e) - size, 1));
+		return Get<Tcomponent>(e);
+	}
+};
+
+
+template<typename Storage = ComponentStorage>
+struct Scene {
+	std::vector<std::vector<bool>> entityMasks;
+	std::vector<Storage> storages = {Storage()};
+
+	template<typename Tcomponent>
+	Storage& GetStorage() {
+		size_t id = GetComponentID<Tcomponent>();
+		if(storages.size() <= id)
+			storages.insert(storages.cend(), std::max<int64_t>(id - storages.size(), 1), Storage());
+		if (storages[id].elementSize == std::numeric_limits<size_t>::max())
+			storages[id] = Storage(Tcomponent{});
+		return storages[id];
+	}
+
+	Entity CreateEntity() {
+		Entity e = entityMasks.size();
+		entityMasks.emplace_back(std::vector<bool>{false});
+		return e;
+	}
+
+	template<typename Tcomponent>
+	Tcomponent& AddComponent(Entity e) {
+		size_t id = GetComponentID<Tcomponent>();
+		auto& eMask = entityMasks[e];
+		if(eMask.size() <= id)
+			eMask.resize(id + 1, false);
+		eMask[id] = true;
+		return GetStorage<Tcomponent>().template GetOrAllocate<Tcomponent>(e);
+	}
+
+	template<typename Tcomponent>
+	void RemoveComponent(Entity e) {
+		size_t id = GetComponentID<Tcomponent>();
+		auto& eMask = entityMasks[e];
+		if(eMask.size() > id)
+			eMask[id] = false;
+	}
+
+	template<typename Tcomponent>
+	Tcomponent& GetComponent(Entity e) {
+		size_t id = GetComponentID<Tcomponent>();
+		assert(entityMasks[e][id]);
+		return GetStorage<Tcomponent>().template Get<Tcomponent>(e);
+	}
+
+	template<typename Tcomponent>
+	bool HasComponent(Entity e) {
+		size_t id = GetComponentID<Tcomponent>();
+		return entityMasks.size() > e && entityMasks[e].size() > id && entityMasks[e][id];
+	}
+};
+
+// Niceties!
+
+struct SkiplistComponentStorage {
+	size_t elementSize = -1;
+	std::vector<size_t> indecies;
+	std::vector<std::byte> data;
+
+	SkiplistComponentStorage() : elementSize(-1), indecies(1, -1), data(1, std::byte{0}) {}
+	SkiplistComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(5 * elementSize); }
+	
+	template<typename Tcomponent>
+	SkiplistComponentStorage(Tcomponent reference = {}) : SkiplistComponentStorage(sizeof(Tcomponent)) {}
+
+	template<typename Tcomponent>
+	Tcomponent& Get(Entity e) {
+		assert(sizeof(Tcomponent) == elementSize);
+		assert(e < indecies.size());
+		assert(indecies[e] != std::numeric_limits<size_t>::max());
+		return *(Tcomponent*)(data.data() + indecies[e]);
+	}
+
+	template<typename Tcomponent>
+	std::pair<Tcomponent&, size_t> Allocate() {
+		assert(sizeof(Tcomponent) == elementSize);
+		data.insert(data.end(), elementSize, std::byte{0});
+		return {
+			*new(data.data() + data.size() - elementSize) Tcomponent(),
+			(data.size() - 1) / elementSize
+		};
+	}
+
+	template<typename Tcomponent>
+	Tcomponent& Allocate(Entity e) {
+		auto [ret, i] = Allocate<Tcomponent>();
+		indecies[e] = i * elementSize;
+		return ret;
+	}
+
+	template<typename Tcomponent>
+	Tcomponent& GetOrAllocate(Entity e) {
+		assert(sizeof(Tcomponent) == elementSize);
+		if (indecies.size() <= e)
+			indecies.insert(indecies.end(), std::max<int64_t>(int64_t(e) - indecies.size(), 1), -1);
+		if (indecies[e] == std::numeric_limits<size_t>::max())
+			return Allocate<Tcomponent>(e);
+		return Get<Tcomponent>(e);
+	}
+};
+
+
+using post_increment_t = int;
+
+template<typename... Tcomponents>
+struct SceneView {
+	Scene<SkiplistComponentStorage>& scene;
+
+	struct Sentinel {};
+	struct Iterator {
+		Scene<SkiplistComponentStorage>* scene = nullptr;
+		Entity e;
+
+		bool valid() { return (scene->HasComponent<Tcomponents>(e) && ...); }
+
+		bool operator==(Sentinel) { return scene == nullptr || e >= scene->entityMasks.size(); }
+
+		Iterator& operator++(post_increment_t) { 
+			do {
+				e++;
+			} while(!valid() && e < scene->entityMasks.size());
+			return *this;
 		}
-		Sentinel end() { return {}; }
+		Iterator operator++() {
+			Iterator old;
+			operator++(0);
+			return old;
+		}
+
+		// Entity operator*() { return e; }
+		std::tuple<std::add_lvalue_reference_t<Tcomponents>...> operator*() { return { scene->GetComponent<Tcomponents>(e)... }; }
 	};
-// }
+
+	Iterator begin() { 
+		Iterator out{&scene, 0}; 
+		if(!out.valid()) ++out;
+		return out;
+	}
+	Sentinel end() { return {}; }
+};
+
 
 
 struct veloKinematics {
@@ -253,7 +239,6 @@ struct physics {
 
 	bool _2d = false;
 };
-
 
 struct TwoDphysics {};
 // struct TwoDphysics {
@@ -286,39 +271,11 @@ struct bufferedComponent {
 void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer);
 void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer);
 void VelocitySystem(Scene<ComponentStorage>& scene, float dt);
-void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
+void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt); // no used but functions
 void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
 void DrawSystem(Scene<ComponentStorage>& scene);
 void ProcessInputSystem(Scene<ComponentStorage>& scene);
-void BoatProcessInputSystem(Scene<ComponentStorage>& scene);
-
-
-
-void DrawSystem(Scene<ComponentStorage>& scene) {
-    for(Entity e = 0; e < scene.entityMasks.size(); e++) {
-        if(!scene.HasComponent<Rendering>(e)) continue;
-        if(!scene.HasComponent<transformcomp>(e)) continue;
-		if(!scene.HasComponent<bufferedComponent>(e)) continue;
-        auto & rendering = scene.GetComponent<Rendering>(e);
-        auto & transformComponent = scene.GetComponent<transformcomp>(e);
-		auto & buffer = scene.GetComponent<bufferedComponent>(e);
-
-		raylib::Color color = rendering.color;
-
-        auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
-			auto [axis, angle] = transformComponent.rotation.ToAxisAngle();
-            return t.
-            Translate(transformComponent.position).
-            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).Rotate(axis, angle);
-        };
-        
-        if (buffer.selected) {
-            DrawBoundedModel(*rendering.model, color, Transformer);
-        } else {
-            DrawModel(*rendering.model, color, Transformer);
-        }
-    }
-}
+void BoatProcessInputSystem(Scene<ComponentStorage>& scene); // not used but functions 
 
 int main() {
 	// Create window
@@ -329,6 +286,8 @@ int main() {
 	raylib::BufferedInput inputs; // Manager for actions 
 
     float dt = 0;
+	bool inputTabbed = false;
+	bool changeCamera = false;
 
 	// Create camera
 	auto camera = raylib::Camera(
@@ -340,12 +299,12 @@ int main() {
 	);
 
 	// Create skybox
-	cs381::SkyBox skybox("textures/skybox.png", true);
+	cs381::SkyBox skybox("textures/skybox.png");
 
 	// Create ground
-	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 125);
+	auto mesh = raylib::Mesh::Plane(10000, 10000, 50, 50, 25);
 	raylib::Model ground = ((raylib::Mesh*)&mesh)->LoadModelFrom();
-	raylib::Texture water("textures/water.jpg");
+	raylib::Texture water("textures/wakerwater.jpg");
 	water.SetFilter(TEXTURE_FILTER_BILINEAR);
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
@@ -364,28 +323,24 @@ int main() {
    for (int i = 0; i < numberOfPlanes; ++i) {
 		auto e = scene.CreateEntity();
 
-		scene.AddComponent<Rendering>(e) = {                                          //1
+		scene.AddComponent<Rendering>(e) = {                                          
 		&plane, 
 		false, DARKGRAY}; // Plane with no bounding box, ie false 
-
-		scene.AddComponent<transformcomp>(e) = {                                          //2
+		scene.AddComponent<transformcomp>(e) = {                                          
 		(Vector3){i * 100.0f - 200, 90, 0}, 
 		(Vector3){1,1,1}, 
 		QuaternionIdentity()}; // Adjust position based on 'i'
-
-		scene.AddComponent<physics>(e) = {                                          //3
+		scene.AddComponent<physics>(e) = {                                          
 		5, 
 		QuaternionIdentity(), QuaternionIdentity()};
-
-		scene.AddComponent<veloKinematics>(e) = {                                          //4
+		scene.AddComponent<veloKinematics>(e) = {                                          
 		10, 
 		(Vector3){0, 0, 0}, 
 		5, 
 		5, 
 		50, 
 		0};
-		
-		scene.AddComponent<bufferedComponent>(e) = {                                          //5
+		scene.AddComponent<bufferedComponent>(e) = {                                          
 		&inputs, 
 		false};
 	}
@@ -398,7 +353,7 @@ int main() {
 	(Vector3){-100, 0, -50}, 
 	(Vector3){1,.5,1}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b1) = {                                          //3
+	scene.AddComponent<physics>(b1) = {                                          
 	5, 
 	QuaternionIdentity(), QuaternionIdentity(), 
 	true};
@@ -421,7 +376,7 @@ int main() {
 	(Vector3){-200, 0, 0}, 
 	(Vector3){1,1,5}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b2) = {                                          //3
+	scene.AddComponent<physics>(b2) = {                                          
 	.05, 
 	QuaternionIdentity(), QuaternionIdentity(), 
 	true};
@@ -444,7 +399,7 @@ int main() {
 	(Vector3){-300, 0, 200}, 
 	(Vector3){2,4,2}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b3) = {                                          //3
+	scene.AddComponent<physics>(b3) = {                                          
 	.3, 
 	QuaternionIdentity(), QuaternionIdentity(), 
 	true};
@@ -467,7 +422,7 @@ int main() {
 	(Vector3){100, 0, 100}, 
 	(Vector3){2,1,7}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b4) = {                                          //3
+	scene.AddComponent<physics>(b4) = {                                          
 	.02, 
 	QuaternionIdentity(), QuaternionIdentity(), 
 	true};
@@ -517,8 +472,6 @@ int main() {
 	inputs["space"] = raylib::Action::key(KEY_SPACE).move();
 	inputs["change"] = raylib::Action::key(KEY_TAB).move();
 
-	bool inputTabbed = false;
-
 	inputs["change"] = raylib::Action::key(KEY_TAB).SetPressedCallback([&scene, &counter, &inputTabbed](){
 		counter = (counter + 1) % scene.entityMasks.size();
 		inputTabbed = true;
@@ -530,17 +483,13 @@ int main() {
 	}).move();
 
 	SetTargetFPS(60);
+    ProcessInputSystem(scene); // setup process input for incremented key input 
 
-    ProcessInputSystem(scene);
-
-	bool changeCamera = false;
-    
 	// Main loop
 	bool keepRunning = true;
 	while(!window.ShouldClose() && keepRunning) {
 
 		inputs.PollEvents(); // Poll buffered input from user
-
         dt = window.GetFrameTime();
 		
 		// Rendering
@@ -548,7 +497,6 @@ int main() {
 		{
 			// Clear screen
 			window.ClearBackground(BLACK);
-
 			if (IsKeyReleased(KEY_C)) { // press C to chnage camera veiw
                 if (changeCamera == false) changeCamera = true;
                 else changeCamera = false;
@@ -556,7 +504,6 @@ int main() {
 
 			camera.BeginMode();
 			{	
-
 				if (counter == 10) camera.fovy = 65.0; // Change feild of veiw for largest ship
 				if (changeCamera && inputTabbed) { // Target is now position of current selected model
 
@@ -591,14 +538,10 @@ int main() {
 				
 				// Render skybox and ground
 				skybox.Draw();
-
 				ground.Draw({});
-
 			}
 			VelocitySystem(scene, dt);
-
 			ThreeDPhysicsSystem(scene, dt);
-			
             DrawSystem(scene);
 			camera.EndMode();
             
@@ -630,50 +573,33 @@ void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer aut
     model.transform = backupTransform; // Restore the original transform
 }
 
+void DrawSystem(Scene<ComponentStorage>& scene) {
+    for(Entity e = 0; e < scene.entityMasks.size(); e++) {
+        if(!scene.HasComponent<Rendering>(e)) continue;
+        if(!scene.HasComponent<transformcomp>(e)) continue;
+		if(!scene.HasComponent<bufferedComponent>(e)) continue;
+        auto & rendering = scene.GetComponent<Rendering>(e);
+        auto & transformComponent = scene.GetComponent<transformcomp>(e);
+		auto & buffer = scene.GetComponent<bufferedComponent>(e);
 
-// void BoatProcessInputSystem(Scene<ComponentStorage>& scene) {
+		raylib::Color color = rendering.color;
 
-// 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
+        auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
+			auto [axis, angle] = transformComponent.rotation.ToAxisAngle();
+            return t.
+            Translate(transformComponent.position).
+            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).Rotate(axis, angle);
+        };
+        
+        if (buffer.selected) {
+            DrawBoundedModel(*rendering.model, color, Transformer);
+        } else {
+            DrawModel(*rendering.model, color, Transformer);
+        }
+    }
+}
 
-// 		if(!scene.HasComponent<bufferedComponent>(e)) continue;
-// 		if(!scene.HasComponent<veloKinematics>(e)) continue;
-// 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
-// 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
-// 		if(!scene.HasComponent<TwoDphysics>(e)) {
-// 			std::cout << "I DO NOT HAVE 2 D PHYSICS" << std::endl;
-// 			continue;
-// 		}
-// 		auto& TwoDPhysicsComponent = scene.GetComponent<TwoDphysics>(e); 
 
-
-// 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action   
-// 			if (buffer.selected)
-//             kinematics.targetSpeed += 3;// thus doing   
-//         });
-//         (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action           
-//             if (buffer.selected)
-// 			kinematics.targetSpeed -= 1; // thus doing 
-//         });
-//         (*buffer.inputs)["right"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
-//             if (buffer.selected) {
-//                 TwoDPhysicsComponent.targetHeading -= 20 * DEG2RAD;
-//                 std::cout << "Right key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
-//             }
-//         });
-//         (*buffer.inputs)["left"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
-//             if (buffer.selected) {
-//                 TwoDPhysicsComponent.targetHeading += 20 * DEG2RAD;
-//                 std::cout << "Left key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
-//             }
-//         });
-//         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action 
-//             if (buffer.selected)
-// 			kinematics.targetSpeed = 0;
-//         });
-// 	}
-// }
-
-//call a function when a event happened, 
 void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 
 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
@@ -757,7 +683,6 @@ void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
 		transformComponent.position += velocity * dt;
 	}
 }
-
 
 void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
     for (Entity e = 0; e < scene.entityMasks.size(); e++) {
@@ -862,5 +787,47 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 //         // std::cout << transformComponent.rotation.y << " <---  y rotation from the physics." << std::endl;
 //         // std::cout << transformComponent.rotation.z << " <---  z rotation from the physics." << std::endl;
 // 		// std::cout << transformComponent.rotation.w << " <---  w rotation from the physics." << std::endl;
+// 	}
+// }
+
+// void BoatProcessInputSystem(Scene<ComponentStorage>& scene) {
+
+// 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
+
+// 		if(!scene.HasComponent<bufferedComponent>(e)) continue;
+// 		if(!scene.HasComponent<veloKinematics>(e)) continue;
+// 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
+// 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
+// 		if(!scene.HasComponent<TwoDphysics>(e)) {
+// 			std::cout << "I DO NOT HAVE 2 D PHYSICS" << std::endl;
+// 			continue;
+// 		}
+// 		auto& TwoDPhysicsComponent = scene.GetComponent<TwoDphysics>(e); 
+
+
+// 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action   
+// 			if (buffer.selected)
+//             kinematics.targetSpeed += 3;// thus doing   
+//         });
+//         (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action           
+//             if (buffer.selected)
+// 			kinematics.targetSpeed -= 1; // thus doing 
+//         });
+//         (*buffer.inputs)["right"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+//             if (buffer.selected) {
+//                 TwoDPhysicsComponent.targetHeading -= 20 * DEG2RAD;
+//                 std::cout << "Right key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+//             }
+//         });
+//         (*buffer.inputs)["left"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+//             if (buffer.selected) {
+//                 TwoDPhysicsComponent.targetHeading += 20 * DEG2RAD;
+//                 std::cout << "Left key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+//             }
+//         });
+//         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action 
+//             if (buffer.selected)
+// 			kinematics.targetSpeed = 0;
+//         });
 // 	}
 // }
