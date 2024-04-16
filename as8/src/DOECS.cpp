@@ -310,155 +310,75 @@ int main() {
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
 	int numberOfPlanes = 5;
-	int counter = -1;
+	int counter = -1; // Initialization for tab indexing 
 
     raylib::Model plane("meshes/PolyPlane.glb");
 	raylib::Model boat1("meshes/SmitHouston_Tug.glb");
-	raylib::Model boat2("meshes/OrientExplorer.glb");
-	boat2.transform = raylib::Transform(boat2.transform).RotateX(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
+	raylib::Model boat2("meshes/OilTanker.glb");
+	raylib::Model boat3("meshes/CargoG_HOSBrigadoon.glb");
+	raylib::Model boat4("meshes/Container_ShipLarge.glb");
+	raylib::Model boat5("meshes/OrientExplorer.glb");
+	
+	boat1.transform = raylib::Transform(boat1.transform).RotateY(raylib::Degree(90));
+	boat2.transform = raylib::Transform(boat2.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
+	boat3.transform = raylib::Transform(boat3.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
+	boat4.transform = raylib::Transform(boat4.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
+	boat5.transform = raylib::Transform(boat5.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
+	
     Scene scene;
 	
- 
 	// PLANES
-   for (int i = 0; i < numberOfPlanes; ++i) {
+   	for (int i = 0; i < numberOfPlanes; ++i) {
 		auto e = scene.CreateEntity();
 
-		scene.AddComponent<Rendering>(e) = {                                          
-		&plane, 
-		false, DARKGRAY}; // Plane with no bounding box, ie false 
-		scene.AddComponent<transformcomp>(e) = {                                          
-		(Vector3){i * 100.0f - 200, 90, 0}, 
-		(Vector3){1,1,1}, 
-		QuaternionIdentity()}; // Adjust position based on 'i'
-		scene.AddComponent<physics>(e) = {                                          
-		5, 
-		QuaternionIdentity(), QuaternionIdentity()};
-		scene.AddComponent<veloKinematics>(e) = {                                          
-		10, 
-		(Vector3){0, 0, 0}, 
-		5, 
-		5, 
-		50, 
-		0};
-		scene.AddComponent<bufferedComponent>(e) = {                                          
-		&inputs, 
-		false};
+		scene.AddComponent<Rendering>(e) = {&plane,false, PURPLE}; // Plane with no bounding box, ie false 
+		scene.AddComponent<transformcomp>(e) = {(Vector3){i * 100.0f - 200, 90, 0}, (Vector3){1,1,1}, QuaternionIdentity()}; 
+		scene.AddComponent<physics>(e) = {15, QuaternionIdentity(), QuaternionIdentity()};
+		scene.AddComponent<veloKinematics>(e) = {10,(Vector3){0, 0, 0}, 5, 
+		5, 50, 0};
+		scene.AddComponent<bufferedComponent>(e) = {&inputs, false};
 	}
-
+	
+	// Boat 1 SmitHouston_Tug
 	auto b1 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b1) = {
-	&boat1, 
-	false, GRAY}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b1) = {
-	(Vector3){-100, 0, -50}, 
-	(Vector3){1,.5,1}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b1) = {                                          
-	5, 
-	QuaternionIdentity(), QuaternionIdentity(), 
-	true};
-	scene.AddComponent<veloKinematics>(b1) = {
-	6, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	50, 
-	0};
-	scene.AddComponent<bufferedComponent>(b1) = {
-	&inputs, 
-	false};
-
+	scene.AddComponent<Rendering>(b1) = {&boat1, false, GRAY}; 
+	scene.AddComponent<transformcomp>(b1) = {(Vector3){-100, 0, -50}, (Vector3){.5,.5,.5}, QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<physics>(b1) = {5, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(b1) = {6, (Vector3){0, 0, 0},
+	5, 5, 50, 0};
+	scene.AddComponent<bufferedComponent>(b1) = {&inputs, false};
+	// Boat 2 OilTanker
 	auto b2 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b2) = {
-	&boat1, 
-	false, ORANGE}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b2) = {
-	(Vector3){-200, 0, 0}, 
-	(Vector3){1,1,5}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b2) = {                                          
-	.05, 
-	QuaternionIdentity(), QuaternionIdentity(), 
-	true};
-	scene.AddComponent<veloKinematics>(b2) = {
-	.5, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	40, 
-	0};
-	scene.AddComponent<bufferedComponent>(b2) = {
-	&inputs, 
-	false};
-
+	scene.AddComponent<Rendering>(b2) = {&boat2, false, ORANGE}; 
+	scene.AddComponent<transformcomp>(b2) = {(Vector3){-200, 0, 0}, (Vector3){.015,.015,.015}, QuaternionIdentity()}; // Adjust position based on 'i'
+	scene.AddComponent<physics>(b2) = {.05, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(b2) = {.5, (Vector3){0, 0, 0}, 
+	5,5, 40, 0};
+	scene.AddComponent<bufferedComponent>(b2) = {&inputs, false};
+	// Boat 3 CargoG_HOSBrigadoon
 	auto b3 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b3) = {
-	&boat1, 
-	false, PINK}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b3) = {
-	(Vector3){-300, 0, 200}, 
-	(Vector3){2,4,2}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b3) = {                                          
-	.3, 
-	QuaternionIdentity(), QuaternionIdentity(), 
-	true};
-	scene.AddComponent<veloKinematics>(b3) = {
-	.2, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	30, 
-	0};
-	scene.AddComponent<bufferedComponent>(b3) = {
-	&inputs, 
-	false};
-
+	scene.AddComponent<Rendering>(b3) = {&boat3, false, BEIGE}; 
+	scene.AddComponent<transformcomp>(b3) = {(Vector3){-300, 0, 200}, (Vector3){.04,.04,.04}, QuaternionIdentity()}; 
+	scene.AddComponent<physics>(b3) = {.3, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(b3) = {.2, (Vector3){0, 0, 0}, 
+	5, 5, 30, 0};
+	scene.AddComponent<bufferedComponent>(b3) = {&inputs, false};
+	// Boat 4 Container_ShipLarge
 	auto b4 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b4) = {
-	&boat1, 
-	false, BLUE}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b4) = {
-	(Vector3){100, 0, 100}, 
-	(Vector3){2,1,7}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b4) = {                                          
-	.02, 
-	QuaternionIdentity(), QuaternionIdentity(), 
-	true};
-	scene.AddComponent<veloKinematics>(b4) = {
-	.1, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	20, 
-	0};
-	scene.AddComponent<bufferedComponent>(b4) = {
-	&inputs, 
-	false};
-
+	scene.AddComponent<Rendering>(b4) = {&boat4, false, BLUE}; 
+	scene.AddComponent<transformcomp>(b4) = {(Vector3){100, 0, 100}, (Vector3){.01, .01, .01}, QuaternionIdentity()}; 
+	scene.AddComponent<physics>(b4) = {.02, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(b4) = {.1, (Vector3){0, 0, 0}, 
+	5, 5, 20, 0};
+	scene.AddComponent<bufferedComponent>(b4) = {&inputs, false};
+	// Boat 5 OrientExplorer
 	auto b5 = scene.CreateEntity();
-	scene.AddComponent<Rendering>(b5) = {
-	&boat2, 
-	false, GREEN}; // Plane with no bounding box, ie false 
-	scene.AddComponent<transformcomp>(b5) = {
-	(Vector3){200, 0, 0}, 
-	(Vector3){.005,.005,.005}, 
-	QuaternionIdentity()}; // Adjust position based on 'i'
-	scene.AddComponent<physics>(b5) = {                                          //3
-	15, 
-	QuaternionIdentity(), QuaternionIdentity(), 
-	true};
-	scene.AddComponent<veloKinematics>(b5) = {
-	10, 
-	(Vector3){0, 0, 0}, 
-	5, 
-	5, 
-	120, 
-	0};
-	scene.AddComponent<bufferedComponent>(b5) = {
-	&inputs, 
-	false};
+	scene.AddComponent<Rendering>(b5) = {&boat5,false, GREEN};
+	scene.AddComponent<transformcomp>(b5) = {(Vector3){200, 0, 0}, (Vector3){.005,.005,.005}, QuaternionIdentity()};
+	scene.AddComponent<physics>(b5) = {15,QuaternionIdentity(), QuaternionIdentity(),true};
+	scene.AddComponent<veloKinematics>(b5) = {30, (Vector3){0, 0, 0}, 
+	5, 5, 400, 0};
+	scene.AddComponent<bufferedComponent>(b5) = {&inputs,false};
 
 	// Buffered input actions for setup in buffered input component
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -487,73 +407,78 @@ int main() {
 
 	// Main loop
 	bool keepRunning = true;
-	while(!window.ShouldClose() && keepRunning) {
+	while (!window.ShouldClose() && keepRunning) { // Main loop: Continue running while the window is open and keepRunning is true
 
 		inputs.PollEvents(); // Poll buffered input from user
-        dt = window.GetFrameTime();
-		
+		dt = window.GetFrameTime(); // Get the time elapsed since the last frame
+
 		// Rendering
-		window.BeginDrawing();
+		window.BeginDrawing(); // Begin drawing
 		{
 			// Clear screen
 			window.ClearBackground(BLACK);
-			if (IsKeyReleased(KEY_C)) { // press C to chnage camera veiw
-                if (changeCamera == false) changeCamera = true;
-                else changeCamera = false;
-            }
 
-			camera.BeginMode();
-			{	
-				if (counter == 10) camera.fovy = 65.0; // Change feild of veiw for largest ship
-				if (changeCamera && inputTabbed) { // Target is now position of current selected model
+			if (IsKeyReleased(KEY_C)) { // Check if the 'C' key is released to toggle camera view
+				if (changeCamera == false) changeCamera = true; // Toggle camera view
+				else changeCamera = false; // Toggle camera view off
+			}
 
+			camera.BeginMode(); // Begin camera mode
+			{
+				if (counter == 10) camera.fovy = 65.0; // Change field of view for the largest ship
+
+				if (changeCamera && inputTabbed) { // If changing camera and input is tabbed
+					// Target the position of the current selected model
 					for (Entity e = 0; e < scene.entityMasks.size(); e++) {
-						if(!scene.HasComponent<bufferedComponent>(e)) continue; // get optional reference to transform component
-						auto& bufInput = scene.GetComponent<bufferedComponent>(e); // get values stored in reference if it exists
-						bufInput.selected = counter == e;
-					
+						if (!scene.HasComponent<bufferedComponent>(e)) continue; // Check if the entity has a buffered component
+						auto& bufInput = scene.GetComponent<bufferedComponent>(e); // Get buffered input component
+
+						bufInput.selected = counter == e; // Set selected status based on the counter value
+
+						// Set camera target and position based on the selected model's position
 						camera.target = (Vector3){
-							scene.GetComponent<transformcomp>(counter).position.x, 
-							scene.GetComponent<transformcomp>(counter).position.y, 
+							scene.GetComponent<transformcomp>(counter).position.x,
+							scene.GetComponent<transformcomp>(counter).position.y,
 							scene.GetComponent<transformcomp>(counter).position.z
 						};
-						camera.position = (Vector3){ // Camera position
-							scene.GetComponent<transformcomp>(counter).position.x - 200, 
-							scene.GetComponent<transformcomp>(counter).position.y + 105, 
-							scene.GetComponent<transformcomp>(counter).position.z 
-						};  
-						camera.up = raylib::Vector3::Up(); // Up direction         
-						if (counter == 9) camera.fovy = 60.0;
-						else camera.fovy = 35.0f; // Camera field-of-view Y
-						camera.projection = CAMERA_PERSPECTIVE;
+						camera.position = (Vector3){
+							scene.GetComponent<transformcomp>(counter).position.x - 200,
+							scene.GetComponent<transformcomp>(counter).position.y + 105,
+							scene.GetComponent<transformcomp>(counter).position.z
+						};
+						camera.up = raylib::Vector3::Up(); // Set camera up direction
+						camera.fovy = (counter == 9) ? 60.0 : 35.0f; // Set camera field of view
+						camera.projection = CAMERA_PERSPECTIVE; // Set camera projection
+					}
+				} else { // If not changing camera
+					// Revert to old camera settings
+					camera.target = raylib::Vector3(0, 0, 300); // Set camera target
+					camera.position = raylib::Vector3(0, 120, -500); // Set camera position
+					camera.up = raylib::Vector3::Up(); // Set camera up direction
+					camera.fovy = 50.0f; // Set camera field of view
+					camera.projection = CAMERA_PERSPECTIVE; // Set camera projection
+				}
 
-				}
-				} else { // revert to old camera settings 
-					camera.target = raylib::Vector3(0, 0, 300), // Target
-					camera.position = raylib::Vector3(0, 120, -500), // Position
-					camera.up = raylib::Vector3::Up(), 
-					camera.fovy = 50.0f; // Camera field-of-view Y
-					camera.projection = CAMERA_PERSPECTIVE;
-				}
-				
 				// Render skybox and ground
-				skybox.Draw();
-				ground.Draw({});
+				skybox.Draw(); // Draw skybox
+				ground.Draw({}); // Draw ground
 			}
-			VelocitySystem(scene, dt);
-			ThreeDPhysicsSystem(scene, dt);
-            DrawSystem(scene);
-			camera.EndMode();
-            
-			int height = window.GetHeight();
-        	int width = window.GetWidth();
+			VelocitySystem(scene, dt); // Update velocity based on the scene and time
+			ThreeDPhysicsSystem(scene, dt); // Update 3D physics based on the scene and time
+			DrawSystem(scene); // Draw the scene
+			camera.EndMode(); // End camera mode
 
-			DrawFPS(10, 10);
+			// Get window height and width
+			int height = window.GetHeight();
+			int width = window.GetWidth();
+
+			DrawFPS(10, 10); // Draw frames per second counter
 		}
-		window.EndDrawing();
+		window.EndDrawing(); // End drawing
 	}
 
-	return 0;
+	return 0; // Return 0 when the loop exits
+
 }
 
 // Function to draw a bounded model with a specified transformation
@@ -605,9 +530,7 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
 
 		if(!scene.HasComponent<bufferedComponent>(e)) continue;
-		if(!scene.HasComponent<physics>(e)) { 
-			std::cout << "I DO NOT HAVE 3 D PHYSICS" << std::endl; 
-		continue;}
+		if(!scene.HasComponent<physics>(e)) continue;
 		if(!scene.HasComponent<veloKinematics>(e)) continue;
 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
 		auto& physicsComponent = scene.GetComponent<physics>(e); // Declare physicsComponent here
@@ -615,23 +538,23 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 
 		bool& is2D = physicsComponent._2d;
 
-		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action   
+		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void {   
 			if (buffer.selected)
             kinematics.targetSpeed += 3;// thus doing   
         });
-        (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action           
+        (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void {           
             if (buffer.selected)
 			kinematics.targetSpeed -= 1; // thus doing 
         });
-        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
             if (buffer.selected )
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(15));  
         });
-        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent, &buffer]()-> void { //lambda function that is creating call back for action 
+        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
             if (buffer.selected)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(15)); 
         });
-		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { //lambda function that is creating call back for action 
+		(*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { 
             if (buffer.selected && !is2D)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));  
         });
@@ -647,7 +570,7 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 			if (buffer.selected && !is2D)
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(12));
 		});
-        (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer, &is2D]()-> void { //lambda function that is creating call back for action 
+        (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer, &is2D]()-> void { 
             if (buffer.selected)
 			kinematics.targetSpeed = 0;
         });
@@ -657,7 +580,6 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 }
 
 void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
-
 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 		if (!scene.HasComponent<veloKinematics>(e)) continue;
 		if (!scene.HasComponent<transformcomp>(e)) continue;
@@ -707,22 +629,10 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
        	rotation = QuaternionSlerp(rotation, targetRotation, angularAcceleration * dt); 
 		
 		// Calculate velocity based on updated speed and rotation
-		/*-----kinematics.velocity --------*/velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
-
-		raylib::Quaternion offsetY = raylib::Quaternion::FromAxisAngle({0, 1, 0}, PI / 2.0f);
-		raylib::Quaternion newRotation = offsetY * rotation;
+		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
 
 		transformComponent.rotation = rotation;
 
-		if (is2D) transformComponent.rotation = newRotation;
-		else transformComponent.rotation = rotation;
-		
-        // Output for debugging
-        // std::cout << dt << " <---  dt from the physics." << std::endl;
-        // std::cout << rotation.x << " <---  x rotation from the physics." << std::endl;
-        // std::cout << rotation.y << " <---  y rotation from the physics." << std::endl;
-        // std::cout << rotation.z << " <---  z rotation from the physics." << std::endl;
-        // std::cout << speed << " <---  speed from the physics." << std::endl;
     }
 }
 
@@ -805,11 +715,11 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 // 		auto& TwoDPhysicsComponent = scene.GetComponent<TwoDphysics>(e); 
 
 
-// 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action   
+// 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void {   
 // 			if (buffer.selected)
 //             kinematics.targetSpeed += 3;// thus doing   
 //         });
-//         (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action           
+//         (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void {           
 //             if (buffer.selected)
 // 			kinematics.targetSpeed -= 1; // thus doing 
 //         });
@@ -825,7 +735,7 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 //                 std::cout << "Left key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
 //             }
 //         });
-//         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { //lambda function that is creating call back for action 
+//         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { 
 //             if (buffer.selected)
 // 			kinematics.targetSpeed = 0;
 //         });

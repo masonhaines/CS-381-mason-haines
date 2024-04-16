@@ -1,6 +1,6 @@
-# AS6 - Object Oriented Entity Component Ships and Planes - README
+# AS8 - Object Oriented Entity Component Ships and Planes - README
 
-This program is designed to create a simple window featuring 5 3D planes and 5 3d Ships allowing you to interact with each one! 
+This program is designed to create a simple window featuring 5 3D planes and 5 3d Ships allowing you to interact with each one! PLanes have 3D physics and interaction while the boats only have 2D.
 
 ### Instructions for Installation
 
@@ -19,7 +19,7 @@ sudo apt install cmake
 
 ```bash
 git clone https://github.com/masonhaines/CS-381-mason-haines.git
-cd CS-381-mason-haines/as6/
+cd CS-381-mason-haines/as8/
 ```
 
 ### 3. Fetch Git Submodules
@@ -50,7 +50,7 @@ make
 To exit the program/window, press 'X' on the top right of the window, and the program will terminate.
 
 ```bash
-./as6
+./as8
 ```
 
 
@@ -67,6 +67,17 @@ To exit the program/window, press 'X' on the top right of the window, and the pr
 
   - Press 'tab' to cycle between all plane and ship models
 
-  - Press 'C' to change camera veiw
+  - Press 'R' to tilt plane right
+
+  - Press 'F' to tilt plane left
+
+  - Press 'Q' to tilt plane forward
+
+  - Press 'E' to tilt plane backwards
+
+  - Press 'C' to change camera view
 
 
+## 7. Extra Credit 
+
+Can change camera view after selecting model and pressing c
