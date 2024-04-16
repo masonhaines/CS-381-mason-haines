@@ -355,6 +355,8 @@ int main() {
 
     raylib::Model plane("meshes/PolyPlane.glb");
 	raylib::Model boat1("meshes/SmitHouston_Tug.glb");
+	raylib::Model boat2("meshes/OrientExplorer.glb");
+	boat2.transform = raylib::Transform(boat2.transform).RotateX(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
     Scene scene;
 	
  
@@ -376,7 +378,7 @@ int main() {
 		QuaternionIdentity(), QuaternionIdentity()};
 
 		scene.AddComponent<veloKinematics>(e) = {                                          //4
-		5, 
+		10, 
 		(Vector3){0, 0, 0}, 
 		5, 
 		5, 
@@ -482,18 +484,18 @@ int main() {
 
 	auto b5 = scene.CreateEntity();
 	scene.AddComponent<Rendering>(b5) = {
-	&boat1, 
+	&boat2, 
 	false, GREEN}; // Plane with no bounding box, ie false 
 	scene.AddComponent<transformcomp>(b5) = {
 	(Vector3){200, 0, 0}, 
-	(Vector3){.5,.25,.5}, 
+	(Vector3){.005,.005,.005}, 
 	QuaternionIdentity()}; // Adjust position based on 'i'
 	scene.AddComponent<physics>(b5) = {                                          //3
 	15, 
 	QuaternionIdentity(), QuaternionIdentity(), 
 	true};
 	scene.AddComponent<veloKinematics>(b5) = {
-	7, 
+	10, 
 	(Vector3){0, 0, 0}, 
 	5, 
 	5, 
