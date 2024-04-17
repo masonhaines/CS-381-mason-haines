@@ -254,13 +254,17 @@ struct Rendering {
     bool drawBoundingBox = false;
 
 	raylib::Color color;
+
+	int counter = 0;
 };
 
 struct transformcomp {
     raylib::Vector3 position;
     raylib::Vector3 scale;
     raylib::Quaternion rotation;
+
     bool jumping = false;
+	int jumpCounter = 0;
 };
 
 struct bufferedComponent {
@@ -275,8 +279,16 @@ void VelocitySystem(Scene<ComponentStorage>& scene, float dt);
 void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt); // no used but functions
 void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt);
 void DrawSystem(Scene<ComponentStorage>& scene);
+void DrawWorldSystem(Scene<ComponentStorage>& scene);
 void ProcessInputSystem(Scene<ComponentStorage>& scene);
 void BoatProcessInputSystem(Scene<ComponentStorage>& scene); // not used but functions 
+void spinSystem(Scene<ComponentStorage>& scene, float dt);
+void jumpSystem(Scene<ComponentStorage>& scene, float dt);
+
+void CheckCollisions(Scene<ComponentStorage>& scene);
+
+
+
 
 int main() {
 	// Create window
@@ -314,76 +326,42 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	int numberOfPlanes = 1;
+	int numberOfIslands = 2;
 	int counter = 0; // Initialization for tab indexing 
 
-    raylib::Model plane("meshes/PolyPlane.glb");
 	raylib::Model character("meshes/pickle.glb");
-	// raylib::Model boat2("meshes/OilTanker.glb");
-	// raylib::Model boat3("meshes/CargoG_HOSBrigadoon.glb");
-	// raylib::Model boat4("meshes/Container_ShipLarge.glb");
-	// raylib::Model boat5("meshes/OrientExplorer.glb");
+	raylib::Model ducky("meshes/Duck.glb");
+	raylib::Model island1("meshes/Island.glb");
+	
 	
 	// character.transform = raylib::Transform(character.transform).RotateY(raylib::Degree(0));
-	// boat2.transform = raylib::Transform(boat2.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
-	// boat3.transform = raylib::Transform(boat3.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
-	// boat4.transform = raylib::Transform(boat4.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
-	// boat5.transform = raylib::Transform(boat5.transform).RotateX(raylib::Degree(-90)).RotateY(raylib::Degree(-90)).RotateZ(raylib::Degree(180));
 	
     Scene scene;
 	
-	// PLANES
-   	for (int i = 0; i < numberOfPlanes; ++i) {
-		auto e = scene.CreateEntity();
+	
+   	// PICKLE
+	auto pickle = scene.CreateEntity();
+	scene.AddComponent<Rendering>(pickle) = {&character,true}; 
+	scene.AddComponent<transformcomp>(pickle) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
+	scene.AddComponent<physics>(pickle) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
+	0, 50, -50};
+	scene.AddComponent<bufferedComponent>(pickle) = {&inputs, false};
 
-		scene.AddComponent<Rendering>(e) = {&character,false, GREEN}; // Plane with no bounding box, ie false 
-		scene.AddComponent<transformcomp>(e) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
-		scene.AddComponent<physics>(e) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
-		scene.AddComponent<veloKinematics>(e) = {15,(Vector3){0, 0, 0}, 0, 
-		0, 25, 0};
-		scene.AddComponent<bufferedComponent>(e) = {&inputs, false};
+	auto duck = scene.CreateEntity();
+	scene.AddComponent<Rendering>(duck) = {&ducky,true}; 
+	scene.AddComponent<transformcomp>(duck) = {(Vector3){0, 0, 0}, (Vector3){3,3, 3}, QuaternionIdentity(), false}; 
+	scene.AddComponent<physics>(duck) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<veloKinematics>(duck) = {100,(Vector3){0, 0, 0}, 0, 
+	0, 50, -50};
+	scene.AddComponent<bufferedComponent>(duck) = {&inputs, false};
+
+	for (int i = 1; i <= numberOfIslands; ++i) {
+		auto island = scene.CreateEntity();
+		scene.AddComponent<Rendering>(island) = {&island1,true, WHITE}; 
+		scene.AddComponent<transformcomp>(island) = {(Vector3){100.0f * i, -50.0f + (i * 20), 35.0f * i}, (Vector3){100,100,100}, QuaternionIdentity()}; 
 	}
 	
-	// Boat 1 SmitHouston_Tug
-	// auto b1 = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(b1) = {&character, false, GRAY}; 
-	// scene.AddComponent<transformcomp>(b1) = {(Vector3){-100, 0, -50}, (Vector3){3,3,3}, QuaternionIdentity()}; // Adjust position based on 'i'
-	// scene.AddComponent<physics>(b1) = {5, QuaternionIdentity(), QuaternionIdentity(), true};
-	// scene.AddComponent<veloKinematics>(b1) = {6, (Vector3){0, 0, 0},
-	// 5, 5, 50, 0};
-	// scene.AddComponent<bufferedComponent>(b1) = {&inputs, false};
-	// // Boat 2 OilTanker
-	// auto b2 = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(b2) = {&boat2, false, ORANGE}; 
-	// scene.AddComponent<transformcomp>(b2) = {(Vector3){-200, 0, 0}, (Vector3){.015,.015,.015}, QuaternionIdentity()}; // Adjust position based on 'i'
-	// scene.AddComponent<physics>(b2) = {.05, QuaternionIdentity(), QuaternionIdentity(), true};
-	// scene.AddComponent<veloKinematics>(b2) = {.5, (Vector3){0, 0, 0}, 
-	// 5,5, 40, 0};
-	// scene.AddComponent<bufferedComponent>(b2) = {&inputs, false};
-	// // Boat 3 CargoG_HOSBrigadoon
-	// auto b3 = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(b3) = {&boat3, false, BEIGE}; 
-	// scene.AddComponent<transformcomp>(b3) = {(Vector3){-300, 0, 200}, (Vector3){.04,.04,.04}, QuaternionIdentity()}; 
-	// scene.AddComponent<physics>(b3) = {.3, QuaternionIdentity(), QuaternionIdentity(), true};
-	// scene.AddComponent<veloKinematics>(b3) = {.2, (Vector3){0, 0, 0}, 
-	// 5, 5, 30, 0};
-	// scene.AddComponent<bufferedComponent>(b3) = {&inputs, false};
-	// // Boat 4 Container_ShipLarge
-	// auto b4 = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(b4) = {&boat4, false, BLUE}; 
-	// scene.AddComponent<transformcomp>(b4) = {(Vector3){100, 0, 100}, (Vector3){.01, .01, .01}, QuaternionIdentity()}; 
-	// scene.AddComponent<physics>(b4) = {.02, QuaternionIdentity(), QuaternionIdentity(), true};
-	// scene.AddComponent<veloKinematics>(b4) = {.1, (Vector3){0, 0, 0}, 
-	// 5, 5, 20, 0};
-	// scene.AddComponent<bufferedComponent>(b4) = {&inputs, false};
-	// // Boat 5 OrientExplorer
-	// auto b5 = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(b5) = {&boat5,false, GREEN};
-	// scene.AddComponent<transformcomp>(b5) = {(Vector3){200, 0, 0}, (Vector3){.005,.005,.005}, QuaternionIdentity()};
-	// scene.AddComponent<physics>(b5) = {15,QuaternionIdentity(), QuaternionIdentity(),true};
-	// scene.AddComponent<veloKinematics>(b5) = {30, (Vector3){0, 0, 0}, 
-	// 5, 5, 400, 0};
-	// scene.AddComponent<bufferedComponent>(b5) = {&inputs,false};
 
 	// Buffered input actions for setup in buffered input component
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -431,15 +409,11 @@ int main() {
 
 			camera.BeginMode(); // Begin camera mode
 			{
-				if (counter == 10) camera.fovy = 65.0; // Change field of view for the largest ship
-
 				if (changeCamera) { // If changing camera and input is tabbed
 					// Target the position of the current selected model
 					for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 						if (!scene.HasComponent<bufferedComponent>(e)) continue; // Check if the entity has a buffered component
 						auto& bufInput = scene.GetComponent<bufferedComponent>(e); // Get buffered input component
-
-						bufInput.selected = counter == e; // Set selected status based on the counter value
 
 						// Set camera target and position based on the selected model's position
 						camera.target = (Vector3){
@@ -448,12 +422,12 @@ int main() {
 							scene.GetComponent<transformcomp>(counter).position.z
 						};
 						camera.position = (Vector3){
-							scene.GetComponent<transformcomp>(counter).position.x - 300,
-							scene.GetComponent<transformcomp>(counter).position.y + 355,
-							scene.GetComponent<transformcomp>(counter).position.z
+							scene.GetComponent<transformcomp>(counter).rotation.x - 375,
+							scene.GetComponent<transformcomp>(counter).rotation.y + 155,
+							scene.GetComponent<transformcomp>(counter).rotation.z
 						};
 						camera.up = raylib::Vector3::Up(); // Set camera up direction
-						camera.fovy = (counter == 9) ? 60.0 : 35.0f; // Set camera field of view
+						camera.fovy = 35.0f; // Set camera field of view
 						camera.projection = CAMERA_PERSPECTIVE; // Set camera projection
 					}
 				} else { // If not changing camera
@@ -469,9 +443,13 @@ int main() {
 				skybox.Draw(); // Draw skybox
 				ground.Draw({}); // Draw ground
 			}
+			CheckCollisions(scene);
+			jumpSystem(scene, dt);
+			spinSystem(scene, dt);
 			VelocitySystem(scene, dt); // Update velocity based on the scene and time
 			ThreeDPhysicsSystem(scene, dt); // Update 3D physics based on the scene and time
 			DrawSystem(scene); // Draw the scene
+			DrawWorldSystem(scene);
 			camera.EndMode(); // End camera mode
 
 			// Get window height and width
@@ -486,8 +464,48 @@ int main() {
 	}
 
 	return 0; // Return 0 when the loop exits
-
 }
+
+void CheckCollisions(Scene<ComponentStorage>& scene) {
+    int collisionCount = 0; 
+
+    
+    for (Entity duckEntity = 0; duckEntity < scene.entityMasks.size(); duckEntity++) {
+        if (!scene.HasComponent<transformcomp>(duckEntity)) continue;
+        if (!scene.HasComponent<Rendering>(duckEntity)) continue;
+
+        auto& duckTransform = scene.GetComponent<transformcomp>(duckEntity);
+        auto& duckRender = scene.GetComponent<Rendering>(duckEntity);
+        auto duckBox = duckRender.model->GetTransformedBoundingBox();
+
+        for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
+            if (islandEntity == duckEntity) continue; // Skip checking collision with itself
+            if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
+            if (!scene.HasComponent<Rendering>(islandEntity)) continue;
+
+            auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
+            auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
+            auto islandBox = islandRender.model->GetTransformedBoundingBox();
+
+		
+            if (islandBox.CheckCollision(duckBox)) {
+                
+				duckTransform.jumping = false;
+                collisionCount++;
+				if (duckBox.CheckCollision(islandBox)) {
+                
+					duckTransform.jumping = false;
+					collisionCount++;
+					std::cout << "collision" << std::endl;
+				}
+            }
+        }
+    }
+
+    std::cout << "total collisions: " << collisionCount << std::endl;
+}
+
+
 
 // Function to draw a bounded model with a specified transformation
 void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
@@ -497,13 +515,68 @@ void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transfor
     model.GetTransformedBoundingBox().Draw(raylib::Color(ORANGE));
     model.transform = backupTransform; // Restore the original transform
 }
-
 // Function to draw a model with a specified transformation
 void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
     raylib::Transform backupTransform = model.transform; // Save the model's transform
     model.transform = transformer(backupTransform); // Update the model's transform based on the transformation function
     model.Draw({}, 1.0f, color);
     model.transform = backupTransform; // Restore the original transform
+}
+
+void spinSystem(Scene<ComponentStorage>& scene, float dt) {
+	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+        if (!scene.HasComponent<transformcomp>(e)) continue;
+        if (!scene.HasComponent<physics>(e)) continue;
+		if (!scene.HasComponent<veloKinematics>(e)) continue;
+		if (!scene.HasComponent<Rendering>(e)) continue;
+
+        auto& transformComponent = scene.GetComponent<transformcomp>(e);
+        auto& physicsComponent = scene.GetComponent<physics>(e);
+		auto& kinematics = scene.GetComponent<veloKinematics>(e); 
+		auto& render = scene.GetComponent<Rendering>(e);
+
+		float& angularAcceleration = physicsComponent.angularAcceleration;
+		int& counter = render.counter;
+		
+		if (transformComponent.jumping && render.counter < 1) {
+			render.model->transform = raylib::Transform(render.model->transform).RotateY(raylib::Degree(6.1)) ;
+			render.color = BLUE;
+		}
+    }
+}
+
+void jumpSystem(Scene<ComponentStorage>& scene, float dt) {
+	int counter = 0;
+	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+		if (!scene.HasComponent<veloKinematics>(e)) continue;
+		if (!scene.HasComponent<transformcomp>(e)) continue;
+		if (!scene.HasComponent<Rendering>(e)) continue;
+
+		auto& render = scene.GetComponent<Rendering>(e);
+		auto& kinematics = scene.GetComponent<veloKinematics>(e);
+		auto& transformComponent = scene.GetComponent<transformcomp>(e);
+
+		int& counter = render.counter;
+		int&jumps = transformComponent.jumpCounter;
+	
+        if(transformComponent.jumping) {
+			transformComponent.position.y += 36 * dt;	
+		}
+		if (transformComponent.position.y > 35.9) {
+			transformComponent.jumping = false;
+			counter = 1;
+			
+		}
+		if(!transformComponent.jumping) {
+			transformComponent.position.y -= 36 * dt;
+		}
+		if (transformComponent.position.y < .05 && !transformComponent.jumping) {
+			transformComponent.position.y = 0; 
+			counter = 0;
+			render.color = WHITE;
+			jumps = 0;
+		}
+	}
 }
 
 void DrawSystem(Scene<ComponentStorage>& scene) {
@@ -524,17 +597,40 @@ void DrawSystem(Scene<ComponentStorage>& scene) {
             Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).Rotate(axis, angle);
         };
         
-        // if (buffer.selected) {
-        //     DrawBoundedModel(*rendering.model, color, Transformer);
-        // } else {
+        if (rendering.drawBoundingBox) {
+            DrawBoundedModel(*rendering.model, color, Transformer);
+        } else {
             DrawModel(*rendering.model, color, Transformer);
-        // }
+        }
     }
 }
 
+void DrawWorldSystem(Scene<ComponentStorage>& scene) {
+    for(Entity e = 0; e < scene.entityMasks.size(); e++) {
+        if(!scene.HasComponent<Rendering>(e)) continue;
+        if(!scene.HasComponent<transformcomp>(e)) continue;
+		
+        auto & rendering = scene.GetComponent<Rendering>(e);
+        auto & transformComponent = scene.GetComponent<transformcomp>(e);
+	
+		raylib::Color color = rendering.color;
+
+        auto Transformer = [&transformComponent](raylib::Transform t) -> raylib::Transform {
+			auto [axis, angle] = transformComponent.rotation.ToAxisAngle();
+            return t.
+            Translate(transformComponent.position).
+            Scale(transformComponent.scale.x, transformComponent.scale.y, transformComponent.scale.z).Rotate(axis, angle);
+        };
+        
+        if (rendering.drawBoundingBox) {
+            DrawBoundedModel(*rendering.model, color, Transformer);
+        } else {
+            DrawModel(*rendering.model, color, Transformer);
+        }
+    }
+}
 
 void ProcessInputSystem(Scene<ComponentStorage>& scene) {
-
 	for(Entity e = 0; e < scene.entityMasks.size(); e++) {
 
 		if(!scene.HasComponent<bufferedComponent>(e)) continue;
@@ -546,40 +642,38 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
         auto& transformComponent = scene.GetComponent<transformcomp>(e);
 
-		bool& is2D = physicsComponent._2d;
-
-		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void {   
-            kinematics.targetSpeed += 10;// thus doing   
+		// bool& is2D = physicsComponent._2d;
+		
+		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics]()-> void {   
+			if(kinematics.maxSpeed > kinematics.targetSpeed) kinematics.targetSpeed += 25;
         });
-        (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics, &buffer]()-> void {           
-			kinematics.targetSpeed -= 2; // thus doing 
+        (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics]()-> void {    
+			if(kinematics.minSpeed < kinematics.targetSpeed)kinematics.targetSpeed -= 15; 
         });
-        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(15));  
+        (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { 
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(35));  
         });
-        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent, &buffer]()-> void { 
-			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(15)); 
+        (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { 
+			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(35)); 
         });
-		// (*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { 
+		// (*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent]()-> void { 
 		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));  
         // });
-		// (*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { 
+		// (*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent]()-> void { 
 		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Left(), raylib::Degree(10));
 		// });
-		// (*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { 
+		// (*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent]()-> void { 
 		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(12));
 		// });
-		// (*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent, &buffer, &is2D]()-> void { 
+		// (*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent]()-> void { 
 		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(12));
 		// });
-        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &buffer, &transformComponent]()-> void { 
-			// physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(180)); 
-            // transformComponent.position.y = transformComponent.position.y + 25;
-            // if (!transformComponent.jumping) transformComponent.jumping = true;
-            
+        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &transformComponent]()-> void { 
+            if (!transformComponent.jumping && transformComponent.jumpCounter < 4) {
+				transformComponent.jumping = true;
+				transformComponent.jumpCounter++;
+			}
         });
-		
-		
 	}
 }
 
@@ -605,17 +699,7 @@ void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
             speed -= acceleration * dt;
         speed = Clamp(speed, minSpeed, maxSpeed);
 
-
         transformComponent.position += velocity * dt;
-		// Update position based on velocity
-        // if(transformComponent.jumping) transformComponent.position.y += 3 * dt;
-        // if (transformComponent.position.y < .05) transformComponent.position = 0;
-        // if (transformComponent.position.y > 4.9) {
-        //     transformComponent.position.y -= 1 * dt;
-        //     transformComponent.jumping = false;
-        // }
-            
-		
 	}
 }
 
@@ -644,9 +728,7 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		// Calculate velocity based on updated speed and rotation
 		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
 
-        if (transformComponent.jumping) physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(10));
 		transformComponent.rotation = rotation;
-
     }
 }
 
