@@ -43,7 +43,7 @@ struct ComponentStorage {
 	Tcomponent& Get(Entity e) {
 		assert(sizeof(Tcomponent) == elementSize);
 		// std::cout << globalComponentCounter << "global counter for components" << std::endl;
-		assert(e < (data.size() / elementSize));
+		assert(e <= (data.size() / elementSize));
 
 		// std::cout << "assertion error value : e is " << static_cast<unsigned int>(e) << " data size divided by element size " << data.size() / elementSize << std::endl;
 		return *(Tcomponent*)(data.data() + e * elementSize);
@@ -240,7 +240,7 @@ struct physics {
 	bool _2d = false;
 };
 
-struct TwoDphysics {};
+struct flipFlag {};
 // struct TwoDphysics {
     
 //     float angularAcceleration;
@@ -285,7 +285,7 @@ void BoatProcessInputSystem(Scene<ComponentStorage>& scene); // not used but fun
 void spinSystem(Scene<ComponentStorage>& scene, float dt);
 void jumpSystem(Scene<ComponentStorage>& scene, float dt);
 
-void CheckCollisions(Scene<ComponentStorage>& scene);
+void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity islands);
 
 
 
@@ -326,7 +326,7 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	int numberOfIslands = 2;
+	int numberOfIslands = 1;
 	int counter = 0; // Initialization for tab indexing 
 
 	raylib::Model character("meshes/pickle.glb");
@@ -340,13 +340,13 @@ int main() {
 	
 	
    	// PICKLE
-	auto pickle = scene.CreateEntity();
-	scene.AddComponent<Rendering>(pickle) = {&character,true}; 
-	scene.AddComponent<transformcomp>(pickle) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
-	scene.AddComponent<physics>(pickle) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
-	scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
-	0, 50, -50};
-	scene.AddComponent<bufferedComponent>(pickle) = {&inputs, false};
+	// auto pickle = scene.CreateEntity();
+	// scene.AddComponent<Rendering>(pickle) = {&character,true}; 
+	// scene.AddComponent<transformcomp>(pickle) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
+	// scene.AddComponent<physics>(pickle) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
+	// scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
+	// 0, 50, -50};
+	// scene.AddComponent<bufferedComponent>(pickle) = {&inputs, false};
 
 	auto duck = scene.CreateEntity();
 	scene.AddComponent<Rendering>(duck) = {&ducky,true}; 
@@ -355,13 +355,15 @@ int main() {
 	scene.AddComponent<veloKinematics>(duck) = {100,(Vector3){0, 0, 0}, 0, 
 	0, 50, -50};
 	scene.AddComponent<bufferedComponent>(duck) = {&inputs, false};
+	scene.AddComponent<flipFlag>(duck);
+
+	Entity island;
 
 	for (int i = 1; i <= numberOfIslands; ++i) {
-		auto island = scene.CreateEntity();
+		island = scene.CreateEntity();
 		scene.AddComponent<Rendering>(island) = {&island1,true, WHITE}; 
 		scene.AddComponent<transformcomp>(island) = {(Vector3){100.0f * i, -50.0f + (i * 20), 35.0f * i}, (Vector3){100,100,100}, QuaternionIdentity()}; 
 	}
-	
 
 	// Buffered input actions for setup in buffered input component
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -443,7 +445,7 @@ int main() {
 				skybox.Draw(); // Draw skybox
 				ground.Draw({}); // Draw ground
 			}
-			CheckCollisions(scene);
+			CheckCollisions(scene, duck, island);
 			jumpSystem(scene, dt);
 			spinSystem(scene, dt);
 			VelocitySystem(scene, dt); // Update velocity based on the scene and time
@@ -466,45 +468,99 @@ int main() {
 	return 0; // Return 0 when the loop exits
 }
 
-void CheckCollisions(Scene<ComponentStorage>& scene) {
-    int collisionCount = 0; 
 
+
+
+void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity islands) {
+
+    int collisionCount = 0;
+	int loop2counter = 0;
     
-    for (Entity duckEntity = 0; duckEntity < scene.entityMasks.size(); duckEntity++) {
-        if (!scene.HasComponent<transformcomp>(duckEntity)) continue;
-        if (!scene.HasComponent<Rendering>(duckEntity)) continue;
 
-        auto& duckTransform = scene.GetComponent<transformcomp>(duckEntity);
-        auto& duckRender = scene.GetComponent<Rendering>(duckEntity);
-        auto duckBox = duckRender.model->GetTransformedBoundingBox();
+	// for (Entity characterEntity = 0; characterEntity < scene.entityMasks.size(); characterEntity++) {
+    //     if (!scene.HasComponent<transformcomp>(characterEntity)) continue;
+    //     if (!scene.HasComponent<Rendering>(characterEntity)) continue;
+		// if (!scene.HasComponent<physics>(characterEntity)) continue;
 
-        for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
-            if (islandEntity == duckEntity) continue; // Skip checking collision with itself
-            if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
-            if (!scene.HasComponent<Rendering>(islandEntity)) continue;
-
-            auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
-            auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
-            auto islandBox = islandRender.model->GetTransformedBoundingBox();
-
+        auto& character1Transform = scene.GetComponent<transformcomp>(character1);
+        auto character1Render = scene.GetComponent<Rendering>(character1);
+		auto kinematics = scene.GetComponent<veloKinematics>(character1);
+        auto character1Box = character1Render.model->GetTransformedBoundingBox();
 		
-            if (islandBox.CheckCollision(duckBox)) {
-                
-				duckTransform.jumping = false;
-                collisionCount++;
-				if (duckBox.CheckCollision(islandBox)) {
-                
-					duckTransform.jumping = false;
-					collisionCount++;
-					std::cout << "collision" << std::endl;
-				}
-            }
-        }
-    }
 
+		auto& islands1Transform = scene.GetComponent<transformcomp>(islands);
+        auto islands1Render = scene.GetComponent<Rendering>(islands);
+        auto islands1Box = islands1Render.model->GetTransformedBoundingBox();
+		
+
+		// // Get the transform components of the entities involved in collisions
+		// auto& transform1 = scene.GetComponent<transformcomp>(character1);
+		// auto& transform2 = scene.GetComponent<transformcomp>(character2);
+		// auto& islandTransform = scene.GetComponent<transformcomp>(islands);
+			
+			if (CheckCollisionBoxes(character1Box, islands1Box)) {
+			// Perform actions for collision between character2 and islands
+				collisionCount++;
+				std::cout << "collision between character1 and island" << std::endl;
+				// Example action: Stop jumping for character2
+				collisionCount++;
+				character1Transform.jumping = false;
+				kinematics.velocity.y = -kinematics.velocity.y;
+				
+			}
+
+       
+        
+    // }
+	
+
+    // for (Entity characterEntity = 0; characterEntity < scene.entityMasks.size(); characterEntity++) {
+    //     if (!scene.HasComponent<transformcomp>(characterEntity)) continue;
+    //     if (!scene.HasComponent<Rendering>(characterEntity)) continue;
+	// 	// if (!scene.HasComponent<physics>(characterEntity)) continue;
+
+    //     auto& characterTransform = scene.GetComponent<transformcomp>(characterEntity);
+    //     auto& characterRender = scene.GetComponent<Rendering>(characterEntity);
+    //     auto characterBox = characterRender.model->GetTransformedBoundingBox();
+
+	// 	raylib::Vector3 charPos = characterTransform.position;
+
+	// 	loop2counter = 0;
+
+    //     for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
+    //         if (islandEntity == characterEntity) continue; // Skip checking collision with itself
+    //         if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
+    //         if (!scene.HasComponent<Rendering>(islandEntity)) continue;
+	// 		if (!scene.HasComponent<flipFlag>(islandEntity)) continue;
+
+	// 		loop2counter++;
+			
+    //         auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
+    //         auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
+    //         auto islandBox = islandRender.model->GetTransformedBoundingBox();
+
+	// 		raylib::Vector3 islandPos = islandTransform.position;
+
+			
+
+
+
+
+
+
+	// 		// std::cout << "    entity in island loop  " <<  loop2counter << std::endl;
+    //         if (CheckCollisionBoxes(islandBox, characterBox)) {
+
+	// 			characterTransform.jumping = false;
+    //             collisionCount++;
+	// 			std::cout << "   collision  " << std::endl;
+				
+				
+    //         }
+        
+    // }
     std::cout << "total collisions: " << collisionCount << std::endl;
 }
-
 
 
 // Function to draw a bounded model with a specified transformation
@@ -538,10 +594,13 @@ void spinSystem(Scene<ComponentStorage>& scene, float dt) {
 		float& angularAcceleration = physicsComponent.angularAcceleration;
 		int& counter = render.counter;
 		
-		if (transformComponent.jumping && render.counter < 1) {
-			render.model->transform = raylib::Transform(render.model->transform).RotateY(raylib::Degree(6.1)) ;
-			render.color = BLUE;
+		if ((transformComponent.jumping && render.counter < 1) && !scene.HasComponent<flipFlag>(e)) {
+			render.model->transform = raylib::Transform(render.model->transform).RotateY(raylib::Degree(6.1));
+			render.color = YELLOW;
+			
 		}
+		if (transformComponent.jumping && scene.HasComponent<flipFlag>(e)) render.model->transform = raylib::Transform(render.model->transform).RotateX(raylib::Degree(6.1));
+
     }
 }
 
@@ -732,16 +791,16 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
     }
 }
 
-// void TwoDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
+// void flipFlagSystem(Scene<ComponentStorage>& scene, float dt) {
 
 // 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
 
 //         if (!scene.HasComponent<transformcomp>(e)) continue;
-//         if (!scene.HasComponent<TwoDphysics>(e)) continue;
+//         if (!scene.HasComponent<flipFlag>(e)) continue;
 // 		if (!scene.HasComponent<veloKinematics>(e)) continue;
 
 //         auto& transformComponent = scene.GetComponent<transformcomp>(e);
-//         auto& TwoDphysicsComponent = scene.GetComponent<TwoDphysics>(e);
+//         auto& flipFlagComponent = scene.GetComponent<flipFlag>(e);
 // 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
 
 // 		// static constexpr auto AngleClamp = [](raylib::Degree angle) -> raylib::Degree {
@@ -754,9 +813,9 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 
 // 		raylib::Vector3& velocity = kinematics.velocity;
 // 		float& speed = kinematics.speed;
-// 		float angularAcceleration = TwoDphysicsComponent.angularAcceleration;
-// 		raylib::Degree& heading = TwoDphysicsComponent.heading;
-// 		raylib::Degree& targetHeading = TwoDphysicsComponent.targetHeading;
+// 		float angularAcceleration = flipFlagComponent.angularAcceleration;
+// 		raylib::Degree& heading = flipFlagComponent.heading;
+// 		raylib::Degree& targetHeading = flipFlagComponent.targetHeading;
 //         float difference = abs(targetHeading - heading);
 
 //         if (targetHeading > heading) {
@@ -804,11 +863,11 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 // 		if(!scene.HasComponent<veloKinematics>(e)) continue;
 // 		auto& buffer = scene.GetComponent<bufferedComponent>(e);
 // 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
-// 		if(!scene.HasComponent<TwoDphysics>(e)) {
+// 		if(!scene.HasComponent<flipFlag>(e)) {
 // 			std::cout << "I DO NOT HAVE 2 D PHYSICS" << std::endl;
 // 			continue;
 // 		}
-// 		auto& TwoDPhysicsComponent = scene.GetComponent<TwoDphysics>(e); 
+// 		auto& flipFlagComponent = scene.GetComponent<flipFlag>(e); 
 
 
 // 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics, &buffer]()-> void {   
@@ -819,16 +878,16 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 //             if (buffer.selected)
 // 			kinematics.targetSpeed -= 1; // thus doing 
 //         });
-//         (*buffer.inputs)["right"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+//         (*buffer.inputs)["right"].AddPressedCallback([&flipFlagComponent, &buffer]()-> void { 
 //             if (buffer.selected) {
-//                 TwoDPhysicsComponent.targetHeading -= 20 * DEG2RAD;
-//                 std::cout << "Right key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+//                 flipFlagComponent.targetHeading -= 20 * DEG2RAD;
+//                 std::cout << "Right key pressed. New Target Heading: " << flipFlagComponent.targetHeading << std::endl;
 //             }
 //         });
-//         (*buffer.inputs)["left"].AddPressedCallback([&TwoDPhysicsComponent, &buffer]()-> void { 
+//         (*buffer.inputs)["left"].AddPressedCallback([&flipFlagComponent, &buffer]()-> void { 
 //             if (buffer.selected) {
-//                 TwoDPhysicsComponent.targetHeading += 20 * DEG2RAD;
-//                 std::cout << "Left key pressed. New Target Heading: " << TwoDPhysicsComponent.targetHeading << std::endl;
+//                 flipFlagComponent.targetHeading += 20 * DEG2RAD;
+//                 std::cout << "Left key pressed. New Target Heading: " << flipFlagComponent.targetHeading << std::endl;
 //             }
 //         });
 //         (*buffer.inputs)["space"].AddPressedCallback([&kinematics, &buffer]()-> void { 
