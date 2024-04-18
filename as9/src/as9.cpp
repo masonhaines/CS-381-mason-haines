@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <string>
 #include <vector>
 #include "rlgl.h"
 #include "skybox.hpp"
@@ -228,6 +229,9 @@ struct veloKinematics {
 
 	float maxSpeed;
     float minSpeed;
+
+	bool bound = false;
+
 };
 
 struct physics {
@@ -237,7 +241,7 @@ struct physics {
     raylib::Quaternion rotation; // Using quaternion for rotation
     raylib::Quaternion targetRotation; // Target rotation 
 
-	bool _2d = false;
+	// bool _2d = false;
 };
 
 struct flipFlag {};
@@ -285,14 +289,14 @@ void BoatProcessInputSystem(Scene<ComponentStorage>& scene); // not used but fun
 void spinSystem(Scene<ComponentStorage>& scene, float dt);
 void jumpSystem(Scene<ComponentStorage>& scene, float dt);
 
-void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity islands);
+void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity character2, Entity islands);
 
 
 
 
 int main() {
 	// Create window
-	const int screenWidth = 900 * 2; // 900
+	const int screenWidth = 400 * 2; // 900
 	const int screenHeight = 450 * 2; // 450
 	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 8");
 
@@ -326,7 +330,7 @@ int main() {
 	water.SetWrap(TEXTURE_WRAP_REPEAT);
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
-	int numberOfIslands = 1;
+	int numberOfIslands = 2;
 	int counter = 0; // Initialization for tab indexing 
 
 	raylib::Model character("meshes/pickle.glb");
@@ -340,18 +344,18 @@ int main() {
 	
 	
    	// PICKLE
-	// auto pickle = scene.CreateEntity();
-	// scene.AddComponent<Rendering>(pickle) = {&character,true}; 
-	// scene.AddComponent<transformcomp>(pickle) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
-	// scene.AddComponent<physics>(pickle) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
-	// scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
-	// 0, 50, -50};
-	// scene.AddComponent<bufferedComponent>(pickle) = {&inputs, false};
+	auto pickle = scene.CreateEntity();
+	scene.AddComponent<Rendering>(pickle) = {&character,true, WHITE}; 
+	scene.AddComponent<transformcomp>(pickle) = {(Vector3){0, 0, 0}, (Vector3){1000,1000,1000}, QuaternionIdentity(), false}; 
+	scene.AddComponent<physics>(pickle) = {15, QuaternionIdentity(), QuaternionIdentity()};
+	scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
+	0, 50, -50};
+	scene.AddComponent<bufferedComponent>(pickle) = {&inputs, true};
 
 	auto duck = scene.CreateEntity();
-	scene.AddComponent<Rendering>(duck) = {&ducky,true}; 
+	scene.AddComponent<Rendering>(duck) = {&ducky,false, WHITE}; 
 	scene.AddComponent<transformcomp>(duck) = {(Vector3){0, 0, 0}, (Vector3){3,3, 3}, QuaternionIdentity(), false}; 
-	scene.AddComponent<physics>(duck) = {15, QuaternionIdentity(), QuaternionIdentity(), true};
+	scene.AddComponent<physics>(duck) = {15, QuaternionIdentity(), QuaternionIdentity()};
 	scene.AddComponent<veloKinematics>(duck) = {100,(Vector3){0, 0, 0}, 0, 
 	0, 50, -50};
 	scene.AddComponent<bufferedComponent>(duck) = {&inputs, false};
@@ -362,8 +366,10 @@ int main() {
 	for (int i = 1; i <= numberOfIslands; ++i) {
 		island = scene.CreateEntity();
 		scene.AddComponent<Rendering>(island) = {&island1,true, WHITE}; 
-		scene.AddComponent<transformcomp>(island) = {(Vector3){100.0f * i, -50.0f + (i * 20), 35.0f * i}, (Vector3){100,100,100}, QuaternionIdentity()}; 
+		scene.AddComponent<transformcomp>(island) = {(Vector3){150.0f * i, -70.0f + (i * 20), 35.0f * i}, (Vector3){100,100,100}, QuaternionIdentity()}; 
 	}
+
+	
 
 	// Buffered input actions for setup in buffered input component
 	inputs["forward"] = raylib::Action::key(KEY_W).move();
@@ -424,9 +430,9 @@ int main() {
 							scene.GetComponent<transformcomp>(counter).position.z
 						};
 						camera.position = (Vector3){
-							scene.GetComponent<transformcomp>(counter).rotation.x - 375,
-							scene.GetComponent<transformcomp>(counter).rotation.y + 155,
-							scene.GetComponent<transformcomp>(counter).rotation.z
+							scene.GetComponent<transformcomp>(counter).position.x - 375,
+							scene.GetComponent<transformcomp>(counter).position.y + 155,
+							scene.GetComponent<transformcomp>(counter).position.z
 						};
 						camera.up = raylib::Vector3::Up(); // Set camera up direction
 						camera.fovy = 35.0f; // Set camera field of view
@@ -445,13 +451,15 @@ int main() {
 				skybox.Draw(); // Draw skybox
 				ground.Draw({}); // Draw ground
 			}
-			CheckCollisions(scene, duck, island);
-			jumpSystem(scene, dt);
-			spinSystem(scene, dt);
+			CheckCollisions(scene, pickle, duck, island);
+			// jumpSystem(scene, dt);
+			// spinSystem(scene, dt);
 			VelocitySystem(scene, dt); // Update velocity based on the scene and time
 			ThreeDPhysicsSystem(scene, dt); // Update 3D physics based on the scene and time
 			DrawSystem(scene); // Draw the scene
+			
 			DrawWorldSystem(scene);
+			// CheckCollisions(scene, pickle, duck, island);
 			camera.EndMode(); // End camera mode
 
 			// Get window height and width
@@ -459,8 +467,9 @@ int main() {
 			int width = window.GetWidth();
 
 			DrawFPS(10, 10); // Draw frames per second counter
+			
 
-            text.Draw(Title, (width / 100), height * .91, textSize * 3.0, raylib::Color::RayWhite());
+            text.Draw(std::to_string(scene.GetComponent<transformcomp>(duck).jumpCounter), (width / 100), height * .91, textSize * 3.0, raylib::Color::RayWhite());
 		}
 		window.EndDrawing(); // End drawing
 	}
@@ -469,45 +478,76 @@ int main() {
 }
 
 
-
-
-void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity islands) {
+void CheckCollisions(Scene<ComponentStorage>& scene, Entity character,Entity character2,  Entity islands) {
 
     int collisionCount = 0;
-	int loop2counter = 0;
-    
 
-	// for (Entity characterEntity = 0; characterEntity < scene.entityMasks.size(); characterEntity++) {
-    //     if (!scene.HasComponent<transformcomp>(characterEntity)) continue;
-    //     if (!scene.HasComponent<Rendering>(characterEntity)) continue;
-		// if (!scene.HasComponent<physics>(characterEntity)) continue;
+		auto& kinematics = scene.GetComponent<veloKinematics>(character);
+		raylib::Vector3& velocity = kinematics.velocity;
+	
 
-        auto& character1Transform = scene.GetComponent<transformcomp>(character1);
-        auto character1Render = scene.GetComponent<Rendering>(character1);
-		auto kinematics = scene.GetComponent<veloKinematics>(character1);
-        auto character1Box = character1Render.model->GetTransformedBoundingBox();
+        auto& characterTransform = scene.GetComponent<transformcomp>(character);
+        auto& characterRender = scene.GetComponent<Rendering>(character);
+        auto characterBox = characterRender.model->GetTransformedBoundingBox();
+		// auto characterBox = characterRender.model->GetBoundingBox();
+
+		raylib::Vector3 cPos = characterTransform.position;
+
+		auto& character2Transform = scene.GetComponent<transformcomp>(character2);
+        auto& character2Render = scene.GetComponent<Rendering>(character2);
+        auto character2Box = character2Render.model->GetTransformedBoundingBox();
+		// auto characterBox = characterRender.model->GetBoundingBox();
+
+		raylib::Vector3 c2Pos = character2Transform.position;
+
+		auto& islandsTransform = scene.GetComponent<transformcomp>(islands);
+        auto& islandsRender = scene.GetComponent<Rendering>(islands);
+        auto islandsBox = islandsRender.model->GetTransformedBoundingBox();
+		// auto islandsBox = islandsRender.model->GetBoundingBox();
+
+		raylib::Vector3 iPos = islandsTransform.position;
+
+		// if (CheckCollisionBoxes(characterBox, islandsBox)) {
 		
-
-		auto& islands1Transform = scene.GetComponent<transformcomp>(islands);
-        auto islands1Render = scene.GetComponent<Rendering>(islands);
-        auto islands1Box = islands1Render.model->GetTransformedBoundingBox();
-		
-
-		// // Get the transform components of the entities involved in collisions
-		// auto& transform1 = scene.GetComponent<transformcomp>(character1);
-		// auto& transform2 = scene.GetComponent<transformcomp>(character2);
-		// auto& islandTransform = scene.GetComponent<transformcomp>(islands);
+		// 	collisionCount++;
+		// 	std::cout << " collision between character and island " << std::endl;
 			
-			if (CheckCollisionBoxes(character1Box, islands1Box)) {
-			// Perform actions for collision between character2 and islands
-				collisionCount++;
-				std::cout << "collision between character1 and island" << std::endl;
-				// Example action: Stop jumping for character2
-				collisionCount++;
-				character1Transform.jumping = false;
-				kinematics.velocity.y = -kinematics.velocity.y;
+		// 	collisionCount++;
+		// 	characterTransform.jumping = false;
+		// 	kinematics.velocity.y = -kinematics.velocity.y;
+			
+		// }
+		
+		
+			// if ((abs(cPos.y - iPos.y) < 90  && abs(cPos.x - iPos.x) < 50)) {
 				
-			}
+			// 	collisionCount++;
+			// 	// characterTransform.jumping = false;
+			// 	std::cout << " collision between character and island " << std::endl;
+				
+			// 	kinematics.bound = true;
+			// 	if (cPos.y > iPos.y) {
+			// 		characterTransform.position.y = iPos.y + 80; // Adjust the value as needed
+    		// 	}
+
+        	// } 
+		// std::cout << cPos.x << " " << cPos.y << " " << cPos.z << std::endl;
+		// std::cout << iPos.x << " " << iPos.y << " " << iPos.z << std::endl;
+
+
+		DrawBoundingBox(characterBox, BLUE);  
+		DrawBoundingBox(islandsBox, RED);  
+			
+		// if (CheckCollisionBoxes(characterBox, islandsBox)) {
+		
+		// 	collisionCount++;
+		// 	std::cout << " collision between character and island " << std::endl;
+			
+		// 	collisionCount++;
+		// 	characterTransform.jumping = false;
+		// 	kinematics.velocity.y = -kinematics.velocity.y;
+			
+		// }
 
        
         
@@ -517,50 +557,63 @@ void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1, Entity i
     // for (Entity characterEntity = 0; characterEntity < scene.entityMasks.size(); characterEntity++) {
     //     if (!scene.HasComponent<transformcomp>(characterEntity)) continue;
     //     if (!scene.HasComponent<Rendering>(characterEntity)) continue;
-	// 	// if (!scene.HasComponent<physics>(characterEntity)) continue;
 
     //     auto& characterTransform = scene.GetComponent<transformcomp>(characterEntity);
     //     auto& characterRender = scene.GetComponent<Rendering>(characterEntity);
     //     auto characterBox = characterRender.model->GetTransformedBoundingBox();
 
-	// 	raylib::Vector3 charPos = characterTransform.position;
+		
 
-	// 	loop2counter = 0;
-
-    //     for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
-    //         if (islandEntity == characterEntity) continue; // Skip checking collision with itself
-    //         if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
-    //         if (!scene.HasComponent<Rendering>(islandEntity)) continue;
-	// 		if (!scene.HasComponent<flipFlag>(islandEntity)) continue;
-
-	// 		loop2counter++;
-			
-    //         auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
-    //         auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
-    //         auto islandBox = islandRender.model->GetTransformedBoundingBox();
-
-	// 		raylib::Vector3 islandPos = islandTransform.position;
+        for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
+            if (islandEntity == character) continue;
+			if (islandEntity == character2) continue;
+			// if (islandEntity == characterEntity) continue;
+            if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
+            if (!scene.HasComponent<Rendering>(islandEntity)) continue;
+			// if (!scene.HasComponent<flipFlag>(islandEntity)) continue;
 
 			
+            auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
+            auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
+            auto islandBox = islandRender.model->GetTransformedBoundingBox();
 
+			raylib::Vector3 islandPos = islandTransform.position;
 
-
-
-
-
-	// 		// std::cout << "    entity in island loop  " <<  loop2counter << std::endl;
-    //         if (CheckCollisionBoxes(islandBox, characterBox)) {
-
-	// 			characterTransform.jumping = false;
-    //             collisionCount++;
-	// 			std::cout << "   collision  " << std::endl;
+			// if ((((cPos.y - islandPos.y) < 90 && (cPos.y - islandPos.y) > 70)  && abs(cPos.x - islandPos.x) < 50) && abs(cPos.z - islandPos.z) < 50) {
 				
+			// 	collisionCount++;
 				
-    //         }
+			// 	std::cout << " collision between character and island " << std::endl;
+				
+			// 	kinematics.bound = true;
+				
+			// 		characterTransform.position.y = islandPos.y + 75; // Adjust the value as needed
+    			
+
+        	// } 
+			if ((((c2Pos.y - islandPos.y) < 90 && (c2Pos.y - islandPos.y) > 70) && abs(c2Pos.x - islandPos.x) < 50) && abs(c2Pos.z - islandPos.z) < 50) {
+				
+				collisionCount++;
+				
+				std::cout << " collision between character and island " << std::endl;
+				
+				kinematics.bound = true;
+			
+					// character2Transform.position.y = islandPos.y + 75; // Adjust the value as needed
+					// characterTransform.position.y = islandPos.y + 75; // Adjust the value as needed
+    			
+					kinematics.velocity.y = 0;
+					characterTransform.jumpCounter = 0;
+					character2Transform.jumpCounter = 0;
+        	} 
+
+		// }
         
-    // }
+    }
     std::cout << "total collisions: " << collisionCount << std::endl;
 }
+
+
 
 
 // Function to draw a bounded model with a specified transformation
@@ -594,7 +647,7 @@ void spinSystem(Scene<ComponentStorage>& scene, float dt) {
 		float& angularAcceleration = physicsComponent.angularAcceleration;
 		int& counter = render.counter;
 		
-		if ((transformComponent.jumping && render.counter < 1) && !scene.HasComponent<flipFlag>(e)) {
+		if ((transformComponent.jumping && counter < 1) && !scene.HasComponent<flipFlag>(e)) {
 			render.model->transform = raylib::Transform(render.model->transform).RotateY(raylib::Degree(6.1));
 			render.color = YELLOW;
 			
@@ -615,26 +668,33 @@ void jumpSystem(Scene<ComponentStorage>& scene, float dt) {
 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
 		auto& transformComponent = scene.GetComponent<transformcomp>(e);
 
-		int& counter = render.counter;
-		int&jumps = transformComponent.jumpCounter;
-	
-        if(transformComponent.jumping) {
-			transformComponent.position.y += 36 * dt;	
+
+		if ((transformComponent.position.y > -1 && transformComponent.position.y < 25) && transformComponent.jumping) {
+			kinematics.velocity.y += 15;
+			// transformComponent.jumpCounter++;
 		}
-		if (transformComponent.position.y > 35.9) {
+		if((transformComponent.position.y > (24 * transformComponent.jumpCounter)) && (transformComponent.position.y < (26 * transformComponent.jumpCounter))) {
 			transformComponent.jumping = false;
-			counter = 1;
-			
 		}
+        // if(transformComponent.jumping && (transformComponent.position.y < 25 * transformComponent.jumpCounter)) {
+		// 	if (transformComponent.position.y >= 25) transformComponent.jumpCounter++;
+		// 	kinematics.velocity.y += 10;
+		// }
 		if(!transformComponent.jumping) {
-			transformComponent.position.y -= 36 * dt;
+			
+			kinematics.velocity.y -= 15;
 		}
 		if (transformComponent.position.y < .05 && !transformComponent.jumping) {
-			transformComponent.position.y = 0; 
-			counter = 0;
+			transformComponent.position.y = 0;
+			// render.counter = 0;
 			render.color = WHITE;
-			jumps = 0;
+			transformComponent.jumpCounter = 0;
 		}
+
+
+		transformComponent.position.y += kinematics.velocity.y * dt;
+		
+		
 	}
 }
 
@@ -704,10 +764,10 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
 		// bool& is2D = physicsComponent._2d;
 		
 		(*buffer.inputs)["forward"].AddPressedCallback([&kinematics]()-> void {   
-			if(kinematics.maxSpeed > kinematics.targetSpeed) kinematics.targetSpeed += 25;
+			if(kinematics.maxSpeed > kinematics.targetSpeed) kinematics.targetSpeed += 5;
         });
         (*buffer.inputs)["backwards"].AddPressedCallback([&kinematics]()-> void {    
-			if(kinematics.minSpeed < kinematics.targetSpeed)kinematics.targetSpeed -= 15; 
+			if(kinematics.minSpeed < kinematics.targetSpeed)kinematics.targetSpeed -= 5; 
         });
         (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { 
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(35));  
@@ -715,23 +775,12 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
         (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { 
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(35)); 
         });
-		// (*buffer.inputs)["tiltright"].AddPressedCallback([&physicsComponent]()-> void { 
-		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Right(), raylib::Degree(10));  
-        // });
-		// (*buffer.inputs)["tiltleft"].AddPressedCallback([&physicsComponent]()-> void { 
-		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Left(), raylib::Degree(10));
-		// });
-		// (*buffer.inputs)["tiltforward"].AddPressedCallback([&physicsComponent]()-> void { 
-		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Forward(), raylib::Degree(12));
-		// });
-		// (*buffer.inputs)["tiltback"].AddPressedCallback([&physicsComponent]()-> void { 
-		// 	physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Back(), raylib::Degree(12));
-		// });
-        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &transformComponent]()-> void { 
-            if (!transformComponent.jumping && transformComponent.jumpCounter < 4) {
-				transformComponent.jumping = true;
+		
+        (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &transformComponent, &kinematics]()-> void { 
+            if (transformComponent.jumpCounter < 3) {
+				kinematics.velocity.y += 25;
 				transformComponent.jumpCounter++;
-			}
+			} 
         });
 	}
 }
@@ -744,7 +793,6 @@ void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
 		auto& transformComponent = scene.GetComponent<transformcomp>(e);
 
-		raylib::Vector3 velocity = kinematics.velocity;
 		float targetSpeed = kinematics.targetSpeed;
         float maxSpeed = kinematics.maxSpeed;
         float minSpeed = kinematics.minSpeed;
@@ -758,7 +806,16 @@ void VelocitySystem(Scene<ComponentStorage>& scene, float dt) {
             speed -= acceleration * dt;
         speed = Clamp(speed, minSpeed, maxSpeed);
 
-        transformComponent.position += velocity * dt;
+
+		kinematics.velocity.y -= 20 * dt;
+
+		if ((transformComponent.position.y < -.005) ) {
+			kinematics.velocity.y = 0;
+		}
+
+        transformComponent.position.x += kinematics.velocity.x * dt;
+		transformComponent.position.y += kinematics.velocity.y * dt;
+		transformComponent.position.z += kinematics.velocity.z * dt;
 	}
 }
 
@@ -778,18 +835,60 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		float& angularAcceleration = physicsComponent.angularAcceleration;
 		raylib::Quaternion& rotation = physicsComponent.rotation;
         raylib::Quaternion& targetRotation = physicsComponent.targetRotation;
-		bool& is2D = physicsComponent._2d;
+		
 
 		float& speed = kinematics.speed;
 
        	rotation = QuaternionSlerp(rotation, targetRotation, angularAcceleration * dt); 
 		
 		// Calculate velocity based on updated speed and rotation
+		auto upward = velocity.y;
 		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
+		velocity.y = upward;
 
 		transformComponent.rotation = rotation;
     }
 }
+
+void chaseVelocitySystem(Scene<ComponentStorage>& scene, Entity character, float dt) {
+	auto& CtransComponent = scene.GetComponent<transformcomp>(character);
+
+    for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+        if (!scene.HasComponent<veloKinematics>(e)) continue;
+        if (!scene.HasComponent<transformcomp>(e)) continue;
+
+        auto& kinematics = scene.GetComponent<veloKinematics>(e);
+        auto& transformComponent = scene.GetComponent<transformcomp>(e);
+
+        raylib::Vector3& velocity = kinematics.velocity;
+        float& speed = kinematics.speed;
+        float acceleration = kinematics.acceleration;
+
+        // Calculate direction towards the target position
+        raylib::Vector3 targetvelo = CtransComponent.position;
+        
+
+		targetvelo.x = transformComponent.position.x - targetvelo.x;
+
+        
+
+        // Update speed based on acceleration
+        float targetSpeed = kinematics.targetSpeed;
+        float maxSpeed = kinematics.maxSpeed;
+        float minSpeed = kinematics.minSpeed;
+
+        float target = Clamp(targetSpeed, minSpeed, maxSpeed);
+        if (speed < target)
+            speed += acceleration * dt;
+        else if (speed > target)
+            speed -= acceleration * dt;
+        speed = Clamp(speed, minSpeed, maxSpeed);
+
+        // Update position
+        transformComponent.position.x += targetvelo.x * dt;
+    }
+}
+
 
 // void flipFlagSystem(Scene<ComponentStorage>& scene, float dt) {
 
