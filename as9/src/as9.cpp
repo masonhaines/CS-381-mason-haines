@@ -458,25 +458,25 @@ int main() {
 					
 						
 
-					if (scene.HasComponent<transformcomp>(pickle)) continue;
-					auto& transform = scene.GetComponent<transformcomp>(pickle);
+					if (scene.HasComponent<transformcomp>(pickle)) {
+						auto& transform = scene.GetComponent<transformcomp>(pickle);
 
-					
-					camera.target = (Vector3){
-						transform.position.x,
-						transform.position.y,
-						transform.position.z
-					};
+						
+						camera.target = (Vector3){
+							transform.position.x,
+							transform.position.y,
+							transform.position.z
+						};
 
 
-					camera.position.x = transform.position.x + 500 * cos(axisOfCamera);
-					camera.position.y = transform.position.y + 355;
-					camera.position.z = transform.position.z + 500 * sin(axisOfCamera);
+						camera.position.x = transform.position.x + 500 * cos(axisOfCamera);
+						camera.position.y = transform.position.y + 355;
+						camera.position.z = transform.position.z + 500 * sin(axisOfCamera);
 
-					camera.up = raylib::Vector3::Up(); 
-					camera.fovy = 35.0f; 
-					camera.projection = CAMERA_PERSPECTIVE; 
-					
+						camera.up = raylib::Vector3::Up(); 
+						camera.fovy = 35.0f; 
+						camera.projection = CAMERA_PERSPECTIVE; 
+					}
 
 
 					// auto& transform = scene.GetComponent<transformcomp>(pickle); 
@@ -558,11 +558,11 @@ int main() {
 
 			DrawFPS(10, 10); // Draw frames per second counter
 
-			text.Draw(std::to_string(num), (width / 100), height * .21, textSize, raylib::Color::Blue());
-			text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.w), (width / 100), height * .51, textSize, raylib::Color::Red());
-			text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.y), (width / 100), height * .71, textSize, raylib::Color::Green());
-			text.Draw(std::to_string(scene.GetComponent<veloKinematics>(pickle).velocity.y), (width / 100), height * .81, textSize, raylib::Color::Green());
-            text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).jumpCounter), (width / 50), height * .91, textSize * 3.0, raylib::Color::RayWhite());
+			text.Draw(std::to_string(scene.GetComponent<score>(pickle).score), (width / 100), height * .21, textSize * 3, raylib::Color::Blue());
+			// text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.w), (width / 100), height * .51, textSize, raylib::Color::Red());
+			// text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.y), (width / 100), height * .71, textSize, raylib::Color::Green());
+			// text.Draw(std::to_string(scene.GetComponent<veloKinematics>(pickle).velocity.y), (width / 100), height * .81, textSize, raylib::Color::Green());
+            // text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).jumpCounter), (width / 50), height * .91, textSize * 3.0, raylib::Color::RayWhite());
 		}
 		window.EndDrawing(); // End drawing
 	}
@@ -605,7 +605,7 @@ void CheckCollisions(Scene<ComponentStorage>& scene, Entity character) {
 			std::cout << " collision between character and island " << std::endl;
 			
 			kinematics.bound = true;
-		
+	
 				characterTransform.position.y = islandPos.y + 75.05; // Adjust the value as needed
 			
 			kinematics.velocity.y = 0;
