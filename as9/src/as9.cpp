@@ -14,6 +14,7 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 template<typename T>
 concept Transformer = requires( T t, raylib::Transform m) {
@@ -35,7 +36,7 @@ struct ComponentStorage {
 	std::vector<std::byte> data;
 
 	ComponentStorage() : elementSize(-1), data(1, std::byte{0}) {}
-	ComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(5 * elementSize); }
+	ComponentStorage(size_t elementSize) : elementSize(elementSize) { data.reserve(10 * elementSize); }
 	
 	template<typename Tcomponent>
 	ComponentStorage(Tcomponent reference = {}) : ComponentStorage(sizeof(Tcomponent)) {}
@@ -241,19 +242,16 @@ struct physics {
     raylib::Quaternion rotation; // Using quaternion for rotation
     raylib::Quaternion targetRotation; // Target rotation 
 
-	// bool _2d = false;
+	float cameraRotation = 0;
+	float targetCameraRotation = 0;
 };
 
-struct score {int score = 0;};
+struct score {
+	int score;
+	bool scored = false;
+};
 
 struct flipFlag {};
-// struct TwoDphysics {
-    
-//     float angularAcceleration;
-
-//     raylib::Degree heading; 
-//     raylib::Degree targetHeading; 
-// };
 
 struct Rendering {
     raylib::Model* model;
@@ -308,6 +306,7 @@ int main() {
     raylib::Text text;
     float textSize = 25;
     const char *Title = {"Pickles"};
+	const char *end = {"You did alright I guess?"};
 
     float dt = 0;
 	bool inputTabbed = false;
@@ -354,7 +353,7 @@ int main() {
 	scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
 	0, 200, -50};
 	scene.AddComponent<bufferedComponent>(pickle) = {&inputs, true};
-	scene.AddComponent<score>(pickle).score = 0;
+	// scene.AddComponent<score>(pickle).score = 0;
 
 	
 
@@ -381,6 +380,7 @@ int main() {
 
 		scene.AddComponent<Rendering>(island) = {&island1, false, WHITE};
 		scene.AddComponent<transformcomp>(island) = {(Vector3){x, y, z}, (Vector3){100, 100, 100}, QuaternionIdentity()};
+		scene.AddComponent<score>(island);
 	}
 
 	
@@ -407,14 +407,13 @@ int main() {
 	float num;
 	// Main loop
 	bool keepRunning = true;
-
-	Vector2 prevMousePosition = GetMousePosition(); // Initialize prevMousePosition outside the loop
-	float axisOfCamera = 0; 
+	bool died = false;
 
 	while (!window.ShouldClose() && keepRunning) { // Main loop: Continue running while the window is open and keepRunning is true
 
 		scene.GetComponent<transformcomp>(duck).position = scene.GetComponent<transformcomp>(pickle).position;
 		scene.GetComponent<transformcomp>(duck).rotation = scene.GetComponent<transformcomp>(pickle).rotation;
+		auto& kinematics = scene.GetComponent<veloKinematics>(pickle);
 
 		inputs.PollEvents(); // Poll buffered input from user
 		dt = window.GetFrameTime(); // Get the time elapsed since the last frame
@@ -430,15 +429,18 @@ int main() {
 				else changeCamera = false; // Toggle camera view off
 			}
 
-		 	// Handle input
-			Vector2 currentMousePosition = GetMousePosition();
-			Vector2 mouseDelta = { currentMousePosition.x - prevMousePosition.x, currentMousePosition.y - prevMousePosition.y };
+			if (kinematics.bound) {
+				if (scene.GetComponent<transformcomp>(pickle).position.y < 1){
+					kinematics.speed = 0;
+					// scene.GetComponent<transformcomp>(pickle).rotation = QuaternionIdentity();
+					scene.GetComponent<Rendering>(pickle).color = BROWN;
+					scene.GetComponent<Rendering>(duck).color = BLACK;
+					died = true;
+				}
+				
 
-			// Update yaw angle based on mouse movement
-			axisOfCamera += mouseDelta.x * 0.01f; // Adjust the sensitivity as needed
-
-			// Update prevMousePosition for the next frame
-			prevMousePosition = currentMousePosition;
+			}
+		 	
 
 
 			
@@ -446,8 +448,6 @@ int main() {
 			camera.BeginMode(); // Begin camera mode
 			{
 				if (changeCamera) { // If not changing camera and input is tabbed
-					// Target the position of the current selected model
-					// Revert to old camera settings
 					camera.target = raylib::Vector3(0, 0, 300); // Set camera target
 					camera.position = raylib::Vector3(0, 120, -500); // Set camera position
 					camera.up = raylib::Vector3::Up(); // Set camera up direction
@@ -455,86 +455,18 @@ int main() {
 					camera.projection = CAMERA_PERSPECTIVE; // Set camera projection
 					
 				} else { // If changing camera
-					
-						
+		
+					auto& transform = scene.GetComponent<transformcomp>(pickle); 
 
-					if (scene.HasComponent<transformcomp>(pickle)) {
-						auto& transform = scene.GetComponent<transformcomp>(pickle);
+					camera.target = transform.position;
 
-						
-						camera.target = (Vector3){
-							transform.position.x,
-							transform.position.y,
-							transform.position.z
-						};
+					camera.position.x = transform.position.x + 360 * cos(scene.GetComponent<physics>(pickle).cameraRotation + (180 * DEG2RAD));
+					camera.position.y = transform.position.y + 155;
+					camera.position.z = transform.position.z + 360 * sin(scene.GetComponent<physics>(pickle).cameraRotation + (180 * DEG2RAD));
 
-
-						camera.position.x = transform.position.x + 500 * cos(axisOfCamera);
-						camera.position.y = transform.position.y + 355;
-						camera.position.z = transform.position.z + 500 * sin(axisOfCamera);
-
-						camera.up = raylib::Vector3::Up(); 
-						camera.fovy = 35.0f; 
-						camera.projection = CAMERA_PERSPECTIVE; 
-					}
-
-
-					// auto& transform = scene.GetComponent<transformcomp>(pickle); 
-
-					
-						// camera.target = transform.position;
-
-						
-						// float radius = 375.0f; 
-						// float height = 155.0f; 
-						// auto [axis, angle] = transform.rotation.ToAxisAngle();
-
-						
-
-						// // angle for the camera by adding 180 degrees
-						// float cameraAngle = angle + raylib::Radian(180.0f);
-
-					
-						// camera.position.x = transform.position.x + radius * cos(cameraAngle);
-						// camera.position.y = transform.position.y + height;
-						// camera.position.z = transform.position.z + radius * sin(cameraAngle);
-
-						// camera.up = raylib::Vector3::Up(); 
-						// camera.fovy = 35.0f; 
-						// camera.projection = CAMERA_PERSPECTIVE; 
-
-						// num = angle;
-
-
-						// if (!scene.HasComponent<transformcomp>(pickle)) continue; // Check if the entity has a buffered component
-						// auto& transform = scene.GetComponent<transformcomp>(pickle); // Get buffered input component
-
-						// // if (abs(transform.rotation.y) > .498) flip = 0;
-						// // else
-						//  flip = 0;
-
-						// // Set camera target and position based on the selected model's position
-						// camera.target = (Vector3){
-						// 	transform.position.x,
-						// 	transform.position.y,
-						// 	transform.position.z
-						// };
-						// // camera.position = (Vector3){
-						// // 	transform.position.x - 375,
-						// // 	transform.position.y + 155,
-						// // 	transform.position.z +180
-						// // };
-
-						// // Calculate camera position relative to the target using polar coordinates
-						// camera.position.x = transform.position.x + 500 * cos(flip);
-						// camera.position.y = transform.position.y + 355;
-						// camera.position.z = transform.position.z + sin(flip);
-
-						// camera.up = raylib::Vector3::Up(); // Set camera up direction
-						// camera.fovy = 35.0f; // Set camera field of view
-						// camera.projection = CAMERA_PERSPECTIVE; // Set camera projection
-
-					
+					camera.up = raylib::Vector3::Up(); 
+					camera.fovy = 35.0f; 
+					camera.projection = CAMERA_PERSPECTIVE; 
 				}
 
 				// Render skybox and ground
@@ -558,8 +490,12 @@ int main() {
 
 			DrawFPS(10, 10); // Draw frames per second counter
 
-			text.Draw(std::to_string(scene.GetComponent<score>(pickle).score), (width / 100), height * .21, textSize * 3, raylib::Color::Blue());
-			// text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.w), (width / 100), height * .51, textSize, raylib::Color::Red());
+			if(died) {
+				text.Draw(end, (width / 3.8) , height * .5, textSize * 4, raylib::Color::Green());
+			}
+
+			text.Draw(std::to_string(scene.GetComponent<score>(island).score), (width / 100), height * .21, textSize * 3, raylib::Color::Blue());
+			// text.Draw(std::to_string(num), (width / 100), height * .51, textSize, raylib::Color::Red());
 			// text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.y), (width / 100), height * .71, textSize, raylib::Color::Green());
 			// text.Draw(std::to_string(scene.GetComponent<veloKinematics>(pickle).velocity.y), (width / 100), height * .81, textSize, raylib::Color::Green());
             // text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).jumpCounter), (width / 50), height * .91, textSize * 3.0, raylib::Color::RayWhite());
@@ -577,48 +513,50 @@ void CheckCollisions(Scene<ComponentStorage>& scene, Entity character) {
 
 	
 
-	auto& characterTransform = scene.GetComponent<transformcomp>(character);
-	auto& characterRender = scene.GetComponent<Rendering>(character);
+	auto& transform = scene.GetComponent<transformcomp>(character);
+	auto& render = scene.GetComponent<Rendering>(character);
 	auto& kinematics = scene.GetComponent<veloKinematics>(character);
-	auto& scoreBoard = scene.GetComponent<score>(character);
+	
 
-	raylib::Vector3& velocity = kinematics.velocity;
 
 	for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
 		if (islandEntity == character) continue;
 		if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
 		if (!scene.HasComponent<Rendering>(islandEntity)) continue;
+		if (!scene.HasComponent<score>(islandEntity)) continue;
 		
 		auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
 		auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
-		auto islandBox = islandRender.model->GetTransformedBoundingBox();
-
-		raylib::Vector3 islandPos = islandTransform.position;
-
-		if(scoreBoard.score >= 13) characterTransform.jumpMax = 3;
+		auto& scoreBoard = scene.GetComponent<score>(islandEntity);
+		// auto islandBox = islandRender.model->GetTransformedBoundingBox();
 
 		
-		if ((((characterTransform.position.y - islandPos.y) < 75 && (characterTransform.position.y - islandPos.y) > 70) && abs(characterTransform.position.x - islandPos.x) < 50) && abs(characterTransform.position.z - islandPos.z) < 50) {
+
+		if(scoreBoard.score >= 13) transform.jumpMax = 3;
+
+		
+		if ((((transform.position.y - islandTransform.position.y) < 75 && (transform.position.y - islandTransform.position.y) > 70) && abs(transform.position.x - islandTransform.position.x) < 50) && abs(transform.position.z - islandTransform.position.z) < 50) {
 			
 			// collisionCount++;
 			
-			std::cout << " collision between character and island " << std::endl;
+			// std::cout << " collision between character and island " << std::endl;
 			
 			kinematics.bound = true;
 	
-				characterTransform.position.y = islandPos.y + 75.05; // Adjust the value as needed
+			transform.position.y = islandTransform.position.y + 75.09; // Adjust the value as needed
 			
 			kinematics.velocity.y = 0;
-			characterTransform.jumpCounter = 0;
-			scoreBoard.score ++;
+			transform.jumpCounter = 0;
+
+			scoreBoard.scored = true;
+			
 				
 		} 
+		if (scoreBoard.scored) scoreBoard.score++;
+
 	}
     // std::cout << "total collisions: " << collisionCount << std::endl;
 }
-
-
-
 
 // Function to draw a bounded model with a specified transformation
 void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
@@ -628,6 +566,7 @@ void DrawBoundedModel(raylib::Model& model, const raylib::Color& color, Transfor
     model.GetTransformedBoundingBox().Draw(raylib::Color(ORANGE));
     model.transform = backupTransform; // Restore the original transform
 }
+
 // Function to draw a model with a specified transformation
 void DrawModel(raylib::Model& model, const raylib::Color& color, Transformer auto transformer) {
     raylib::Transform backupTransform = model.transform; // Save the model's transform
@@ -659,47 +598,6 @@ void spinSystem(Scene<ComponentStorage>& scene, float dt) {
 		if (transformComponent.jumping && scene.HasComponent<flipFlag>(e)) render.model->transform = raylib::Transform(render.model->transform).RotateX(raylib::Degree(6.1));
 
     }
-}
-
-void jumpSystem(Scene<ComponentStorage>& scene, float dt) {
-	int counter = 0;
-	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
-		if (!scene.HasComponent<veloKinematics>(e)) continue;
-		if (!scene.HasComponent<transformcomp>(e)) continue;
-		if (!scene.HasComponent<Rendering>(e)) continue;
-
-		auto& render = scene.GetComponent<Rendering>(e);
-		auto& kinematics = scene.GetComponent<veloKinematics>(e);
-		auto& transformComponent = scene.GetComponent<transformcomp>(e);
-
-
-		if ((transformComponent.position.y > -1 && transformComponent.position.y < 25) && transformComponent.jumping) {
-			kinematics.velocity.y += 15;
-			// transformComponent.jumpCounter++;
-		}
-		if((transformComponent.position.y > (24 * transformComponent.jumpCounter)) && (transformComponent.position.y < (26 * transformComponent.jumpCounter))) {
-			transformComponent.jumping = false;
-		}
-        // if(transformComponent.jumping && (transformComponent.position.y < 25 * transformComponent.jumpCounter)) {
-		// 	if (transformComponent.position.y >= 25) transformComponent.jumpCounter++;
-		// 	kinematics.velocity.y += 10;
-		// }
-		if(!transformComponent.jumping) {
-			
-			kinematics.velocity.y -= 15;
-		}
-		if (transformComponent.position.y < .05 && !transformComponent.jumping) {
-			transformComponent.position.y = 0;
-			// render.counter = 0;
-			render.color = WHITE;
-			transformComponent.jumpCounter = 0;
-		}
-
-
-		transformComponent.position.y += kinematics.velocity.y * dt;
-		
-		
-	}
 }
 
 void DrawSystem(Scene<ComponentStorage>& scene) {
@@ -775,9 +673,11 @@ void ProcessInputSystem(Scene<ComponentStorage>& scene) {
         });
         (*buffer.inputs)["right"].AddPressedCallback([&physicsComponent]()-> void { 
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Down(), raylib::Degree(35));  
+			physicsComponent.targetCameraRotation += 35 * DEG2RAD;
         });
         (*buffer.inputs)["left"].AddPressedCallback([&physicsComponent]()-> void { 
 			physicsComponent.targetRotation = physicsComponent.targetRotation * raylib::Quaternion::FromAxisAngle(raylib::Vector3::Up(), raylib::Degree(35)); 
+			physicsComponent.targetCameraRotation -= 35 * DEG2RAD;
         });
 		
         (*buffer.inputs)["space"].AddPressedCallback([&physicsComponent, &transformComponent, &kinematics]()-> void { 
@@ -843,14 +743,28 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		float& angularAcceleration = physicsComponent.angularAcceleration;
 		raylib::Quaternion& rotation = physicsComponent.rotation;
         raylib::Quaternion& targetRotation = physicsComponent.targetRotation;
+
+		float difference = abs(physicsComponent.targetCameraRotation - physicsComponent.cameraRotation);
+		if (physicsComponent.targetCameraRotation > physicsComponent.cameraRotation) {
+            if (difference < 180 * DEG2RAD)
+                physicsComponent.cameraRotation += angularAcceleration * dt;
+            else if (difference > 180 * DEG2RAD)
+                physicsComponent.cameraRotation -= angularAcceleration * dt;
+        } else if (physicsComponent.targetCameraRotation < physicsComponent.cameraRotation) {
+            if (difference < 180 * DEG2RAD)
+                physicsComponent.cameraRotation -= angularAcceleration * dt;
+            else if (difference > 180 * DEG2RAD)
+                physicsComponent.cameraRotation += angularAcceleration * dt;
+        }
+		if (difference < .5) physicsComponent.cameraRotation = physicsComponent.targetCameraRotation;
 		
-		float& speed = kinematics.speed;
+	
 
        	rotation = QuaternionSlerp(rotation, targetRotation, angularAcceleration * dt); 
 		
 		// Calculate velocity based on updated speed and rotation
 		auto upward = velocity.y;
-		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * speed;
+		velocity = raylib::Vector3::Left().RotateByQuaternion(rotation) * kinematics.speed;
 		velocity.y = upward;
 
 		transformComponent.rotation = rotation;
@@ -896,6 +810,46 @@ void chaseVelocitySystem(Scene<ComponentStorage>& scene, Entity character, float
     }
 }
 
+// void jumpSystem(Scene<ComponentStorage>& scene, float dt) {
+// 	int counter = 0;
+// 	for (Entity e = 0; e < scene.entityMasks.size(); e++) {
+// 		if (!scene.HasComponent<veloKinematics>(e)) continue;
+// 		if (!scene.HasComponent<transformcomp>(e)) continue;
+// 		if (!scene.HasComponent<Rendering>(e)) continue;
+
+// 		auto& render = scene.GetComponent<Rendering>(e);
+// 		auto& kinematics = scene.GetComponent<veloKinematics>(e);
+// 		auto& transformComponent = scene.GetComponent<transformcomp>(e);
+
+
+// 		if ((transformComponent.position.y > -1 && transformComponent.position.y < 25) && transformComponent.jumping) {
+// 			kinematics.velocity.y += 15;
+// 			// transformComponent.jumpCounter++;
+// 		}
+// 		if((transformComponent.position.y > (24 * transformComponent.jumpCounter)) && (transformComponent.position.y < (26 * transformComponent.jumpCounter))) {
+// 			transformComponent.jumping = false;
+// 		}
+//         // if(transformComponent.jumping && (transformComponent.position.y < 25 * transformComponent.jumpCounter)) {
+// 		// 	if (transformComponent.position.y >= 25) transformComponent.jumpCounter++;
+// 		// 	kinematics.velocity.y += 10;
+// 		// }
+// 		if(!transformComponent.jumping) {
+			
+// 			kinematics.velocity.y -= 15;
+// 		}
+// 		if (transformComponent.position.y < .05 && !transformComponent.jumping) {
+// 			transformComponent.position.y = 0;
+// 			// render.counter = 0;
+// 			render.color = WHITE;
+// 			transformComponent.jumpCounter = 0;
+// 		}
+
+
+// 		transformComponent.position.y += kinematics.velocity.y * dt;
+		
+		
+// 	}
+// }
 
 // void flipFlagSystem(Scene<ComponentStorage>& scene, float dt) {
 
