@@ -307,6 +307,7 @@ int main() {
     float textSize = 25;
     const char *Title = {"Pickles"};
 	const char *end = {"You did alright I guess?"};
+	const char *total = {"Total islands reached "};
 
     float dt = 0;
 	bool inputTabbed = false;
@@ -353,7 +354,7 @@ int main() {
 	scene.AddComponent<veloKinematics>(pickle) = {100,(Vector3){0, 0, 0}, 0, 
 	0, 200, -50};
 	scene.AddComponent<bufferedComponent>(pickle) = {&inputs, true};
-	// scene.AddComponent<score>(pickle).score = 0;
+	scene.AddComponent<score>(pickle) = {false, 0};
 
 	
 
@@ -380,7 +381,7 @@ int main() {
 
 		scene.AddComponent<Rendering>(island) = {&island1, false, WHITE};
 		scene.AddComponent<transformcomp>(island) = {(Vector3){x, y, z}, (Vector3){100, 100, 100}, QuaternionIdentity()};
-		scene.AddComponent<score>(island);
+		scene.AddComponent<score>(island) = {false, 0};
 	}
 
 	
@@ -491,14 +492,12 @@ int main() {
 			DrawFPS(10, 10); // Draw frames per second counter
 
 			if(died) {
-				text.Draw(end, (width / 3.8) , height * .5, textSize * 4, raylib::Color::Green());
-			}
+				text.Draw(end, (width / 3.8) , height * .01, textSize * 4, raylib::Color::Green());
+			} else text.Draw(Title, (width / 9) , height / 99, textSize * 4, raylib::Color::Green());
 
-			text.Draw(std::to_string(scene.GetComponent<score>(island).score), (width / 100), height * .21, textSize * 3, raylib::Color::Blue());
-			// text.Draw(std::to_string(num), (width / 100), height * .51, textSize, raylib::Color::Red());
-			// text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).rotation.y), (width / 100), height * .71, textSize, raylib::Color::Green());
-			// text.Draw(std::to_string(scene.GetComponent<veloKinematics>(pickle).velocity.y), (width / 100), height * .81, textSize, raylib::Color::Green());
-            // text.Draw(std::to_string(scene.GetComponent<transformcomp>(pickle).jumpCounter), (width / 50), height * .91, textSize * 3.0, raylib::Color::RayWhite());
+			text.Draw(total, (width / 100), height * .91, textSize * 3.0, raylib::Color::RayWhite());
+            text.Draw(std::to_string(scene.GetComponent<score>(pickle).score), (width / 2.2), height * .91, textSize * 3.25, raylib::Color::White());
+       
 		}
 		window.EndDrawing(); // End drawing
 	}
@@ -511,51 +510,35 @@ void CheckCollisions(Scene<ComponentStorage>& scene, Entity character) {
 
     int collisionCount = 0;
 
-	
-
 	auto& transform = scene.GetComponent<transformcomp>(character);
 	auto& render = scene.GetComponent<Rendering>(character);
 	auto& kinematics = scene.GetComponent<veloKinematics>(character);
+	auto& scoreBoard = scene.GetComponent<score>(character);
 	
-
-
 	for (Entity islandEntity = 0; islandEntity < scene.entityMasks.size(); islandEntity++) {
 		if (islandEntity == character) continue;
 		if (!scene.HasComponent<transformcomp>(islandEntity)) continue;
 		if (!scene.HasComponent<Rendering>(islandEntity)) continue;
-		if (!scene.HasComponent<score>(islandEntity)) continue;
 		
 		auto& islandTransform = scene.GetComponent<transformcomp>(islandEntity);
 		auto& islandRender = scene.GetComponent<Rendering>(islandEntity);
-		auto& scoreBoard = scene.GetComponent<score>(islandEntity);
-		// auto islandBox = islandRender.model->GetTransformedBoundingBox();
-
 		
-
-		if(scoreBoard.score >= 13) transform.jumpMax = 3;
-
+		if(scoreBoard.score >= 15) transform.jumpMax = 3;
 		
 		if ((((transform.position.y - islandTransform.position.y) < 75 && (transform.position.y - islandTransform.position.y) > 70) && abs(transform.position.x - islandTransform.position.x) < 50) && abs(transform.position.z - islandTransform.position.z) < 50) {
 			
-			// collisionCount++;
-			
-			// std::cout << " collision between character and island " << std::endl;
-			
 			kinematics.bound = true;
+
+			if ((transform.position.y - islandTransform.position.y) < 74.5 && (transform.position.y - islandTransform.position.y) > 70) {
+				scoreBoard.score++;
+			}
 	
 			transform.position.y = islandTransform.position.y + 75.09; // Adjust the value as needed
 			
 			kinematics.velocity.y = 0;
 			transform.jumpCounter = 0;
-
-			scoreBoard.scored = true;
-			
-				
 		} 
-		if (scoreBoard.scored) scoreBoard.score++;
-
 	}
-    // std::cout << "total collisions: " << collisionCount << std::endl;
 }
 
 // Function to draw a bounded model with a specified transformation
@@ -747,16 +730,16 @@ void ThreeDPhysicsSystem(Scene<ComponentStorage>& scene, float dt) {
 		float difference = abs(physicsComponent.targetCameraRotation - physicsComponent.cameraRotation);
 		if (physicsComponent.targetCameraRotation > physicsComponent.cameraRotation) {
             if (difference < 180 * DEG2RAD)
-                physicsComponent.cameraRotation += angularAcceleration * dt;
+                physicsComponent.cameraRotation += angularAcceleration * dt * .2;
             else if (difference > 180 * DEG2RAD)
-                physicsComponent.cameraRotation -= angularAcceleration * dt;
+                physicsComponent.cameraRotation -= angularAcceleration * dt * .2;
         } else if (physicsComponent.targetCameraRotation < physicsComponent.cameraRotation) {
             if (difference < 180 * DEG2RAD)
-                physicsComponent.cameraRotation -= angularAcceleration * dt;
+                physicsComponent.cameraRotation -= angularAcceleration * dt * .2;
             else if (difference > 180 * DEG2RAD)
-                physicsComponent.cameraRotation += angularAcceleration * dt;
+                physicsComponent.cameraRotation += angularAcceleration * dt * .2;
         }
-		if (difference < .5) physicsComponent.cameraRotation = physicsComponent.targetCameraRotation;
+		if (difference < .05) physicsComponent.cameraRotation = physicsComponent.targetCameraRotation;
 		
 	
 
