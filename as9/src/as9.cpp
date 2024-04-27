@@ -285,16 +285,15 @@ void DrawWorldSystem(Scene<ComponentStorage>& scene);
 void ProcessInputSystem(Scene<ComponentStorage>& scene);
 void BoatProcessInputSystem(Scene<ComponentStorage>& scene); // not used but functions 
 void spinSystem(Scene<ComponentStorage>& scene, float dt);
-void jumpSystem(Scene<ComponentStorage>& scene, float dt);
 void CameraSystem(Scene<ComponentStorage>& scene, float dt);
 void CheckCollisions(Scene<ComponentStorage>& scene, Entity character1);
 
 
 int main() {
 	// Create window
-	const int screenWidth = 400 * 2; // 900
+	const int screenWidth = 900 * 2; // 900
 	const int screenHeight = 450 * 2; // 450
-	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 8");
+	raylib::Window window(screenWidth, screenHeight, "CS381 - Assignment 9");
 
 	raylib::BufferedInput inputs; // Manager for actions 
 
@@ -305,7 +304,6 @@ int main() {
 	const char *total = {"Total islands reached "};
 
     float dt = 0;
-	bool inputTabbed = false;
 	bool changeCamera = false;
 
 	// Create camera
@@ -329,7 +327,6 @@ int main() {
 	ground.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = water;
 
 	int numberOfIslands = 50;
-	int counter = 0; // Initialization for tab indexing 
 
 	raylib::Model character("meshes/pickle.glb");
 	raylib::Model ducky("meshes/Duck.glb");
@@ -471,7 +468,7 @@ int main() {
 			} else text.Draw(Title, (width / 9) , height / 99, textSize * 4, raylib::Color::Green());
 
 			text.Draw(total, (width / 100), height * .91, textSize * 3.0, raylib::Color::Black());
-            text.Draw(std::to_string(scene.GetComponent<score>(pickle).score), (width / 2.2), height * .91, textSize * 3.25, raylib::Color::Black());
+            text.Draw(std::to_string(scene.GetComponent<score>(pickle).score), ((width / 100) + 850), height * .91, textSize * 3.25, raylib::Color::Black());
        
 		}
 		window.EndDrawing(); // End drawing
